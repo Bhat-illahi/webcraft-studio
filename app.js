@@ -73,8 +73,7 @@ function createParticles() {
     });
   }
 
-  const baseRadius = window.innerWidth < 768 ? 130 : 150;
-  let mouse = { x: -1000, y: -1000, radius: baseRadius };
+  let mouse = { x: -1000, y: -1000, radius: 150 }; // Unified 150 radius for all devices
 
   // Track mouse across the whole page viewport
   window.addEventListener('mousemove', (e) => {
