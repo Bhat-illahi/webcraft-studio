@@ -168,6 +168,121 @@ function createParticles() {
 }
 createParticles();
 
+// ===== LUXURY UX SUITE =====
+
+// 1. Splash Screen Timeout
+window.addEventListener('load', () => {
+  const splash = document.getElementById('splash-screen');
+  setTimeout(() => {
+    if (splash) {
+      splash.style.opacity = '0';
+      splash.style.visibility = 'hidden';
+      setTimeout(() => splash.remove(), 800);
+    }
+  }, 1000);
+});
+
+// 2. Custom Glowing Cursor
+const cursorBlob = document.getElementById('cursor-blob');
+document.addEventListener('mousemove', (e) => {
+  if (cursorBlob) {
+    cursorBlob.style.left = e.clientX + 'px';
+    cursorBlob.style.top = e.clientY + 'px';
+  }
+});
+
+// Expand cursor on interactive elements
+const interactables = document.querySelectorAll('a, button, .service-card, .portfolio-item, .star');
+interactables.forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    if (cursorBlob) {
+      cursorBlob.style.width = '450px';
+      cursorBlob.style.height = '450px';
+      cursorBlob.style.background = 'radial-gradient(circle, rgba(167, 139, 250, 0.2) 0%, transparent 70%)';
+    }
+  });
+  el.addEventListener('mouseleave', () => {
+    if (cursorBlob) {
+      cursorBlob.style.width = '300px';
+      cursorBlob.style.height = '300px';
+      cursorBlob.style.background = 'radial-gradient(circle, rgba(108, 99, 255, 0.15) 0%, transparent 70%)';
+    }
+  });
+});
+
+// 3. Scroll Reveal Logic
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('active');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal, .reveal-up').forEach(el => revealObserver.observe(el));
+
+// 4. 3D Magnetic Tilt Logic
+const tiltElements = document.querySelectorAll('.service-card, .portfolio-item, .testimonial-card');
+
+tiltElements.forEach(el => {
+  el.addEventListener('mousemove', (e) => {
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const rotateX = ((y - centerY) / centerY) * -10; // Max 10 degrees
+    const rotateY = ((x - centerX) / centerX) * 10;
+    
+    el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+  });
+  
+  el.addEventListener('mouseleave', () => {
+    el.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+  });
+});
+
+// 5. Portfolio Lightbox Logic
+const lightboxOverlay = document.getElementById('lightboxOverlay');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxTitle = document.getElementById('lightboxTitle');
+const lightboxVisit = document.getElementById('lightboxVisit');
+const lightboxClose = document.getElementById('lightboxClose');
+
+document.querySelectorAll('.portfolio-item-link').forEach(link => {
+  link.addEventListener('click', (e) => {
+    // Only intercept if screen is large enough or specific meta key not pressed
+    if (window.innerWidth > 768) {
+      e.preventDefault();
+      const item = link.querySelector('.portfolio-item');
+      const img = item.querySelector('img');
+      const title = item.querySelector('h3').innerText;
+      const url = link.getAttribute('href');
+      
+      lightboxImg.src = img.src;
+      lightboxTitle.innerText = title;
+      lightboxVisit.href = url;
+      
+      lightboxOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent scroll
+    }
+  });
+});
+
+lightboxClose.addEventListener('click', () => {
+  lightboxOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+});
+
+lightboxOverlay.addEventListener('click', (e) => {
+  if (e.target === lightboxOverlay) {
+    lightboxOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+});
+
 // ===== SCROLL ANIMATIONS =====
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {

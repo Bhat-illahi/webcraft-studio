@@ -16,6 +16,18 @@
 
 <body>
 
+  <!-- Premium Splash Screen -->
+  <div id="splash-screen">
+    <div class="splash-content">
+      <div class="splash-logo">⚡</div>
+      <div class="splash-text">WebCraft <span>Studio</span></div>
+      <div class="splash-loader"></div>
+    </div>
+  </div>
+
+  <!-- Custom Glowing Cursor -->
+  <div id="cursor-blob"></div>
+
   <!-- WhatsApp Float Button -->
   <a href="https://wa.me/918492922783?text=Hi!%20I'm%20interested%20in%20getting%20a%20website." class="whatsapp-float"
     target="_blank" id="whatsapp-float">
@@ -58,7 +70,7 @@
   </nav>
 
   <!-- Hero Section -->
-  <section class="hero" id="home">
+  <section class="hero reveal" id="home">
     <div class="hero-bg"></div>
     <div class="hero-content">
       <div class="hero-badge">🔥 Trusted by 200+ Businesses</div>
@@ -109,7 +121,7 @@
           better!
         </p>
       </div>
-      <div class="portfolio-grid">
+      <div class="portfolio-grid reveal-up">
         <a href="demo-salon.html" target="_blank" class="portfolio-item-link">
           <div class="portfolio-item" data-category="salon">
             <img src="salon_mockup.png" alt="Salon Website"
@@ -260,7 +272,7 @@
         <h2>Our <span class="gradient-text">Services</span></h2>
         <p>From basic landing pages to full business websites, we've got you covered</p>
       </div>
-      <div class="services-grid">
+      <div class="services-grid reveal-up">
         <a href="gallery-salon.html" class="service-item-link">
           <div class="service-card" data-aos="fade-up">
             <div class="service-icon" style="--clr:#6C63FF">✂️</div>
@@ -613,6 +625,25 @@
         No Thanks
       </button>
 
+    </div>
+  </div>
+
+  <!-- ===== PORTFOLIO LIGHTBOX ===== -->
+  <div class="lightbox-overlay" id="lightboxOverlay">
+    <div class="lightbox-modal">
+      <button class="lightbox-close" id="lightboxClose">&times;</button>
+      <div class="lightbox-content">
+        <img id="lightboxImg" src="" alt="Preview" />
+        <div class="lightbox-details">
+          <h3 id="lightboxTitle">Project Title</h3>
+          <p id="lightboxDesc">Full demonstration of our professional web design.</p>
+          <div class="lightbox-actions">
+            <a id="lightboxVisit" href="#" target="_blank" class="btn btn-primary">
+              <i class="fas fa-external-link-alt"></i> Visit Full Demo
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
