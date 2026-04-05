@@ -133,8 +133,8 @@ function createParticles() {
           const forceDirectionX = dx / distance;
           const forceDirectionY = dy / distance;
           const force = (mouse.radius - distance) / mouse.radius;
-          p.vx += forceDirectionX * force * 5.0; // Repel strongly!
-          p.vy += forceDirectionY * force * 5.0;
+          p.vx += forceDirectionX * force * 1.5; // Gentle repel
+          p.vy += forceDirectionY * force * 1.5;
         }
       } else if (voidHole.active) {
         // Void filling logic (Gravity) when finger is lifted!
