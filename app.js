@@ -58,7 +58,8 @@ function createParticles() {
   const particles = [];
   const colors = ['#6C63FF', '#FF6B6B', '#FFD43B', '#51CF66', '#a78bfa'];
   
-  const particleCount = 500; // Unified 500 particles for all devices
+  // Performance Density: 120 on mobile for speed, 250 on desktop for WOW
+  const particleCount = window.innerWidth < 768 ? 120 : 250;
   for (let i = 0; i < particleCount; i++) {
     particles.push({
       x: Math.random() * width,
@@ -151,7 +152,7 @@ function createParticles() {
         let dy = particles[i].y - particles[j].y;
         let distSq = dx * dx + dy * dy;
         
-        if (distSq < 7000) { 
+        if (distSq < 3500) { 
           let dist = Math.sqrt(distSq);
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
