@@ -58,8 +58,8 @@ function createParticles() {
   const particles = [];
   const colors = ['#6C63FF', '#FF6B6B', '#FFD43B', '#51CF66', '#a78bfa'];
   
-  // Make it dense: 250 particles instead of 80
-  for (let i = 0; i < 250; i++) {
+  // Very dense: 500 particles for high-end look
+  for (let i = 0; i < 500; i++) {
     particles.push({
       x: Math.random() * width,
       y: Math.random() * height,
