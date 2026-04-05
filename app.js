@@ -165,6 +165,7 @@ function createParticles() {
         }
       }
     }
+    requestAnimationFrame(animate);
   }
   animate();
 }
