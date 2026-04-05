@@ -90,17 +90,17 @@ img {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, rgba(108, 99, 255, 0.35), rgba(90, 82, 213, 0.15));
-  border-top: 1px solid rgba(167, 139, 250, 0.6);
-  border-left: 1px solid rgba(167, 139, 250, 0.3);
-  box-shadow: 0 8px 32px rgba(108, 99, 255, 0.3);
+  background: linear-gradient(135deg, rgba(108, 99, 255, 0.85), rgba(90, 82, 213, 0.75));
+  border-top: 1px solid rgba(255, 255, 255, 0.6);
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(108, 99, 255, 0.4);
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, rgba(108, 99, 255, 0.5), rgba(90, 82, 213, 0.25));
-  box-shadow: 0 12px 40px rgba(108, 99, 255, 0.5);
-  border-top-color: rgba(167, 139, 250, 0.8);
+  background: linear-gradient(135deg, rgba(108, 99, 255, 0.95), rgba(90, 82, 213, 0.85));
+  box-shadow: 0 12px 40px rgba(108, 99, 255, 0.6);
+  border-top-color: rgba(255, 255, 255, 0.8);
 }
 
 .btn-outline {
@@ -118,17 +118,17 @@ img {
 }
 
 .btn-whatsapp {
-  background: linear-gradient(135deg, rgba(37, 211, 102, 0.35), rgba(18, 140, 126, 0.15));
-  border-top: 1px solid rgba(81, 207, 102, 0.6);
-  border-left: 1px solid rgba(81, 207, 102, 0.3);
-  box-shadow: 0 8px 32px rgba(37, 211, 102, 0.3);
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.85), rgba(18, 140, 126, 0.75));
+  border-top: 1px solid rgba(255, 255, 255, 0.6);
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(37, 211, 102, 0.4);
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .btn-whatsapp:hover {
-  background: linear-gradient(135deg, rgba(37, 211, 102, 0.5), rgba(18, 140, 126, 0.25));
-  box-shadow: 0 12px 40px rgba(37, 211, 102, 0.5);
-  border-top-color: rgba(81, 207, 102, 0.8);
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.95), rgba(18, 140, 126, 0.85));
+  box-shadow: 0 12px 40px rgba(37, 211, 102, 0.6);
+  border-top-color: rgba(255, 255, 255, 0.8);
 }
 
 .btn.full-width {
@@ -329,18 +329,18 @@ img {
 }
 
 .nav-cta {
-  background: linear-gradient(135deg, rgba(108, 99, 255, 0.3), rgba(90, 82, 213, 0.1)) !important;
+  background: linear-gradient(135deg, rgba(108, 99, 255, 0.85), rgba(90, 82, 213, 0.75)) !important;
   color: #fff !important;
   padding: 8px 20px !important;
-  border-top: 1px solid rgba(167, 139, 250, 0.5) !important;
-  border-left: 1px solid rgba(167, 139, 250, 0.2) !important;
-  box-shadow: 0 8px 24px rgba(108, 99, 255, 0.2) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.6) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 8px 24px rgba(108, 99, 255, 0.4) !important;
 }
 
 .nav-cta:hover {
-  background: linear-gradient(135deg, rgba(108, 99, 255, 0.5), rgba(90, 82, 213, 0.2)) !important;
-  box-shadow: 0 12px 32px rgba(108, 99, 255, 0.4) !important;
-  border-top-color: rgba(167, 139, 250, 0.8) !important;
+  background: linear-gradient(135deg, rgba(108, 99, 255, 0.95), rgba(90, 82, 213, 0.85)) !important;
+  box-shadow: 0 12px 32px rgba(108, 99, 255, 0.6) !important;
+  border-top-color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .nav-toggle {
