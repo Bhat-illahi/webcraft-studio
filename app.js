@@ -73,7 +73,7 @@ function createParticles() {
     });
   }
 
-  const baseRadius = window.innerWidth < 768 ? 90 : 150;
+  const baseRadius = window.innerWidth < 768 ? 130 : 150;
   let mouse = { x: -1000, y: -1000, radius: baseRadius };
 
   // Track mouse across the whole page viewport
