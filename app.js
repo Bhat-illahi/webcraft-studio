@@ -106,7 +106,6 @@ function createParticles() {
   });
 
   function animate() {
-    requestAnimationFrame(animate);
     ctx.clearRect(0, 0, width, height);
 
     particles.forEach(p => {
@@ -717,4 +716,29 @@ function buildReviewCard(r) {
   if (needsUpdate) {
     localStorage.setItem('wc_reviews', JSON.stringify(reviews));
   }
+// ===== DYNAMIC WORKING HOURS =====
+(function initWorkingHours() {
+  const statusBadge = document.getElementById('workingStatus');
+  if (!statusBadge) return;
+
+  const now = new Date();
+  const day = now.getDay(); // 0 Sunday, 1 Monday, ...
+  const hour = now.getHours();
+  
+  // 9 AM (9) to 9 PM (21)
+  // Closed on Sunday (0)
+  const isOpen = (day !== 0) && (hour >= 9 && hour < 21);
+  
+  if (isOpen) {
+    statusBadge.innerHTML = '🟢 Available Now';
+    statusBadge.className = 'available-badge open';
+  } else {
+    statusBadge.innerHTML = '🔴 Closed / WhatsApp Us';
+    statusBadge.className = 'available-badge closed';
+    statusBadge.style.background = 'rgba(255, 107, 107, 0.15)';
+    statusBadge.style.color = '#FF6B6B';
+    statusBadge.style.borderColor = 'rgba(255, 107, 107, 0.3)';
+  }
+})();
+
 })();
