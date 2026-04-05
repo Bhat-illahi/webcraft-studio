@@ -196,18 +196,65 @@ const interactables = document.querySelectorAll('a, button, .service-card, .port
 interactables.forEach(el => {
   el.addEventListener('mouseenter', () => {
     if (cursorBlob) {
-      cursorBlob.style.width = '450px';
-      cursorBlob.style.height = '450px';
-      cursorBlob.style.background = 'radial-gradient(circle, rgba(167, 139, 250, 0.2) 0%, transparent 70%)';
+      cursorBlob.style.width = '550px';
+      cursorBlob.style.height = '550px';
+      cursorBlob.style.background = 'radial-gradient(circle, rgba(167, 139, 250, 0.4) 0%, rgba(108, 99, 255, 0.1) 50%, transparent 80%)';
+      cursorBlob.style.filter = 'blur(60px)';
     }
   });
   el.addEventListener('mouseleave', () => {
     if (cursorBlob) {
-      cursorBlob.style.width = '300px';
-      cursorBlob.style.height = '300px';
-      cursorBlob.style.background = 'radial-gradient(circle, rgba(108, 99, 255, 0.15) 0%, transparent 70%)';
+      cursorBlob.style.width = '350px';
+      cursorBlob.style.height = '350px';
+      cursorBlob.style.background = 'radial-gradient(circle, rgba(167, 139, 250, 0.25) 0%, rgba(108, 99, 255, 0.1) 40%, transparent 75%)';
+      cursorBlob.style.filter = 'blur(50px)';
     }
   });
+});
+
+// Hacker Click Animation
+document.addEventListener('mousedown', (e) => {
+  if (window.innerWidth <= 768) return;
+
+  // 1. Create the Ring
+  const ring = document.createElement('div');
+  ring.className = 'hacker-ring';
+  ring.style.left = e.clientX + 'px';
+  ring.style.top = e.clientY + 'px';
+  document.body.appendChild(ring);
+  setTimeout(() => ring.remove(), 600);
+
+  // 2. Create Fragments
+  for (let i = 0; i < 8; i++) {
+    const frag = document.createElement('div');
+    frag.className = 'hacker-fragment';
+    frag.style.left = e.clientX + 'px';
+    frag.style.top = e.clientY + 'px';
+    
+    const angle = Math.random() * Math.PI * 2;
+    const velocity = 5 + Math.random() * 10;
+    const vx = Math.cos(angle) * velocity;
+    const vy = Math.sin(angle) * velocity;
+    
+    document.body.appendChild(frag);
+    
+    let opacity = 1;
+    let x = e.clientX;
+    let y = e.clientY;
+    
+    const anim = () => {
+      x += vx;
+      y += vy;
+      opacity -= 0.05;
+      frag.style.left = x + 'px';
+      frag.style.top = y + 'px';
+      frag.style.opacity = opacity;
+      
+      if (opacity > 0) requestAnimationFrame(anim);
+      else frag.remove();
+    };
+    requestAnimationFrame(anim);
+  }
 });
 
 // 3. Scroll Reveal Logic

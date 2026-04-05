@@ -1904,18 +1904,46 @@ img {
 /* 1. Custom Cursor Blob */
 #cursor-blob {
   position: fixed;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(108, 99, 255, 0.15) 0%, transparent 70%);
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.25) 0%, rgba(108, 99, 255, 0.1) 40%, transparent 75%);
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
   mix-blend-mode: screen;
-  filter: blur(40px);
-  transition: width 0.3s, height 0.3s, background 0.3s;
+  filter: blur(50px);
+  transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s;
   display: none;
+  box-shadow: 0 0 60px rgba(108, 99, 255, 0.2);
 }
+
+/* Hacker Click Fragment */
+.hacker-fragment {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background: var(--primary);
+  pointer-events: none;
+  z-index: 10000;
+  box-shadow: 0 0 10px var(--primary);
+}
+
+.hacker-ring {
+  position: fixed;
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  animation: hackerRing 0.5s ease-out forwards;
+}
+
+@keyframes hackerRing {
+  0% { width: 0; height: 0; opacity: 1; border-width: 4px; }
+  100% { width: 150px; height: 150px; opacity: 0; border-width: 1px; }
+}
+
 
 @media (pointer: fine) {
   #cursor-blob { display: block; }
