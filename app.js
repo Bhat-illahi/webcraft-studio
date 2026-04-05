@@ -73,7 +73,7 @@ function createParticles() {
     });
   }
 
-  let mouse = { x: -1000, y: -1000, radius: 180 };
+  let mouse = { x: -1000, y: -1000, radius: 220 }; // Slightly larger radius to grab more particles
 
   // Track mouse across the whole page viewport
   window.addEventListener('mousemove', (e) => {
@@ -85,12 +85,32 @@ function createParticles() {
     mouse.y = -1000;
   });
 
+  // Mobile Touch Support
+  window.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 0) {
+      mouse.x = e.touches[0].clientX;
+      mouse.y = e.touches[0].clientY;
+    }
+  }, { passive: true });
+  
+  window.addEventListener('touchmove', (e) => {
+    if (e.touches.length > 0) {
+      mouse.x = e.touches[0].clientX;
+      mouse.y = e.touches[0].clientY;
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchend', () => {
+    mouse.x = -1000;
+    mouse.y = -1000;
+  });
+
   function animate() {
     requestAnimationFrame(animate);
     ctx.clearRect(0, 0, width, height);
 
     particles.forEach(p => {
-      // Repulsion logic (Anti-Gravity)
+      // Attraction logic (Gravity) instead of Anti-Gravity
       if (mouse.x !== -1000) {
         let dx = p.x - mouse.x;
         let dy = p.y - mouse.y;
@@ -100,8 +120,9 @@ function createParticles() {
           const forceDirectionX = dx / distance;
           const forceDirectionY = dy / distance;
           const force = (mouse.radius - distance) / mouse.radius;
-          p.vx += forceDirectionX * force * 2.5; // pushed away slightly faster
-          p.vy += forceDirectionY * force * 2.5;
+          // Attract strongly towards the mouse/touch point
+          p.vx -= forceDirectionX * force * 5.0; 
+          p.vy -= forceDirectionY * force * 5.0;
         }
       }
       
