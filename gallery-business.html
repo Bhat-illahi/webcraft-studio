@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Small Business Website Demos – WebCraft Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .gallery-hero { padding: 100px 0 60px; text-align: center; background: radial-gradient(circle at center, rgba(81,207,102,0.1), transparent 70%); }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-top: 40px; }
+    .demo-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; transition: var(--transition); display: flex; flex-direction: column; }
+    .demo-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+    .demo-img { width: 100%; aspect-ratio: 16/10; object-fit: cover; border-bottom: 1px solid var(--border); }
+    .demo-body { padding: 24px; flex-grow: 1; display: flex; flex-direction: column; }
+    .demo-badge { display: inline-block; padding: 4px 12px; background: rgba(81,207,102,0.1); color: var(--green); border-radius: 50px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px; width: fit-content; }
+    .demo-card h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .demo-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; flex-grow: 1; }
+    .demo-note-box { background: rgba(81,207,102,0.05); border: 1px solid rgba(81,207,102,0.2); padding: 40px; border-radius: 24px; margin-top: 60px; text-align: center; }
+    .demo-note-box h2 { font-family: 'Space Grotesk'; margin-bottom: 10px; }
+    .demo-note-box p { color: var(--text-muted); max-width: 600px; margin: 0 auto 24px; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">⚡</span>
+        <span>WebCraft <em>Studio</em></span>
+      </a>
+      <a href="index.html" class="btn btn-sm btn-outline"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </div>
+  </nav>
+
+  <section class="gallery-hero">
+    <div class="container">
+      <span class="section-tag">Showcase</span>
+      <h1>Business <span class="gradient-text">Web Demos</span></h1>
+      <p>Clean, growth-focused designs for professional services. Pick a benchmark, and let's get building!</p>
+      
+      <div class="gallery-grid">
+        <!-- Real Demo 1 (Internal) -->
+        <div class="demo-card">
+          <img src="business_mockup.png" alt="Local Business Demo" class="demo-img" onerror="this.src='https://placehold.co/600x400/001a0a/51CF66?text=Small+Business+Demo'">
+          <div class="demo-body">
+            <span class="demo-badge">Vibe: Reliable Service</span>
+            <h3>The Local Hero</h3>
+            <p>Our custom build for local service providers, focusing on SEO, map integration, and quick contact.</p>
+            <a href="demo-business.html" target="_blank" class="btn btn-sm btn-primary">View Internal Demo</a>
+          </div>
+        </div>
+
+        <!-- Real Demo 2 (External Strategy) -->
+        <div class="demo-card">
+          <img src="https://placehold.co/600x400/1a1a2e/6c63ff?text=Modern+Consulting+Aesthetic" alt="Modern Agency Style" class="demo-img">
+          <div class="demo-body">
+            <span class="demo-badge">Vibe: High Corporate</span>
+            <h3>Modern Agency (Style Guide)</h3>
+            <p>A flagship for professional consultancies, combining clean layouts with strong authority-building content.</p>
+            <a href="https://www.wix.com/website/templates/html/business" target="_blank" class="btn btn-sm btn-outline">Explore Strategy &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Real Demo 3 (External Strategy) -->
+        <div class="demo-card">
+          <img src="https://placehold.co/600x400/0a1a0a/ff6b35?text=Squarespace+Business+Style" alt="Elite Business Style" class="demo-img">
+          <div class="demo-body">
+            <span class="demo-badge">Vibe: Creative Professional</span>
+            <h3>Elite Business (Style Guide)</h3>
+            <p>A masterclass in modern creative business design, perfect for architects, law firms, or clinics.</p>
+            <a href="https://www.squarespace.com/templates/browse/business" target="_blank" class="btn btn-sm btn-outline">Explore Strategy &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-note-box">
+        <i class="fas fa-briefcase" style="font-size: 2.5rem; color: var(--green); margin-bottom: 20px; display: block;"></i>
+        <h2>Your Website Will Be <span class="gradient-text">Even Better</span></h2>
+        <p>These are industry benchmarks for authority and growth. When we build your site, it will be 100% uniquely tailored to your business goals.</p>
+        <a href="index.html#order" class="btn btn-primary" style="background: var(--green); border: none;">Start Your Custom Project Now</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" style="padding: 40px 0 20px; border-top: 1px solid var(--border); margin-top: 80px;">
+    <div class="container" style="text-align: center;">
+      <p style="color: var(--text-muted); font-size: 0.85rem;">© 2026 WebCraft Studio. Growth-First Web Development.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

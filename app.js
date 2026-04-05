@@ -1,0 +1,550 @@
+// ===== NAVBAR SCROLL =====
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 50) { navbar.style.padding = '10px 0'; }
+  else { navbar.style.padding = '16px 0'; }
+
+  // Back to Top button visibility
+  const btt = document.getElementById('backToTop');
+  if (window.scrollY > 500) { btt.classList.add('active'); }
+  else { btt.classList.remove('active'); }
+});
+
+document.getElementById('backToTop').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ===== MOBILE NAV TOGGLE =====
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
+});
+
+// ===== SESSION ID FOR REVIEWS =====
+let userSessionId = localStorage.getItem('wc_session_id');
+if (!userSessionId) {
+  userSessionId = 'sess_' + Date.now() + Math.random().toString(36).substr(2, 9);
+  localStorage.setItem('wc_session_id', userSessionId);
+}
+
+// ===== GLOBAL PARTICLES (ANTI-GRAVITY) =====
+function createParticles() {
+  const existingCanvas = document.getElementById('global-particles-canvas');
+  if (existingCanvas) existingCanvas.remove();
+  
+  const canvas = document.createElement('canvas');
+  canvas.id = 'global-particles-canvas';
+  canvas.style.position = 'fixed';
+  canvas.style.top = '0';
+  canvas.style.left = '0';
+  canvas.style.width = '100vw';
+  canvas.style.height = '100vh';
+  canvas.style.zIndex = '-1'; 
+  canvas.style.pointerEvents = 'none';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  
+  let width, height;
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const particles = [];
+  const colors = ['#6C63FF', '#FF6B6B', '#FFD43B', '#51CF66', '#a78bfa'];
+  
+  // Make it dense: 250 particles instead of 80
+  for (let i = 0; i < 250; i++) {
+    particles.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      r: Math.random() * 2.5 + 1.2, // slightly smaller max radius
+      baseDx: (Math.random() - 0.5) * 1.5,
+      baseDy: (Math.random() - 0.5) * 1.5,
+      vx: 0,
+      vy: 0,
+      color: colors[Math.floor(Math.random() * colors.length)]
+    });
+  }
+
+  let mouse = { x: -1000, y: -1000, radius: 180 };
+
+  // Track mouse across the whole page viewport
+  window.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+  window.addEventListener('mouseleave', () => {
+    mouse.x = -1000;
+    mouse.y = -1000;
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    ctx.clearRect(0, 0, width, height);
+
+    particles.forEach(p => {
+      // Repulsion logic (Anti-Gravity)
+      if (mouse.x !== -1000) {
+        let dx = p.x - mouse.x;
+        let dy = p.y - mouse.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < mouse.radius) {
+          const forceDirectionX = dx / distance;
+          const forceDirectionY = dy / distance;
+          const force = (mouse.radius - distance) / mouse.radius;
+          p.vx += forceDirectionX * force * 2.5; // pushed away slightly faster
+          p.vy += forceDirectionY * force * 2.5;
+        }
+      }
+      
+      // Friction
+      p.vx *= 0.88;
+      p.vy *= 0.88;
+      p.x += p.baseDx + p.vx;
+      p.y += p.baseDy + p.vy;
+
+      // Wrap around edges dynamically
+      if (p.x < -10) p.x = width + 10;
+      if (p.x > width + 10) p.x = -10;
+      if (p.y < -10) p.y = height + 10;
+      if (p.y > height + 10) p.y = -10;
+
+      // Draw particle
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = 0.5;
+      ctx.fill();
+    });
+
+    // Draw connecting lines with reduced distance threshold for dense network
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        let dx = particles[i].x - particles[j].x;
+        let dy = particles[i].y - particles[j].y;
+        let distSq = dx * dx + dy * dy;
+        
+        if (distSq < 7000) { 
+          let dist = Math.sqrt(distSq);
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = particles[i].color;
+          ctx.globalAlpha = 0.15 * (1 - dist / Math.sqrt(7000));
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+  animate();
+}
+createParticles();
+
+// ===== SCROLL ANIMATIONS =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('[data-aos]').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(30px)';
+  el.style.transition = `opacity 0.6s ease ${el.dataset.delay || 0}ms, transform 0.6s ease ${el.dataset.delay || 0}ms`;
+  observer.observe(el);
+});
+
+// ===== GENERATE ORDER ID =====
+function generateOrderId() {
+  const prefix = 'WC';
+  const timestamp = Date.now().toString().slice(-6);
+  const random = Math.floor(Math.random() * 9000 + 1000);
+  return `${prefix}-${timestamp}-${random}`;
+}
+
+// ===== ORDER FORM SUBMISSION =====
+document.getElementById('orderForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const type = document.getElementById('websiteType').value;
+  const budget = document.getElementById('budget').value;
+  const req = document.getElementById('requirements').value.trim();
+
+  // Email and requirements are optional now
+  if (!name || !phone || !type || !budget) {
+    showToast('Please fill in all required fields.', 'error');
+    return;
+  }
+
+  // Validate 10 digit number
+  if (phone.length !== 10) {
+    showToast('Please enter a valid 10-digit phone number.', 'error');
+    return;
+  }
+
+  const orderId = generateOrderId();
+  const formattedPhone = `+91 ${phone}`;
+  const validEmail = email || 'customer@no-email-provided.com';
+  
+  const orderData = { 
+    name, 
+    phone: formattedPhone, 
+    email: validEmail,
+    type, 
+    budget, 
+    requirements: req, 
+    orderId 
+  };
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+  // Send order directly via Formspree
+  const formspreeURL = "https://formspree.io/f/mlgoojvn";
+  fetch(formspreeURL, {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      ...orderData,
+      _subject: `📦 NEW ORDER #${orderId} – ${name} (${type})`
+    })
+  })
+  .then(response => {
+    if (response.ok) {
+      // Mark as ordered to unlock review prompt
+      localStorage.setItem('wc_ordered', 'true');
+      document.getElementById('orderForm').reset();
+      window.location.href = `success.html?id=${orderId}`;
+    } else {
+      // Something went wrong (e.g. Formspree limits, captcha requirement)
+      response.json().then(data => {
+        if (data && data.errors) {
+          showToast(data.errors.map(err => err.message).join(", "), 'error');
+        } else {
+          showToast('Failed to send order. We might be experiencing high volume. Please contact via WhatsApp!', 'error');
+        }
+      }).catch(err => {
+        showToast('Failed to process order securely. Please message us on WhatsApp!', 'error');
+      });
+    }
+  })
+  .catch(error => {
+    showToast('Network error! Please check your internet connection and try again.', 'error');
+  })
+  .finally(() => {
+    // Reset buttons
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Order & Start My Project';
+  });
+});// ===== TOAST NOTIFICATION =====
+function showToast(message, type = 'info') {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.style.cssText = `
+    position: fixed; top: 80px; right: 20px; z-index: 99999;
+    background: ${type === 'error' ? '#FF6B6B' : '#51CF66'};
+    color: #fff; padding: 14px 22px; border-radius: 12px;
+    font-weight: 600; font-size: 0.9rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    animation: slideIn 0.3s ease;
+  `;
+  toast.textContent = message;
+
+  const style = document.createElement('style');
+  style.textContent = `@keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }`;
+  document.head.appendChild(style);
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3500);
+}
+
+// ===== ACTIVE NAV LINK ON SCROLL =====
+const sections = document.querySelectorAll('section[id]');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.getAttribute('id');
+  });
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.style.color = '';
+    if (a.getAttribute('href') === '#' + current) a.style.color = '#6C63FF';
+  });
+});
+
+// ===== COPY PAYMENT DETAILS =====
+document.querySelectorAll('.payment-detail strong').forEach(el => {
+  el.style.cursor = 'pointer';
+  el.title = 'Click to copy';
+  el.addEventListener('click', () => {
+    navigator.clipboard.writeText(el.textContent).then(() => {
+      showToast('Copied: ' + el.textContent);
+    });
+  });
+});
+
+// ===== PREFILL FROM SERVICES =====
+function selectService(type) {
+  const select = document.getElementById('websiteType');
+  if (select) {
+    select.value = type;
+  }
+}
+
+// ===== PREFILL FROM PRICING =====
+function selectPackage(type, budget) {
+  const typeSelect = document.getElementById('websiteType');
+  const budgetSelect = document.getElementById('budget');
+  if (typeSelect) typeSelect.value = type;
+  if (budgetSelect) budgetSelect.value = budget;
+}
+
+
+// ===== REVIEW SYSTEM =====
+const STAR_LABELS = ['', 'Poor 😞', 'Fair 😐', 'Good 😊', 'Great 😄', 'Excellent 🤩'];
+
+function openReviewModal() {
+  document.getElementById('reviewModalOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeReviewModal() {
+  document.getElementById('reviewModalOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+  const url = new URL(window.location.href);
+  url.searchParams.delete('showReview');
+  window.history.replaceState({}, '', url);
+}
+
+// Show/hide the "Give Us a Review" button based on localStorage
+(function initReviewSystem() {
+  if (localStorage.getItem('wc_ordered') === 'true') {
+    const area = document.getElementById('reviewPromptArea');
+    if (area) area.classList.remove('hidden');
+  }
+  // Auto-open if redirected from order success page
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('showReview') === 'true') {
+    setTimeout(openReviewModal, 700);
+  }
+})();
+
+// Open modal on button click
+const openBtn = document.getElementById('openReviewBtn');
+if (openBtn) openBtn.addEventListener('click', openReviewModal);
+
+// Close modal on X button
+const closeReviewBtn = document.getElementById('closeReviewModal');
+if (closeReviewBtn) closeReviewBtn.addEventListener('click', closeReviewModal);
+
+// Close modal on Cancel button
+const cancelReviewBtn = document.getElementById('cancelReviewBtn');
+if (cancelReviewBtn) cancelReviewBtn.addEventListener('click', closeReviewModal);
+
+// Close modal on backdrop click
+const reviewOverlay = document.getElementById('reviewModalOverlay');
+if (reviewOverlay) {
+  reviewOverlay.addEventListener('click', function (e) {
+    if (e.target === reviewOverlay) closeReviewModal();
+  });
+}
+
+// Star rating interaction
+let selectedStars = 0;
+const starEls = document.querySelectorAll('.star');
+const starLabel = document.getElementById('starLabel');
+
+starEls.forEach(function (star) {
+  star.addEventListener('mouseover', function () {
+    const val = parseInt(this.dataset.value);
+    starEls.forEach(function (s) {
+      s.classList.toggle('hovered', parseInt(s.dataset.value) <= val);
+    });
+  });
+  star.addEventListener('mouseout', function () {
+    starEls.forEach(function (s) { s.classList.remove('hovered'); });
+  });
+  star.addEventListener('click', function () {
+    selectedStars = parseInt(this.dataset.value);
+    starEls.forEach(function (s) {
+      s.classList.toggle('selected', parseInt(s.dataset.value) <= selectedStars);
+    });
+    if (starLabel) starLabel.textContent = STAR_LABELS[selectedStars];
+  });
+});
+
+// Submit review
+const submitReviewBtn = document.getElementById('submitReviewBtn');
+let editingReviewId = null; // null = new review, string = editing existing id
+
+if (submitReviewBtn) {
+  submitReviewBtn.addEventListener('click', function () {
+    const name = document.getElementById('reviewName').value.trim();
+    const text = document.getElementById('reviewText').value.trim();
+
+    if (!selectedStars) { showToast('Please select a star rating.', 'error'); return; }
+    if (!name) { showToast('Please enter your name.', 'error'); return; }
+    if (!text) { showToast('Please write your review.', 'error'); return; }
+
+    const reviews = JSON.parse(localStorage.getItem('wc_reviews') || '[]');
+    const grid = document.getElementById('testimonialsGrid');
+
+    if (editingReviewId) {
+      // ---- EDIT MODE: update existing review ----
+      const idx = reviews.findIndex(function (r) { return r.id === editingReviewId; });
+      if (idx !== -1) {
+        reviews[idx].name = name;
+        reviews[idx].text = text;
+        reviews[idx].stars = selectedStars;
+        localStorage.setItem('wc_reviews', JSON.stringify(reviews));
+        // Replace the card in the DOM
+        const existing = document.querySelector('[data-review-id="' + editingReviewId + '"]');
+        if (existing && grid) {
+          const updated = buildReviewCard(reviews[idx]);
+          existing.replaceWith(updated);
+        }
+        showToast('Review updated! ✏️');
+      }
+      editingReviewId = null;
+    } else {
+      // ---- NEW REVIEW ----
+      const review = { 
+        id: 'rv_' + Date.now(), 
+        name: name, 
+        text: text, 
+        stars: selectedStars, 
+        date: Date.now(),
+        sessionId: userSessionId
+      };
+      reviews.unshift(review);
+      localStorage.setItem('wc_reviews', JSON.stringify(reviews));
+      if (grid) grid.prepend(buildReviewCard(review));
+      showToast('Thank you for your review! 🌟');
+    }
+
+    closeReviewModal();
+    resetReviewForm();
+  });
+}
+
+function resetReviewForm() {
+  selectedStars = 0;
+  starEls.forEach(function (s) { s.classList.remove('selected', 'hovered'); });
+  if (starLabel) starLabel.textContent = 'Tap a star to rate';
+  document.getElementById('reviewName').value = '';
+  document.getElementById('reviewText').value = '';
+  // Reset modal title back to "new review" mode
+  const h2 = document.querySelector('.review-modal h2');
+  const sub = document.querySelector('.review-modal-sub');
+  const btn = document.getElementById('submitReviewBtn');
+  if (h2) h2.textContent = 'How Was Your Experience?';
+  if (sub) sub.textContent = "Your feedback helps us improve. We'd love to hear from you!";
+  if (btn) btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Review';
+  editingReviewId = null;
+}
+
+function buildReviewCard(r) {
+  const starStr = '★'.repeat(r.stars) + '☆'.repeat(5 - r.stars);
+  const initial = r.name.charAt(0).toUpperCase();
+  const card = document.createElement('div');
+  card.className = 'testimonial-card new-review';
+  card.setAttribute('data-review-id', r.id);
+  let actionsHtml = '';
+  if (r.sessionId === userSessionId) {
+    actionsHtml = 
+      '<div class="review-actions">' +
+      '<button class="review-action-btn edit-review-btn" data-id="' + r.id + '" title="Edit Review">✏️ Edit</button>' +
+      '<button class="review-action-btn delete-review-btn" data-id="' + r.id + '" title="Delete Review">🗑️ Delete</button>' +
+      '</div>';
+  }
+
+  card.innerHTML =
+    '<div class="stars">' + starStr + '</div>' +
+    '<p>"' + r.text + '"</p>' +
+    '<div class="testimonial-author">' +
+    '<div class="author-avatar">' + initial + '</div>' +
+    '<div><strong>' + r.name + '</strong><span>Verified Customer</span></div>' +
+    '</div>' + actionsHtml;
+
+  // Attach edit listener
+  if (card.querySelector('.edit-review-btn')) {
+  card.querySelector('.edit-review-btn').addEventListener('click', function () {
+    const reviews = JSON.parse(localStorage.getItem('wc_reviews') || '[]');
+    const review = reviews.find(function (rv) { return rv.id === r.id; });
+    if (!review) return;
+    // Pre-fill the modal
+    document.getElementById('reviewName').value = review.name;
+    document.getElementById('reviewText').value = review.text;
+    selectedStars = review.stars;
+    starEls.forEach(function (s) {
+      s.classList.toggle('selected', parseInt(s.dataset.value) <= review.stars);
+    });
+    if (starLabel) starLabel.textContent = STAR_LABELS[review.stars];
+    // Update modal UI to "Edit" mode
+    const h2 = document.querySelector('.review-modal h2');
+    const sub = document.querySelector('.review-modal-sub');
+    const btn = document.getElementById('submitReviewBtn');
+    if (h2) h2.textContent = 'Edit Your Review';
+    if (sub) sub.textContent = 'Update your stars and message below.';
+    if (btn) btn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+    editingReviewId = r.id;
+    openReviewModal();
+  });
+  }
+
+  // Attach delete listener
+  if (card.querySelector('.delete-review-btn')) {
+  card.querySelector('.delete-review-btn').addEventListener('click', function () {
+    if (!confirm('Delete your review? This cannot be undone.')) return;
+    let reviews = JSON.parse(localStorage.getItem('wc_reviews') || '[]');
+    reviews = reviews.filter(function (rv) { return rv.id !== r.id; });
+    localStorage.setItem('wc_reviews', JSON.stringify(reviews));
+    card.style.transition = 'opacity 0.3s, transform 0.3s';
+    card.style.opacity = '0';
+    card.style.transform = 'scale(0.9)';
+    setTimeout(function () { card.remove(); }, 320);
+    showToast('Review deleted.', 'error');
+  });
+  }
+
+  return card;
+}
+
+// Load previously saved reviews from localStorage
+(function loadSavedReviews() {
+  const reviews = JSON.parse(localStorage.getItem('wc_reviews') || '[]');
+  const grid = document.getElementById('testimonialsGrid');
+  if (!grid || !reviews.length) return;
+  
+  let needsUpdate = false;
+  reviews.slice().reverse().forEach(function (r) {
+    // Ensure legacy reviews without id get one
+    if (!r.id) {
+      r.id = 'rv_' + (r.date || Date.now() + Math.floor(Math.random() * 10000));
+      needsUpdate = true;
+    }
+    grid.prepend(buildReviewCard(r));
+  });
+
+  if (needsUpdate) {
+    localStorage.setItem('wc_reviews', JSON.stringify(reviews));
+  }
+})();
