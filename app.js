@@ -716,6 +716,8 @@ function buildReviewCard(r) {
   if (needsUpdate) {
     localStorage.setItem('wc_reviews', JSON.stringify(reviews));
   }
+})();
+
 // ===== DYNAMIC WORKING HOURS =====
 (function initWorkingHours() {
   const statusBadge = document.getElementById('workingStatus');
@@ -739,6 +741,4 @@ function buildReviewCard(r) {
     statusBadge.style.color = '#FF6B6B';
     statusBadge.style.borderColor = 'rgba(255, 107, 107, 0.3)';
   }
-})();
-
 })();
