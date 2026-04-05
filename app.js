@@ -1,10 +1,9 @@
 // ===== NAVBAR SCROLL =====
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
-  if (window.scrollY > 50) { navbar.style.padding = '10px 0'; }
-  else { navbar.style.padding = '16px 0'; }
-
-  // Back to Top button visibility
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+    
+    // Back to Top button visibility
   const btt = document.getElementById('backToTop');
   if (window.scrollY > 500) { btt.classList.add('active'); }
   else { btt.classList.remove('active'); }
