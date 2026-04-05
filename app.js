@@ -170,19 +170,7 @@ createParticles();
 
 // ===== LUXURY UX SUITE =====
 
-// 1. Splash Screen Timeout
-window.addEventListener('load', () => {
-  const splash = document.getElementById('splash-screen');
-  setTimeout(() => {
-    if (splash) {
-      splash.style.opacity = '0';
-      splash.style.visibility = 'hidden';
-      setTimeout(() => splash.remove(), 800);
-    }
-  }, 1000);
-});
-
-// 2. Custom Glowing Cursor
+// 1. Custom Glowing Cursor
 const cursorBlob = document.getElementById('cursor-blob');
 document.addEventListener('mousemove', (e) => {
   if (cursorBlob) {
@@ -196,18 +184,16 @@ const interactables = document.querySelectorAll('a, button, .service-card, .port
 interactables.forEach(el => {
   el.addEventListener('mouseenter', () => {
     if (cursorBlob) {
-      cursorBlob.style.width = '550px';
-      cursorBlob.style.height = '550px';
-      cursorBlob.style.background = 'radial-gradient(circle, rgba(167, 139, 250, 0.4) 0%, rgba(108, 99, 255, 0.1) 50%, transparent 80%)';
-      cursorBlob.style.filter = 'blur(60px)';
+      cursorBlob.style.width = '450px';
+      cursorBlob.style.height = '450px';
+      cursorBlob.style.background = 'radial-gradient(circle, rgba(167, 139, 250, 0.2) 0%, transparent 70%)';
     }
   });
   el.addEventListener('mouseleave', () => {
     if (cursorBlob) {
-      cursorBlob.style.width = '350px';
-      cursorBlob.style.height = '350px';
-      cursorBlob.style.background = 'radial-gradient(circle, rgba(167, 139, 250, 0.25) 0%, rgba(108, 99, 255, 0.1) 40%, transparent 75%)';
-      cursorBlob.style.filter = 'blur(50px)';
+      cursorBlob.style.width = '300px';
+      cursorBlob.style.height = '300px';
+      cursorBlob.style.background = 'radial-gradient(circle, rgba(108, 99, 255, 0.15) 0%, transparent 70%)';
     }
   });
 });
