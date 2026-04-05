@@ -72,7 +72,7 @@ function createParticles() {
     });
   }
 
-  let mouse = { x: -1000, y: -1000, radius: 220 };
+  let mouse = { x: -1000, y: -1000, radius: 150 };
 
   // Track mouse across the whole page viewport
   window.addEventListener('mousemove', (e) => {
