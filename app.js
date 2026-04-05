@@ -58,8 +58,8 @@ function createParticles() {
   const particles = [];
   const colors = ['#6C63FF', '#FF6B6B', '#FFD43B', '#51CF66', '#a78bfa'];
   
-  // Performance Density: 50 on mobile for smoothness, 300 on desktop for WOW
-  const particleCount = window.innerWidth < 768 ? 50 : 300;
+  // Performance Density: 100 on mobile for smoothness, 300 on desktop for WOW
+  const particleCount = window.innerWidth < 768 ? 100 : 300;
   for (let i = 0; i < particleCount; i++) {
     particles.push({
       x: Math.random() * width,
@@ -166,7 +166,6 @@ function createParticles() {
         }
       }
     }
-    requestAnimationFrame(animate);
   }
   animate();
 }
