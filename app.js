@@ -58,8 +58,8 @@ function createParticles() {
   const particles = [];
   const colors = ['#6C63FF', '#FF6B6B', '#FFD43B', '#51CF66', '#a78bfa'];
   
-  // Performance Density: 120 on mobile for speed, 250 on desktop for WOW
-  const particleCount = window.innerWidth < 768 ? 120 : 250;
+  // Performance Density: 50 on mobile for smoothness, 300 on desktop for WOW
+  const particleCount = window.innerWidth < 768 ? 50 : 300;
   for (let i = 0; i < particleCount; i++) {
     particles.push({
       x: Math.random() * width,
@@ -145,25 +145,28 @@ function createParticles() {
       ctx.fill();
     });
 
-    // Draw connecting lines with reduced distance threshold for dense network
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        let dx = particles[i].x - particles[j].x;
-        let dy = particles[i].y - particles[j].y;
-        let distSq = dx * dx + dy * dy;
-        
-        if (distSq < 3500) { 
-          let dist = Math.sqrt(distSq);
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = particles[i].color;
-          ctx.globalAlpha = 0.15 * (1 - dist / Math.sqrt(7000));
-          ctx.lineWidth = 1;
-          ctx.stroke();
+    // DRAW LINES: Skip on mobile because it's a huge CPU drain (O(N^2))
+    if (window.innerWidth >= 768) {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          let dx = particles[i].x - particles[j].x;
+          let dy = particles[i].y - particles[j].y;
+          let distSq = dx * dx + dy * dy;
+          
+          if (distSq < 3500) { 
+            let dist = Math.sqrt(distSq);
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = particles[i].color;
+            ctx.globalAlpha = 0.15 * (1 - dist / Math.sqrt(7000));
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
         }
       }
     }
+    requestAnimationFrame(animate);
   }
   animate();
 }
