@@ -73,7 +73,8 @@ function createParticles() {
     });
   }
 
-  let mouse = { x: -1000, y: -1000, radius: 220 }; // Slightly larger radius to grab more particles
+  let mouse = { x: -1000, y: -1000, radius: 220 };
+  let voidHole = { x: -1000, y: -1000, active: false, timer: 0 };
 
   // Track mouse across the whole page viewport
   window.addEventListener('mousemove', (e) => {
@@ -81,6 +82,9 @@ function createParticles() {
     mouse.y = e.clientY;
   });
   window.addEventListener('mouseleave', () => {
+    if (mouse.x !== -1000) {
+      voidHole.x = mouse.x; voidHole.y = mouse.y; voidHole.active = true; voidHole.timer = 50;
+    }
     mouse.x = -1000;
     mouse.y = -1000;
   });
@@ -90,6 +94,7 @@ function createParticles() {
     if (e.touches.length > 0) {
       mouse.x = e.touches[0].clientX;
       mouse.y = e.touches[0].clientY;
+      voidHole.active = false; // Cancel void fill if touching again
     }
   }, { passive: true });
   
@@ -101,6 +106,9 @@ function createParticles() {
   }, { passive: true });
 
   window.addEventListener('touchend', () => {
+    if (mouse.x !== -1000) {
+      voidHole.x = mouse.x; voidHole.y = mouse.y; voidHole.active = true; voidHole.timer = 50;
+    }
     mouse.x = -1000;
     mouse.y = -1000;
   });
@@ -109,9 +117,14 @@ function createParticles() {
     requestAnimationFrame(animate);
     ctx.clearRect(0, 0, width, height);
 
+    if (voidHole.active) {
+      voidHole.timer--;
+      if (voidHole.timer <= 0) voidHole.active = false;
+    }
+
     particles.forEach(p => {
-      // Attraction logic (Gravity) instead of Anti-Gravity
       if (mouse.x !== -1000) {
+        // Repulsion logic (Anti-Gravity) when touched
         let dx = p.x - mouse.x;
         let dy = p.y - mouse.y;
         let distance = Math.sqrt(dx * dx + dy * dy);
@@ -120,9 +133,21 @@ function createParticles() {
           const forceDirectionX = dx / distance;
           const forceDirectionY = dy / distance;
           const force = (mouse.radius - distance) / mouse.radius;
-          // Attract strongly towards the mouse/touch point
-          p.vx -= forceDirectionX * force * 5.0; 
-          p.vy -= forceDirectionY * force * 5.0;
+          p.vx += forceDirectionX * force * 5.0; // Repel strongly!
+          p.vy += forceDirectionY * force * 5.0;
+        }
+      } else if (voidHole.active) {
+        // Void filling logic (Gravity) when finger is lifted!
+        let dx = p.x - voidHole.x;
+        let dy = p.y - voidHole.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < mouse.radius * 1.5) {
+          const forceDirectionX = dx / distance;
+          const forceDirectionY = dy / distance;
+          const force = ((mouse.radius * 1.5) - distance) / (mouse.radius * 1.5);
+          p.vx -= forceDirectionX * force * 4.0; // Suck back in!
+          p.vy -= forceDirectionY * force * 4.0;
         }
       }
       
