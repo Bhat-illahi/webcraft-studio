@@ -73,7 +73,8 @@ function createParticles() {
     });
   }
 
-  let mouse = { x: -1000, y: -1000, radius: 150 };
+  const baseRadius = window.innerWidth < 768 ? 70 : 150;
+  let mouse = { x: -1000, y: -1000, radius: baseRadius };
 
   // Track mouse across the whole page viewport
   window.addEventListener('mousemove', (e) => {
