@@ -849,9 +849,9 @@ async function loadSiteSettings() {
                     const r = parseInt(hex.slice(1, 3), 16);
                     const g = parseInt(hex.slice(3, 5), 16);
                     const b = parseInt(hex.slice(5, 7), 16);
-                    banner.style.background = `rgba(${r}, ${g}, ${b}, 0.45)`;
+                    banner.style.setProperty('background', `rgba(${r}, ${g}, ${b}, 0.55)`, 'important'); 
                 } else {
-                    banner.style.background = hex;
+                    banner.style.setProperty('background', hex, 'important');
                 }
             }
             if (s('note_blur')) {

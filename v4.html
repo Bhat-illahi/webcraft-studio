@@ -251,12 +251,13 @@
           else preview.style.margin = "0 auto";
 
           if (isBox) {
-            preview.style.background = hexToRgba(bg, 0.45);
-            preview.style.backdropFilter = `blur(${blur}px)`;
-            preview.style.webkitBackdropFilter = `blur(${blur}px)`;
-            preview.style.padding = `${padding}px 40px`;
-            preview.style.borderRadius = radius + 'px';
-          } else {
+          preview.style.setProperty('background', hexToRgba(bg, 0.55), 'important');
+          preview.style.backdropFilter = `blur(${blur}px)`;
+          preview.style.webkitBackdropFilter = `blur(${blur}px)`;
+          preview.style.padding = `${padding}px 40px`;
+          preview.style.borderRadius = radius + 'px';
+          preview.style.setProperty('border', '1px solid rgba(255,255,255,0.2)', 'important');
+        } else {
             preview.style.background = 'none';
             preview.style.backdropFilter = 'none';
             preview.style.padding = '10px';
