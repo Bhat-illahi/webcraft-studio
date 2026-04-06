@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebCraft | Pricing Admin</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <title>WebCraft | Owner Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -12,355 +12,409 @@
             --bg: #050510;
             --surface: #0f0f1e;
             --text: #f0f0ff;
-            --text-muted: #9090b8;
-            --border: rgba(108, 99, 255, 0.2);
+            --muted: #9090b8;
+            --border: rgba(108,99,255,0.2);
             --success: #00c853;
+            --danger: #ff4757;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
         /* AUTH GATE */
         #auth-gate {
-            position: fixed; inset: 0; background: var(--bg); z-index: 10000;
-            display: flex; align-items: center; justify-content: center; padding: 20px;
+            position: fixed; inset: 0; background: var(--bg); z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
         }
         .auth-box {
-            background: var(--surface); padding: 40px; border-radius: 24px; border: 1px solid var(--border);
-            width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            background: var(--surface); border: 1px solid var(--border); border-radius: 24px;
+            padding: 48px 40px; width: 100%; max-width: 400px; text-align: center;
         }
-        .auth-box i { color: var(--primary); font-size: 3rem; margin-bottom: 20px; }
-        .auth-box h2 { font-family: 'Space Grotesk', sans-serif; margin-bottom: 10px; }
-        .auth-box p { color: var(--text-muted); margin-bottom: 30px; }
-        input[type="password"] {
-            width: 100%; padding: 15px; border-radius: 12px; border: 1px solid var(--border);
-            background: #000; color: #fff; font-size: 1.1rem; text-align: center; margin-bottom: 20px; outline: none;
+        .auth-box .icon { font-size: 3rem; color: var(--primary); margin-bottom: 20px; }
+        .auth-box h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; margin-bottom: 8px; }
+        .auth-box p { color: var(--muted); margin-bottom: 30px; font-size: 0.9rem; }
+        .auth-input {
+            width: 100%; padding: 14px 18px; border-radius: 12px; border: 1px solid var(--border);
+            background: rgba(255,255,255,0.05); color: #fff; font-size: 1.1rem;
+            text-align: center; letter-spacing: 4px; margin-bottom: 16px; outline: none;
+            transition: border 0.3s;
         }
+        .auth-input:focus { border-color: var(--primary); }
         .btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-            padding: 15px 30px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer;
-            transition: 0.3s; width: 100%;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 14px 28px; border-radius: 12px; border: none; font-weight: 700;
+            font-size: 0.95rem; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif;
         }
-        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 10px 20px rgba(108,99,255,0.3); }
-        .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn-primary { background: var(--primary); color: #fff; width: 100%; }
+        .btn-primary:hover { filter: brightness(1.15); transform: translateY(-2px); }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-outline { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+        .btn-danger { background: rgba(255,71,87,0.15); color: var(--danger); border: 1px solid rgba(255,71,87,0.3); }
+        .btn-add { background: rgba(108,99,255,0.15); color: var(--primary); border: 1px dashed var(--primary); width: 100%; padding: 16px; margin-top: 10px; border-radius: 16px; font-size: 1rem; }
+        .btn-add:hover { background: rgba(108,99,255,0.25); }
 
-        /* MAIN DASHBOARD */
-        .dashboard { max-width: 1200px; margin: 0 auto; padding: 40px 20px; display: none; }
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        /* DASHBOARD */
+        #main-dashboard { display: none; max-width: 1300px; margin: 0 auto; padding: 40px 20px 120px; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
         .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-        .logout-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
+        .topbar-actions { display: flex; gap: 10px; align-items: center; }
 
-        .section-title { margin-bottom: 25px; border-left: 4px solid var(--primary); padding-left: 15px; }
-        .section-title h2 { font-size: 1.5rem; font-family: 'Space Grotesk', sans-serif; }
+        .section { margin-bottom: 50px; }
+        .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+        .section-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; }
+        .section-pill { background: rgba(108,99,255,0.15); color: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-bottom: 50px; }
-        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 25px; }
-
-        .field { margin-bottom: 20px; }
-        .field label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        input[type="text"], textarea {
-            width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
-            background: #050510; color: #fff; font-family: inherit; font-size: 1rem; outline: none;
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 24px; }
+        .field { margin-bottom: 16px; }
+        .field:last-child { margin-bottom: 0; }
+        .field label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .field input, .field textarea {
+            width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.04); color: #fff; font-family: inherit; font-size: 0.95rem; outline: none;
+            transition: border 0.3s;
         }
-        textarea { resize: vertical; min-height: 80px; }
-        .checkbox-field { display: flex; align-items: center; gap: 10px; font-weight: 600; cursor: pointer; }
-        input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); }
+        .field input:focus, .field textarea:focus { border-color: var(--primary); }
+        .field textarea { resize: vertical; min-height: 80px; }
 
+        /* PRICING GRID */
+        #plans-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .plan-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 24px;
+            position: relative; transition: border 0.3s;
+        }
+        .plan-card.featured { border-color: var(--primary); box-shadow: 0 0 30px rgba(108,99,255,0.15); }
+        .plan-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .plan-number { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; color: var(--muted); }
+        .remove-btn { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 0.85rem; padding: 4px 8px; border-radius: 6px; transition: background 0.3s; }
+        .remove-btn:hover { background: rgba(255,71,87,0.1); }
+        .featured-toggle { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); cursor: pointer; margin-top: 16px; }
+        .featured-toggle input { accent-color: var(--primary); width: 16px; height: 16px; }
+
+        /* SAVE BAR */
         .save-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(15,15,30,0.95);
-            backdrop-filter: blur(10px); border-top: 1px solid var(--border); padding: 20px;
-            display: flex; justify-content: flex-end; z-index: 100;
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(5,5,16,0.95); backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border); padding: 16px 30px;
+            display: none; justify-content: flex-end; align-items: center; gap: 12px; z-index: 100;
         }
-        .save-bar .btn { width: auto; min-width: 200px; }
 
-        .toast {
-            position: fixed; bottom: 100px; right: 30px; background: var(--success); color: #fff;
-            padding: 15px 25px; border-radius: 12px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            display: none; animation: slideUp 0.3s ease;
+        /* NOTIFICATION */
+        #notify {
+            position: fixed; top: 30px; right: 30px; z-index: 9999;
+            padding: 16px 24px; border-radius: 14px; font-weight: 700; font-size: 0.9rem;
+            display: none; align-items: center; gap: 10px; animation: slideIn 0.4s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
         }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        #notify.success { background: var(--success); color: #fff; }
+        #notify.error { background: var(--danger); color: #fff; }
+        @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        @media (max-width: 600px) { .contact-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <!-- AUTH GATE -->
-    <div id="auth-gate">
-        <div class="auth-box">
-            <i class="fas fa-lock"></i>
-            <h2>Owner Access</h2>
-            <p>Enter your master key to manage pricing.</p>
-            <input type="password" id="master-key" placeholder="••••••••" onkeydown="if(event.key==='Enter') login()">
-            <button class="btn btn-primary" onclick="login()">Unlock Dashboard</button>
+<!-- AUTH GATE -->
+<div id="auth-gate">
+    <div class="auth-box">
+        <div class="icon"><i class="fas fa-shield-alt"></i></div>
+        <h2>Owner Access</h2>
+        <p>Enter your master key to manage your website content.</p>
+        <input type="password" class="auth-input" id="master-key" placeholder="••••••••"
+               onkeydown="if(event.key==='Enter') login()">
+        <button class="btn btn-primary" onclick="login()">
+            <i class="fas fa-unlock-alt"></i> Unlock Dashboard
+        </button>
+    </div>
+</div>
+
+<!-- MAIN DASHBOARD -->
+<div id="main-dashboard">
+    <div class="topbar">
+        <div class="logo">⚡ WebCraft <em>Admin</em></div>
+        <div class="topbar-actions">
+            <a href="https://bhat-illahi.github.io/webcraft-studio/" target="_blank" class="btn btn-outline">
+                <i class="fas fa-external-link-alt"></i> View Live Site
+            </a>
+            <button class="btn btn-outline" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD -->
-    <div class="dashboard" id="main-dashboard">
-        <header>
-            <div class="logo">⚡ WebCraft <em>Admin</em></div>
-            <button class="logout-btn" onclick="logout()">Logout</button>
-        </header>
-
-        <section>
-            <div class="section-title">
-                <h2>Contact Information</h2>
-            </div>
-            <div class="grid" style="grid-template-columns: 1fr 1fr;">
-                <div class="card">
-                    <div class="field">
-                        <label>Primary Phone Number</label>
-                        <input type="text" id="site_phone" placeholder="+91 XXXX XXX XXX">
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="field">
-                        <label>Primary Email Address</label>
-                        <input type="text" id="site_email" placeholder="owner@example.com">
-                    </div>
+    <!-- Contact Info -->
+    <section class="section">
+        <div class="section-header">
+            <h2>Contact Information</h2>
+            <span class="section-pill">Live Sync</span>
+        </div>
+        <div class="contact-grid">
+            <div class="card">
+                <div class="field">
+                    <label>Primary Phone Number</label>
+                    <input type="text" id="site_phone" placeholder="+91 84929 22783">
                 </div>
             </div>
-        </section>
-
-        <section>
-            <div class="section-title">
-                <h2>Service Packages</h2>
-            </div>
-            <div class="grid" id="pricing-grid">
-                <!-- Card 1 -->
-                <div class="card pricing-card" data-idx="0">
-                    <div class="field">
-                        <label>Plan Badge</label>
-                        <input type="text" class="p-badge" placeholder="Starter">
-                    </div>
-                    <div class="field">
-                        <label>Plan Name</label>
-                        <input type="text" class="p-name" placeholder="Basic Site">
-                    </div>
-                    <div class="field">
-                        <label>Price Display</label>
-                        <input type="text" class="p-price" placeholder="₹2500 – ₹3000">
-                    </div>
-                    <div class="field">
-                        <label>Features (comma separated)</label>
-                        <textarea class="p-features" placeholder="Feature 1, Feature 2, Feature 3"></textarea>
-                    </div>
-                    <label class="checkbox-field">
-                        <input type="checkbox" class="p-featured"> Most Popular / Highlighted
-                    </label>
-                </div>
-                <!-- Card 2 -->
-                <div class="card pricing-card" data-idx="1">
-                    <div class="field">
-                        <label>Plan Badge</label>
-                        <input type="text" class="p-badge" placeholder="Professional">
-                    </div>
-                    <div class="field">
-                        <label>Plan Name</label>
-                        <input type="text" class="p-name" placeholder="Business Site">
-                    </div>
-                    <div class="field">
-                        <label>Price Display</label>
-                        <input type="text" class="p-price" placeholder="₹3000 – ₹5000">
-                    </div>
-                    <div class="field">
-                        <label>Features (comma separated)</label>
-                        <textarea class="p-features" placeholder="Feature 1, Feature 2, Feature 3"></textarea>
-                    </div>
-                    <label class="checkbox-field">
-                        <input type="checkbox" class="p-featured"> Most Popular / Highlighted
-                    </label>
-                </div>
-                <!-- Card 3 -->
-                <div class="card pricing-card" data-idx="2">
-                    <div class="field">
-                        <label>Plan Badge</label>
-                        <input type="text" class="p-badge" placeholder="Premium">
-                    </div>
-                    <div class="field">
-                        <label>Plan Name</label>
-                        <input type="text" class="p-name" placeholder="E-Commerce Store">
-                    </div>
-                    <div class="field">
-                        <label>Price Display</label>
-                        <input type="text" class="p-price" placeholder="₹5000+">
-                    </div>
-                    <div class="field">
-                        <label>Features (comma separated)</label>
-                        <textarea class="p-features" placeholder="Feature 1, Feature 2, Feature 3"></textarea>
-                    </div>
-                    <label class="checkbox-field">
-                        <input type="checkbox" class="p-featured"> Most Popular / Highlighted
-                    </label>
+            <div class="card">
+                <div class="field">
+                    <label>Primary Email Address</label>
+                    <input type="text" id="site_email" placeholder="bhatillahi21@gmail.com">
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <div style="height: 100px;"></div>
-    </div>
-
-    <div class="save-bar" id="save-bar" style="display:none;">
-        <a href="https://bhat-illahi.github.io/webcraft-studio/" target="_blank" class="btn" style="background:transparent;border:1px solid rgba(108,99,255,0.4);color:#9090b8;width:auto;margin-right:10px;">
-            <i class="fas fa-external-link-alt"></i> View Live Site
-        </a>
-        <button class="btn btn-primary" id="saveBtn" onclick="saveAll()">
-            <i class="fas fa-save"></i> Save & Publish Updates
+    <!-- Pricing Plans -->
+    <section class="section">
+        <div class="section-header">
+            <h2>Service Packages</h2>
+            <span class="section-pill">Auto-Published</span>
+        </div>
+        <div id="plans-container">
+            <!-- Plans render here dynamically -->
+        </div>
+        <button class="btn btn-add" onclick="addPlan()">
+            <i class="fas fa-plus-circle"></i> Add New Pricing Plan
         </button>
-    </div>
+    </section>
+</div>
 
-    <div class="toast" id="toast">Successfully updated live site! 🚀</div>
+<!-- SAVE BAR -->
+<div class="save-bar" id="save-bar">
+    <a href="https://bhat-illahi.github.io/webcraft-studio/" target="_blank" class="btn btn-outline">
+        <i class="fas fa-eye"></i> View Live Site
+    </a>
+    <button class="btn btn-primary" id="saveBtn" onclick="saveAll()">
+        <i class="fas fa-cloud-upload-alt"></i> Save & Publish
+    </button>
+</div>
 
-    <!-- 1. LOAD SUPABASE SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- NOTIFICATION -->
+<div id="notify"></div>
 
-    <!-- 2. CORE AUTH LOGIC (No dependencies) -->
-    <script>
-        function login() {
-            const keyInput = document.getElementById('master-key');
-            if (!keyInput) return;
-            
-            const key = keyInput.value;
-            if (key === 'mumin69') {
-                localStorage.setItem('admin_auth', 'true');
-                showDashboard();
-            } else {
-                alert('Invalid Master Key');
-            }
-        }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    // ===================== CONFIG =====================
+    const SB_URL  = 'https://imuqwquuytcfuqbpaqoa.supabase.co';
+    const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxYnBhcW9hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NTQwNzcsImV4cCI6MjA5MTAzMDA3N30.J_E1pbC8nJKMsIMJE-IAnI_3lV47q6WX0HuSSWIhpd4';
+    const MASTER  = 'mumin69';
+    let sb = null;
+    let plans = [];
 
-        function logout() {
-            localStorage.removeItem('admin_auth');
-            window.location.reload();
-        }
-
-        function showDashboard() {
+    // ===================== AUTH =====================
+    function login() {
+        const val = document.getElementById('master-key').value;
+        if (val === MASTER) {
+            localStorage.setItem('wc_auth', '1');
             document.getElementById('auth-gate').style.display = 'none';
-            const dash = document.getElementById('main-dashboard');
-            const bar = document.getElementById('save-bar');
-            if (dash) dash.style.display = 'block';
-            if (bar) bar.style.display = 'flex';
-            
-            // Trigger data load if Supabase is ready
-            if (typeof initAndLoad === 'function') {
-                initAndLoad();
-            }
+            document.getElementById('main-dashboard').style.display = 'block';
+            document.getElementById('save-bar').style.display = 'flex';
+            initSupabase();
+        } else {
+            shake();
+            showNotify('Wrong master key!', 'error');
         }
+    }
 
-        // Auto-check on load
-        window.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('admin_auth') === 'true') {
-                showDashboard();
+    function logout() {
+        localStorage.removeItem('wc_auth');
+        location.reload();
+    }
+
+    function shake() {
+        const el = document.getElementById('master-key');
+        el.style.borderColor = 'var(--danger)';
+        setTimeout(() => el.style.borderColor = '', 1000);
+    }
+
+    // ===================== INIT =====================
+    function initSupabase() {
+        try {
+            sb = window.supabase.createClient(SB_URL, SB_KEY);
+            loadData();
+        } catch(e) {
+            showNotify('Cloud connection failed: ' + e.message, 'error');
+        }
+    }
+
+    // ===================== LOAD DATA =====================
+    async function loadData() {
+        if (!sb) return;
+        try {
+            // Load contact settings
+            const { data: settings, error: se } = await sb.from('site_settings').select('*');
+            if (se) throw se;
+            if (settings) {
+                const phone = settings.find(s => s.key === 'primary_phone')?.value || '';
+                const email = settings.find(s => s.key === 'primary_email')?.value || '';
+                document.getElementById('site_phone').value = phone;
+                document.getElementById('site_email').value = email;
             }
+
+            // Load pricing
+            const { data: pricing, error: pe } = await sb.from('pricing').select('*').order('id');
+            if (pe) throw pe;
+
+            plans = pricing && pricing.length ? pricing : getDefaultPlans();
+            renderPlans();
+        } catch(e) {
+            console.error('Load error:', e);
+            plans = getDefaultPlans();
+            renderPlans();
+        }
+    }
+
+    // ===================== DEFAULT PLANS =====================
+    function getDefaultPlans() {
+        return [
+            { id: 1, badge: 'Starter', name: 'Basic Site', price: '2500 - 3000', features: '1-Page Site, Mobile Friendly, Contact Form, Basic SEO', featured: false },
+            { id: 2, badge: 'Professional', name: 'Business Site', price: '3000 - 5000', features: '5-Page Site, Mobile Friendly, SEO Optimized, WhatsApp Button', featured: true },
+            { id: 3, badge: 'Premium', name: 'E-Commerce Store', price: '5000+', features: 'Full Online Store, Product Listings, Payment Integration, Admin Panel', featured: false }
+        ];
+    }
+
+    // ===================== RENDER PLANS =====================
+    function renderPlans() {
+        const container = document.getElementById('plans-container');
+        container.innerHTML = '';
+        plans.forEach((plan, i) => {
+            const div = document.createElement('div');
+            div.className = 'plan-card' + (plan.featured ? ' featured' : '');
+            div.dataset.idx = i;
+            div.innerHTML = `
+                <div class="plan-card-header">
+                    <span class="plan-number">Plan #${i + 1}</span>
+                    <button class="remove-btn" onclick="removePlan(${i})" title="Remove Plan">
+                        <i class="fas fa-trash-alt"></i> Remove
+                    </button>
+                </div>
+                <div class="field">
+                    <label>Plan Badge (e.g. Starter)</label>
+                    <input type="text" value="${esc(plan.badge)}" oninput="plans[${i}].badge=this.value">
+                </div>
+                <div class="field">
+                    <label>Plan Name</label>
+                    <input type="text" value="${esc(plan.name)}" oninput="plans[${i}].name=this.value">
+                </div>
+                <div class="field">
+                    <label>Price Display</label>
+                    <input type="text" value="${esc(plan.price)}" oninput="plans[${i}].price=this.value">
+                </div>
+                <div class="field">
+                    <label>Features (comma separated)</label>
+                    <textarea oninput="plans[${i}].features=this.value">${esc(plan.features)}</textarea>
+                </div>
+                <label class="featured-toggle">
+                    <input type="checkbox" ${plan.featured ? 'checked' : ''} onchange="plans[${i}].featured=this.checked;renderPlans()">
+                    ⭐ Mark as Most Popular
+                </label>
+            `;
+            container.appendChild(div);
         });
-    </script>
+    }
 
-    <!-- 3. DATABASE SYNC LOGIC -->
-    <script>
-        const SUPABASE_URL = 'https://imuqwquuytcfuqbpaqoa.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxYnBhcW9hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NTQwNzcsImV4cCI6MjA5MTAzMDA3N30.J_E1pbC8nJKMsIMJE-IAnI_3lV47q6WX0HuSSWIhpd4';
-        
-        let supabase;
+    function esc(str) {
+        return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
 
-        function initAndLoad() {
-            try {
-                if (!window.supabase) {
-                    console.error("Supabase SDK not loaded yet.");
-                    return;
-                }
-                if (!supabase) {
-                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                }
-                loadData();
-            } catch (err) {
-                console.error("Supabase Init Error:", err);
-            }
+    // ===================== ADD / REMOVE PLAN =====================
+    function addPlan() {
+        const newId = plans.length ? Math.max(...plans.map(p => p.id || 0)) + 1 : 1;
+        plans.push({ id: newId, badge: 'New Plan', name: 'Custom Package', price: 'Contact Us', features: 'Feature 1, Feature 2, Feature 3', featured: false });
+        renderPlans();
+        // Scroll to new card
+        setTimeout(() => {
+            const cards = document.querySelectorAll('.plan-card');
+            if (cards.length) cards[cards.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+    }
+
+    function removePlan(idx) {
+        if (plans.length <= 1) { showNotify('You must have at least 1 plan!', 'error'); return; }
+        if (!confirm('Remove this plan?')) return;
+        plans.splice(idx, 1);
+        renderPlans();
+    }
+
+    // ===================== SAVE ALL =====================
+    async function saveAll() {
+        const btn = document.getElementById('saveBtn');
+        if (!sb) {
+            showNotify('Not connected to cloud. Please refresh!', 'error');
+            return;
         }
 
-        async function loadData() {
-            if (!supabase) return;
-            try {
-                const { data: settings } = await supabase.from('site_settings').select('*');
-                if (settings) {
-                    const phone = settings.find(s => s.key === 'primary_phone')?.value;
-                    const email = settings.find(s => s.key === 'primary_email')?.value;
-                    if (phone) document.getElementById('site_phone').value = phone;
-                    if (email) document.getElementById('site_email').value = email;
-                }
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
 
-                const { data: pricing } = await supabase.from('pricing').select('*').order('id', { ascending: true });
-                if (pricing) {
-                    pricing.forEach((item, i) => {
-                        const cards = document.querySelectorAll('.pricing-card');
-                        if (cards[i]) {
-                            cards[i].querySelector('.p-badge').value = item.badge || '';
-                            cards[i].querySelector('.p-name').value = item.name || '';
-                            cards[i].querySelector('.p-price').value = item.price || '';
-                            cards[i].querySelector('.p-features').value = item.features || '';
-                            cards[i].querySelector('.p-featured').checked = item.featured || false;
-                        }
-                    });
-                }
-            } catch (e) { console.error("Load Error:", e); }
-        }
+        try {
+            const phone = document.getElementById('site_phone').value.trim();
+            const email = document.getElementById('site_email').value.trim();
 
-        async function saveAll() {
-            const btn = document.getElementById('saveBtn');
-            if (!supabase) { alert('Database not connected. Please refresh.'); return; }
+            // Save contact info (delete then insert)
+            await sb.from('site_settings').delete().in('key', ['primary_phone', 'primary_email']);
+            const { error: ce } = await sb.from('site_settings').insert([
+                { key: 'primary_phone', value: phone },
+                { key: 'primary_email', value: email }
+            ]);
+            if (ce) throw ce;
 
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
+            // Save pricing (delete all then insert fresh)
+            const pricingData = plans.map((p, i) => ({
+                id: p.id || (i + 1),
+                badge: p.badge || '',
+                name: p.name || '',
+                price: p.price || '',
+                features: p.features || '',
+                featured: p.featured || false,
+                action_type: `selectPackage('${(p.name||'').replace(/'/g,"\\'")}', '${(p.price||'').replace(/'/g,"\\'")} (${(p.badge||'').replace(/'/g,"\\'")})')`
+            }));
 
-            try {
-                const phone = document.getElementById('site_phone').value;
-                const email = document.getElementById('site_email').value;
+            // Delete existing pricing rows
+            await sb.from('pricing').delete().gte('id', 0);
+            const { error: pe } = await sb.from('pricing').insert(pricingData);
+            if (pe) throw pe;
 
-                // Delete then insert (reliable, no upsert constraint needed)
-                await supabase.from('site_settings').delete().in('key', ['primary_phone', 'primary_email']);
-                await supabase.from('site_settings').insert([
-                    { key: 'primary_phone', value: phone },
-                    { key: 'primary_email', value: email }
-                ]);
+            // SUCCESS UI
+            btn.innerHTML = '<i class="fas fa-check-circle"></i> Published!';
+            btn.style.cssText += 'background:#00c853;box-shadow:0 8px 20px rgba(0,200,83,0.4);';
+            showNotify('✅ Changes published to live website!', 'success');
 
-                const pricingCards = document.querySelectorAll('.pricing-card');
-                const pricingData = Array.from(pricingCards).map((card, i) => ({
-                    id: i + 1,
-                    badge: card.querySelector('.p-badge').value,
-                    name: card.querySelector('.p-name').value,
-                    price: card.querySelector('.p-price').value,
-                    features: card.querySelector('.p-features').value,
-                    featured: card.querySelector('.p-featured').checked,
-                    action_type: i === 2 ? "selectPackage('E-Commerce Store', '5000+ (Premium)')" : (i === 1 ? "selectPackage('Small Business / Shop', '3000 - 5000 (Professional)')" : "selectPackage('Small Business / Shop', '2500 - 3000 (Basic)')")
-                }));
-
-                await supabase.from('pricing').delete().in('id', [1, 2, 3]);
-                await supabase.from('pricing').insert(pricingData);
-
-                // Show published state
-                btn.innerHTML = '<i class="fas fa-check-circle"></i> Published!';
-                btn.style.background = '#00c853';
-                btn.style.boxShadow = '0 10px 20px rgba(0,200,83,0.3)';
-                showToast();
-
-                // Reset button after 3 seconds
-                setTimeout(() => {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-save"></i> Save & Publish Updates';
-                    btn.style.background = '';
-                    btn.style.boxShadow = '';
-                }, 3000);
-
-            } catch (err) {
-                console.error(err);
-                alert('Error saving: ' + (err.message || JSON.stringify(err)));
+            setTimeout(() => {
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-save"></i> Save & Publish Updates';
-            }
-        }
+                btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Save & Publish';
+                btn.style.background = '';
+                btn.style.boxShadow = '';
+            }, 4000);
 
-        function showToast() {
-            const t = document.getElementById('toast');
-            t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 3000);
+        } catch(err) {
+            console.error('Save error:', err);
+            const msg = err?.message || err?.details || JSON.stringify(err);
+            showNotify('Error: ' + msg, 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Save & Publish';
         }
-    </script>
+    }
+
+    // ===================== NOTIFICATION =====================
+    function showNotify(msg, type) {
+        const el = document.getElementById('notify');
+        el.className = type;
+        el.innerHTML = msg;
+        el.style.display = 'flex';
+        clearTimeout(el._t);
+        el._t = setTimeout(() => { el.style.display = 'none'; }, 4000);
+    }
+
+    // ===================== AUTO LOGIN =====================
+    window.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('wc_auth') === '1') {
+            document.getElementById('auth-gate').style.display = 'none';
+            document.getElementById('main-dashboard').style.display = 'block';
+            document.getElementById('save-bar').style.display = 'flex';
+            initSupabase();
+        }
+    });
+</script>
 </body>
 </html>
