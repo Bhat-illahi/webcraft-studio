@@ -181,7 +181,15 @@
                 <i class="fas fa-times" onclick="closeToolbox()" style="cursor:pointer"></i>
             </div>
             <div style="margin-bottom:20px;">
-                <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:var(--admin-gray)">Change Color</label>
+                <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:var(--admin-gray)">Target Mode</label>
+                <div style="display:flex; gap:10px;">
+                    <button class="tab-btn active" id="mode-text" onclick="switchTargetMode('color')" style="padding:5px 15px; font-size:0.75rem;">Text</button>
+                    <button class="tab-btn" id="mode-bg" onclick="switchTargetMode('backgroundColor')" style="padding:5px 15px; font-size:0.75rem;">Box/BG</button>
+                    <button class="tab-btn" onclick="selectParent()" style="padding:5px 15px; font-size:0.75rem; background:rgba(255,255,255,0.1);"><i class="fas fa-level-up-alt"></i> Parent Box</button>
+                </div>
+            </div>
+            <div style="margin-bottom:20px;">
+                <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:var(--admin-gray)">Choose Color</label>
                 <input type="color" id="tool-color" oninput="applyPulse('color')" style="width:100%; height:40px; border:none; background:none; cursor:pointer;">
             </div>
             <div style="margin-bottom:20px;">
@@ -286,17 +294,27 @@
             }
         }
 
+        let activeTargetMode = 'color';
+
+        function switchTargetMode(mode) {
+            activeTargetMode = mode;
+            document.querySelectorAll('#mode-text, #mode-bg').forEach(b => b.classList.remove('active'));
+            document.getElementById(mode === 'color' ? 'mode-text' : 'mode-bg').classList.add('active');
+        }
+
+        function selectParent() {
+            if (!activeEl || !activeEl.parentElement) return;
+            launchFrameStudio(activeEl.parentElement);
+        }
+
         function applyPulse(type) {
             if (!activeEl) return;
             const val = document.getElementById('tool-' + (type==='borderRadius'?'radius':type)).value;
             
             // Apply with High Priority for REAL-TIME PREVIEW
-            if (type === 'color') activeEl.style.setProperty('color', val, 'important');
-            else if (type === 'fontSize') activeEl.style.setProperty('font-size', val + 'px', 'important');
-            else if (type === 'padding') activeEl.style.setProperty('padding', val + 'px', 'important');
-            else if (type === 'borderRadius') activeEl.style.setProperty('border-radius', val + 'px', 'important');
+            const property = (type === 'color') ? activeTargetMode : type;
+            activeEl.style.setProperty(property, val, 'important');
             
-            // TRACKING: Prioritize the Persistent ID (v5-...)
             const trackingId = activeEl.id || ('v5_gen_' + Math.random().toString(36).substr(2, 6));
             if (!activeEl.id) activeEl.id = trackingId;
         }
@@ -304,27 +322,24 @@
         function confirmElementPulse() {
             if (!activeEl) return;
             
-            const trackingId = activeEl.id || ('v5_gen_' + Math.random().toString(36).substr(2, 6));
-            if (!activeEl.id) activeEl.id = trackingId;
-
+            const trackingId = activeEl.id;
             // Finalize values for this element
             pendingChanges.set(trackingId, {
                 color: activeEl.style.color,
+                background: activeEl.style.backgroundColor,
                 fontSize: activeEl.style.fontSize,
                 padding: activeEl.style.padding,
                 borderRadius: activeEl.style.borderRadius,
-                text: activeEl.innerText,
-                width: activeEl.style.width
+                text: activeEl.innerText
             });
 
             // Visual feedback
             const btn = event.target;
-            const oldText = btn.innerText;
             btn.style.background = "#00c853";
             btn.innerText = "Applied ✅";
             setTimeout(() => {
                 btn.style.background = "";
-                btn.innerText = oldText;
+                btn.innerText = "Apply Changes ✍️";
             }, 1000);
         }
 

@@ -882,6 +882,8 @@ async function loadSiteSettings() {
                             const el = document.getElementById(id) || document.querySelector(`[id="${id}"]`);
                             if (el) {
                                 if (styles.color) el.style.setProperty('color', styles.color, 'important');
+                                if (styles.background) el.style.setProperty('background', styles.background, 'important');
+                                if (styles.backgroundColor) el.style.setProperty('background-color', styles.backgroundColor, 'important');
                                 if (styles.fontSize) el.style.setProperty('font-size', styles.fontSize, 'important');
                                 if (styles.padding) el.style.setProperty('padding', styles.padding, 'important');
                                 if (styles.borderRadius) el.style.setProperty('border-radius', styles.borderRadius, 'important');
