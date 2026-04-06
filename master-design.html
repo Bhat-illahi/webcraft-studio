@@ -116,9 +116,14 @@
         <div style="margin-bottom: 25px; border: 1px dashed rgba(255,255,255,0.1); border-radius: 15px; padding: 40px; text-align: center; background: url('https://w.wallhaven.cc/full/1p/wallhaven-1p398v.jpg'); background-size: cover; position: relative;">
           <div style="position: absolute; top: 10px; left: 10px; font-size: 0.6rem; color: rgba(255,255,255,0.5); text-transform: uppercase; background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 5px;">Live Preview (Click parts to design)</div>
           <div id="preview-wrap" style="padding: 20px 0;">
-            <div id="note-preview" onclick="focusEditor('box')" style="margin: 0 auto; transition: all 0.2s; cursor: pointer; min-height: 40px; min-width: 100px; display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap;">
-              <i id="preview-icon" onclick="event.stopPropagation(); focusEditor('icon')" class="fas fa-exclamation-circle" style="transition: 0.2s; cursor: pointer;"></i>
-              <p style="margin:0;"><b id="preview-prefix" onclick="event.stopPropagation(); focusEditor('prefix')" style="cursor: pointer; transition: 0.2s; min-width: 20px; display: inline-block;"></b> <span id="preview-msg" onclick="event.stopPropagation(); focusEditor('msg')" style="cursor: pointer; transition: 0.2s; min-width: 20px; display: inline-block;"></span></p>
+            <div id="note-preview" onclick="focusEditor('box')" style="margin: 0 auto; transition: all 0.2s; cursor: pointer; min-height: 40px; display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: nowrap; border: 1px solid rgba(255,255,255,0.1);">
+                <div style="font-size: 2rem; color: #6C63FF; display: flex; align-items: center;">
+                    <i id="preview-icon" onclick="event.stopPropagation(); focusEditor('icon')" class="fas fa-exclamation-circle" style="transition: 0.2s; cursor: pointer;"></i>
+                </div>
+                <div style="text-align: left;">
+                    <p style="margin:0;"><b id="preview-prefix" onclick="event.stopPropagation(); focusEditor('prefix')" style="cursor: pointer; transition: 0.2s; min-width: 20px; display: inline-block;">Important Note:</b></p>
+                    <p id="preview-msg" onclick="event.stopPropagation(); focusEditor('msg')" style="cursor: pointer; transition: 0.2s; min-width: 20px; display: block; margin:0;">These are sample demo websites...</p>
+                </div>
             </div>
           </div>
         </div>
@@ -442,22 +447,19 @@ function updatePreview() {
   preview.style.maxWidth = width + 'px';
   preview.style.borderRadius = radius + 'px';
   
-  if (align === 'left') { preview.style.margin = "0 auto 0 0"; preview.style.textAlign = "left"; }
-  else if (align === 'right') { preview.style.margin = "0 0 0 auto"; preview.style.textAlign = "right"; }
-  else { preview.style.margin = "0 auto"; preview.style.textAlign = "center"; }
+  const actualPadding = document.getElementById('set-note-padding')?.value || 20;
 
   if (isBox) {
-    const padding = document.getElementById('set-note-padding')?.value || 20;
-    preview.style.background = hexToRgba(bg, 0.35); // Matches the new cloud force level
+    preview.style.background = hexToRgba(bg, 0.45); // Solid but glassy
     preview.style.backdropFilter = `blur(${blur}px)`;
     preview.style.webkitBackdropFilter = `blur(${blur}px)`;
-    preview.style.border = '1px solid rgba(255,255,255,0.1)';
-    preview.style.padding = `${padding}px 25px`;
+    preview.style.border = '1px solid rgba(255,255,255,0.2)';
+    preview.style.padding = `${actualPadding}px 35px`;
   } else {
     preview.style.background = 'none';
     preview.style.backdropFilter = `none`;
     preview.style.border = 'none';
-    preview.style.padding = '5px';
+    preview.style.padding = '10px';
   }
 }
 
