@@ -210,16 +210,16 @@
     <script>
         const SUPABASE_URL = 'https://imuqwquuytcfuqbpaqoa.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxYnBhcW9hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NTQwNzcsImV4cCI6MjA5MTAzMDA3N30.J_E1pbC8nJKMsIMJE-IAnI_3lV47q6WX0HuSSWIhpd4';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        let supabase;
 
         function login() {
-            const key = document.getElementById('master-key').value;
+            const keyInput = document.getElementById('master-key');
+            if (!keyInput) return;
+            const key = keyInput.value;
             if (key === 'mumin69') {
                 localStorage.setItem('admin_auth', 'true');
-                document.getElementById('auth-gate').style.display = 'none';
-                document.getElementById('main-dashboard').style.display = 'block';
-                document.getElementById('save-bar').style.display = 'flex';
-                loadData();
+                showDashboard();
             } else {
                 alert('Invalid Master Key');
             }
@@ -230,12 +230,31 @@
             window.location.reload();
         }
 
-        if (localStorage.getItem('admin_auth') === 'true') {
-            document.getElementById('auth-gate').style.display = 'none';
-            document.getElementById('main-dashboard').style.display = 'block';
-            document.getElementById('save-bar').style.display = 'flex';
+        function showDashboard() {
+            const authGate = document.getElementById('auth-gate');
+            const dashboard = document.getElementById('main-dashboard');
+            const saveBar = document.getElementById('save-bar');
+            if (authGate) authGate.style.display = 'none';
+            if (dashboard) dashboard.style.display = 'block';
+            if (saveBar) saveBar.style.display = 'flex';
             loadData();
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                if (window.supabase) {
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                } else {
+                    console.error("Supabase library not found.");
+                }
+            } catch (err) {
+                console.error("Error initializing Supabase:", err);
+            }
+
+            if (localStorage.getItem('admin_auth') === 'true') {
+                showDashboard();
+            }
+        });
 
         async function loadData() {
             // 1. Load Contact Info
