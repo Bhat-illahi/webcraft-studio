@@ -196,6 +196,9 @@
                 <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:var(--admin-gray)">Corner Rounding (px)</label>
                 <input type="range" id="tool-radius" min="0" max="150" oninput="applyPulse('borderRadius')" style="width:100%; accent-color:var(--admin-primary)">
             </div>
+            <button class="btn-apply" style="width:100%; padding:12px; font-size:1rem;" onclick="confirmElementPulse()">
+                Apply Changes ✍️
+            </button>
         </div>
 
         <div style="position:fixed; bottom:40px; left:50%; transform:translateX(-50%); z-index:2500;">
@@ -287,22 +290,42 @@
             if (!activeEl) return;
             const val = document.getElementById('tool-' + (type==='borderRadius'?'radius':type)).value;
             
+            // Apply with High Priority for REAL-TIME PREVIEW
             if (type === 'color') activeEl.style.setProperty('color', val, 'important');
-            else if (type === 'fontSize' || type === 'padding' || type === 'borderRadius') {
-                activeEl.style[type] = val + 'px';
-            }
+            else if (type === 'fontSize') activeEl.style.setProperty('font-size', val + 'px', 'important');
+            else if (type === 'padding') activeEl.style.setProperty('padding', val + 'px', 'important');
+            else if (type === 'borderRadius') activeEl.style.setProperty('border-radius', val + 'px', 'important');
             
             // TRACKING: Prioritize the Persistent ID (v5-...)
             const trackingId = activeEl.id || ('v5_gen_' + Math.random().toString(36).substr(2, 6));
             if (!activeEl.id) activeEl.id = trackingId;
+        }
 
+        function confirmElementPulse() {
+            if (!activeEl) return;
+            
+            const trackingId = activeEl.id || ('v5_gen_' + Math.random().toString(36).substr(2, 6));
+            if (!activeEl.id) activeEl.id = trackingId;
+
+            // Finalize values for this element
             pendingChanges.set(trackingId, {
                 color: activeEl.style.color,
                 fontSize: activeEl.style.fontSize,
                 padding: activeEl.style.padding,
                 borderRadius: activeEl.style.borderRadius,
-                text: activeEl.innerText
+                text: activeEl.innerText,
+                width: activeEl.style.width
             });
+
+            // Visual feedback
+            const btn = event.target;
+            const oldText = btn.innerText;
+            btn.style.background = "#00c853";
+            btn.innerText = "Applied ✅";
+            setTimeout(() => {
+                btn.style.background = "";
+                btn.innerText = oldText;
+            }, 1000);
         }
 
         async function saveV5Mirror() {
