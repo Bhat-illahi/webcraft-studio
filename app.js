@@ -1008,7 +1008,13 @@ function updateWorkingStatus() {
 
         let isOpen = false;
         if (isDayActive) {
-            if (currentTime >= start && currentTime < end) isOpen = true;
+            if (end > start) {
+                // Normal case: 9 AM to 5 PM
+                if (currentTime >= start && currentTime < end) isOpen = true;
+            } else {
+                // Crossover case: 9 PM to 1 AM
+                if (currentTime >= start || currentTime < end) isOpen = true;
+            }
         }
 
         // 3. UI Update
