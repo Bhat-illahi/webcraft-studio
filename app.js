@@ -1036,7 +1036,18 @@ function updateWorkingStatus() {
     }
 }
 
-// ===== LAUNCH CMS =====
+// ===== SMART ANCHOR JUMP (MOBILE FIX) =====
+window.addEventListener('load', () => {
+    if (window.location.hash) {
+        setTimeout(() => {
+            const target = document.querySelector(window.location.hash);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 500); // Wait for dynamic content (Supabase) to settle
+    }
+});
+
 (async function initCMS() {
     const check = setInterval(async () => {
         if (typeof _supabase !== 'undefined' && _supabase) {
