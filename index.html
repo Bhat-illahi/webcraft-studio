@@ -713,14 +713,14 @@
           const cssVal = (type !== 'color' ? val + 'px' : val);
           const cssProp = prop.replace(/([A-Z])/g, "-$1").toLowerCase();
 
-          // ABSOLUTE HEAD INJECTION: Creates a Specific CSS Rule for this ID
+          // ABSOLUTE RULE INJECTION: Force browser TO OBEY these rules
           if (!v5RealTimeStyles[v5ActiveEl.id]) v5RealTimeStyles[v5ActiveEl.id] = {};
           v5RealTimeStyles[v5ActiveEl.id][cssProp] = cssVal;
 
-          refreshV5Heart();
+          refreshV5HeartRules();
       }
 
-      function refreshV5Heart() {
+      function refreshV5HeartRules() {
           let css = "";
           for (let id in v5RealTimeStyles) {
               css += `#${id} { `;

@@ -1933,19 +1933,26 @@ img {
 
 /* ===== LUXURY UX ENHANCEMENTS ===== */
 
+/* ===== GLOBAL CLICK FIX: V5.4 ===== */
+#cursor-blob, 
+canvas, 
+.particles-js-canvas-el, 
+[id*="tsparticles"] {
+  pointer-events: none !important;
+}
+
 /* 1. Custom Cursor Blob */
 #cursor-blob {
   position: fixed;
-  width: 300px;
-  height: 300px;
+  width: 400px;
+  height: 400px;
   background: radial-gradient(circle, rgba(108, 99, 255, 0.15) 0%, transparent 70%);
   border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
   transform: translate(-50%, -50%);
+  z-index: 9998;
+  transition: width 0.3s, height 0.3s;
   mix-blend-mode: screen;
   filter: blur(40px);
-  transition: width 0.3s, height 0.3s, background 0.3s;
   display: none;
 }
 
