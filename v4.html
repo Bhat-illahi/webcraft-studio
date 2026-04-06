@@ -104,8 +104,12 @@
               <div class="editor-card">
                   <h3 class="section-title"><i class="fas fa-sliders"></i> Visual Controls</h3>
                   <div class="form-group">
-                      <label>Glass Background</label>
+                      <label>Glass Background Color</label>
                       <input type="color" id="set-note-bg" value="#050510" oninput="updatePreview()">
+                  </div>
+                  <div class="form-group">
+                      <label>Icon Accent Color</label>
+                      <input type="color" id="set-note-accent" value="#6C63FF" oninput="updatePreview()">
                   </div>
                   <div class="form-group" style="background:rgba(108,99,255,0.05); padding:15px; border-radius:15px; border:1px solid var(--admin-primary);">
                       <label style="color:var(--admin-primary)">BOX HEIGHT (Vertical Padding)</label>
@@ -240,9 +244,12 @@
         const isBox = document.getElementById('set-note-box')?.checked;
         const align = document.getElementById('set-note-align')?.value;
         const preview = document.getElementById('note-preview');
+        const icon = document.getElementById('preview-icon');
+        const accent = document.getElementById('set-note-accent')?.value || '#6C63FF';
         
         document.getElementById('preview-prefix').innerText = document.getElementById('set-note-prefix')?.value;
         document.getElementById('preview-msg').innerText = document.getElementById('set-note')?.value;
+        if (icon) icon.style.color = accent;
         
         if (preview) {
           preview.style.maxWidth = width + 'px';
@@ -254,6 +261,9 @@
           preview.style.setProperty('background', hexToRgba(bg, 0.55), 'important');
           preview.style.backdropFilter = `blur(${blur}px)`;
           preview.style.webkitBackdropFilter = `blur(${blur}px)`;
+            
+            const icon = preview.querySelector('i');
+            if (icon && accent) icon.style.setProperty('color', accent, 'important');
           preview.style.padding = `${padding}px 40px`;
           preview.style.borderRadius = radius + 'px';
           preview.style.setProperty('border', '1px solid rgba(255,255,255,0.2)', 'important');
@@ -309,6 +319,7 @@
         const updates = [
             { key: 'note_prefix', value: document.getElementById('set-note-prefix').value },
             { key: 'demo_note', value: document.getElementById('set-note').value },
+            { key: 'note_accent', value: document.getElementById('set-note-accent').value },
             { key: 'note_bg', value: document.getElementById('set-note-bg').value },
             { key: 'note_blur', value: document.getElementById('set-note-blur').value },
             { key: 'note_padding', value: document.getElementById('set-note-padding').value },

@@ -862,6 +862,9 @@ async function loadSiteSettings() {
             if (s('note_radius')) banner.style.borderRadius = s('note_radius') + 'px';
             if (s('note_padding')) banner.style.padding = `${s('note_padding')}px 25px`;
             
+            const icon = banner.querySelector('i');
+            if (icon && s('note_accent')) icon.style.setProperty('color', s('note_accent'), 'important');
+            
             if (s('note_align')) {
                 if (s('note_align') === 'left') banner.style.margin = "0 auto 0 0";
                 else if (s('note_align') === 'right') banner.style.margin = "0 0 0 auto";
