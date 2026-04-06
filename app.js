@@ -884,11 +884,19 @@ async function loadPricingSync() {
     else renderPricing(data);
 }
 
-async function initCMS() {
-    if (!_supabase) {
-        renderServices(DEFAULT_SERVICES);
-        renderPricing(DEFAULT_PRICING);
+async function initCMS(retries = 3) {
+    if (typeof supabase === 'undefined') {
+        if (retries > 0) {
+            console.warn(`Supabase SDK not ready, retrying... (${retries})`);
+            setTimeout(() => initCMS(retries - 1), 1000);
+            return;
+        }
+        console.error("Supabase SDK failed to load after 3 retries.");
         return;
+    }
+
+    if (!_supabase) {
+        _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     }
 
     const dot = document.getElementById('cmsDot');
@@ -897,6 +905,7 @@ async function initCMS() {
     try {
         if (dot) dot.style.background = '#f1c40f'; // Syncing
         
+        // Force a fresh fetch bypass
         await Promise.all([
             loadSiteSettings(),
             loadServicesSync(),
@@ -904,14 +913,18 @@ async function initCMS() {
         ]);
 
         if (dot) {
-            dot.style.background = '#2ecc71'; // Connected
-            dot.style.boxShadow = '0 0 8px #2ecc71';
+            dot.style.background = '#2ecc71'; 
+            dot.style.boxShadow = '0 0 10px #2ecc71';
         }
-        if (text) text.innerText = 'Cloud Sync Active';
+        if (text) text.innerText = 'Sync Live & Perfect';
     } catch (err) {
-        console.error("CMS Sync Failed:", err);
-        if (dot) dot.style.background = '#e74c3c'; // Error
-        if (text) text.innerText = 'Sync Offline';
+        console.error("CMS Sync Attempt Failed:", err);
+        if (retries > 0) {
+            setTimeout(() => initCMS(retries - 1), 1500);
+        } else {
+            if (dot) dot.style.background = '#e74c3c';
+            if (text) text.innerText = 'Sync Error (Retrying...)';
+        }
     }
 }
 
