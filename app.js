@@ -869,18 +869,42 @@ async function loadSiteContent() {
     const { data: settings } = await _supabase.from('site_settings').select('*');
     if (settings) {
         settings.forEach(s => {
-            // Contact Updates
             if (s.key === 'primary_phone') {
+                const raw = s.value || '';
+                const digits = raw.replace(/[^0-9]/g, '');
+                const waUrl = 'https://wa.me/' + digits + '?text=Hi!%20I\'m%20interested%20in%20getting%20a%20website.';
+
+                // 1. Footer link
                 document.querySelectorAll('.dynamic-phone').forEach(el => {
-                    el.innerText = 'WhatsApp: ' + s.value.replace(/\+/g, '').replace(/ /g, '');
-                    el.href = 'https://wa.me/' + s.value.replace(/[^0-9]/g, '');
+                    el.innerText = 'WhatsApp: ' + raw.replace(/^\+91\s?/, '');
+                    el.href = waUrl;
                 });
+                // 2. Contact section - text
+                const dp = document.getElementById('dynamic_phone');
+                if (dp) dp.innerText = raw;
+                // 3. Contact section - button
+                const dwl = document.getElementById('dynamic_whatsapp_link');
+                if (dwl) dwl.href = waUrl;
+                // 4. Floating WhatsApp button
+                const wf = document.getElementById('whatsapp-float');
+                if (wf) wf.href = waUrl;
             }
+
             if (s.key === 'primary_email') {
+                const raw = s.value || '';
+                const mailUrl = 'mailto:' + raw;
+
+                // 1. Footer link
                 document.querySelectorAll('.dynamic-email').forEach(el => {
-                    el.innerText = s.value;
-                    el.href = 'mailto:' + s.value;
+                    el.innerText = raw;
+                    el.href = mailUrl;
                 });
+                // 2. Contact section - text
+                const de = document.getElementById('dynamic_email');
+                if (de) de.innerText = raw;
+                // 3. Contact section - button
+                const del2 = document.getElementById('dynamic_email_link');
+                if (del2) del2.href = mailUrl;
             }
 
             // Legacy Design Pulse Loader (v5_...)
@@ -899,6 +923,7 @@ async function loadSiteContent() {
             }
         });
     }
+
 
     // 2. Load Services Grid
     const { data: services } = await _supabase.from('services').select('*').order('id');
