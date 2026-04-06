@@ -920,6 +920,11 @@ async function loadSiteContent() {
                 const raw = s.value || 'Mon – Sat: 9 AM – 9 PM';
                 const el = document.getElementById('dynamic_hours');
                 if (el) el.innerText = raw;
+                // Initial update
+                updateWorkingStatus();
+                // Refresh every minute
+                if (window._workingInterval) clearInterval(window._workingInterval);
+                window._workingInterval = setInterval(updateWorkingStatus, 60000);
             }
 
             // Legacy Design Pulse Loader (v5_...)
@@ -947,6 +952,80 @@ async function loadSiteContent() {
     // 3. Load Pricing Grid
     const { data: pricing } = await _supabase.from('pricing').select('*').order('id');
     renderPricing(pricing && pricing.length ? pricing : DEFAULT_PRICING);
+}
+
+// ===== AUTOMATED WORKING STATUS =====
+function updateWorkingStatus() {
+    const hoursEl = document.getElementById('dynamic_hours');
+    const statusEl = document.getElementById('workingStatus');
+    if (!hoursEl || !statusEl) return;
+
+    try {
+        const text = hoursEl.innerText.trim();
+        // Regex to extract Day Range and Time Range
+        // Format: "Day - Day: Start - End" or "Day: Start - End"
+        const dayMatch = text.match(/^([A-Za-z\s\u2013\u2014-]+):/);
+        const timeMatch = text.match(/:\s*(.*)$/);
+        
+        if (!timeMatch) return;
+
+        const now = new Date();
+        const currentDay = now.getDay(); // 0=Sun, 1=Mon...6=Sat
+        const currentTime = now.getHours() * 100 + now.getMinutes(); // e.g. 1430 for 2:30 PM
+
+        // 1. Day Check
+        let isDayActive = false;
+        const dayText = dayMatch ? dayMatch[1].toLowerCase() : "mon-sun";
+        const daysMap = { "sun":0, "mon":1, "tue":2, "wed":3, "thu":4, "fri":5, "sat":6 };
+        
+        if (dayText.includes("mon") && dayText.includes("sat")) {
+            if (currentDay >= 1 && currentDay <= 6) isDayActive = true;
+        } else if (dayText.includes("mon") && dayText.includes("sun")) {
+            isDayActive = true;
+        } else if (dayText.includes("sun") && !dayText.includes("-") && !dayText.includes("\u2013")) {
+            if (currentDay === 0) isDayActive = true;
+        } else {
+            // Default to Mon-Sat if pattern not recognized
+            if (currentDay >= 1 && currentDay <= 6) isDayActive = true;
+        }
+
+        // 2. Time Check
+        const timeRange = timeMatch[1].split(/[-\u2013\u2014]/);
+        if (timeRange.length < 2) return;
+
+        function parseTimeString(t) {
+            t = t.trim().toLowerCase();
+            let [h, m] = t.replace(/(am|pm)/, '').split(':').map(Number);
+            if (!m) m = 0;
+            if (t.includes('pm') && h < 12) h += 12;
+            if (t.includes('am') && h === 12) h = 0;
+            return h * 100 + m;
+        }
+
+        const start = parseTimeString(timeRange[0]);
+        const end = parseTimeString(timeRange[1]);
+
+        let isOpen = false;
+        if (isDayActive) {
+            if (currentTime >= start && currentTime < end) isOpen = true;
+        }
+
+        // 3. UI Update
+        if (isOpen) {
+            statusEl.innerHTML = '🟢 Open Now';
+            statusEl.style.background = 'rgba(81, 207, 102, 0.15)';
+            statusEl.style.color = '#51CF66';
+            statusEl.style.borderColor = 'rgba(81, 207, 102, 0.3)';
+        } else {
+            statusEl.innerHTML = '🔴 Closed Now';
+            statusEl.style.background = 'rgba(255, 107, 107, 0.15)';
+            statusEl.style.color = '#FF6B6B';
+            statusEl.style.borderColor = 'rgba(255, 107, 107, 0.3)';
+        }
+
+    } catch (err) {
+        console.error("Working status error:", err);
+    }
 }
 
 // ===== LAUNCH CMS =====
