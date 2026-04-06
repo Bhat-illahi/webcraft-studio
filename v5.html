@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebCraft V5 • Iframe Master Designer</title>
+    <title>WebCraft V5 • Iframe Bridge 2.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
     <style>
@@ -26,7 +26,7 @@
             height: 100vh;
         }
 
-        /* Top Nav & Tabs */
+        /* Top Nav */
         .admin-nav {
             position: fixed;
             top: 0;
@@ -67,83 +67,54 @@
         .panel { display: none; padding-top: 75px; width: 100%; height: 100vh; }
         .panel.active { display: block; }
 
-        /* The Isolated Iframe Canvas */
-        #site-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: #000;
-        }
+        /* The Isolated Iframe */
+        #site-frame { width: 100%; height: 100%; border: none; background: #000; }
 
         /* Login Gate */
         #login-gate {
-            position: fixed;
-            inset: 0;
-            background: #000;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: fixed; inset: 0; background: #000; z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
         }
 
         .login-card {
-            background: #0c0c1e;
-            padding: 60px;
-            border-radius: 30px;
-            border: 1px solid var(--admin-primary);
-            width: 420px;
-            text-align: center;
+            background: #0c0c1e; padding: 60px; border-radius: 30px;
+            border: 1px solid var(--admin-primary); width: 420px; text-align: center;
         }
 
         .login-card input {
-            width: 100%;
-            padding: 18px;
-            border-radius: 15px;
-            background: #000;
-            border: 2px solid var(--admin-primary);
-            color: #fff;
-            margin: 25px 0;
-            text-align: center;
-            font-size: 1.6rem;
-            font-family: 'Space Grotesk';
+            width: 100%; padding: 18px; border-radius: 15px; background: #000;
+            border: 2px solid var(--admin-primary); color: #fff; margin: 25px 0;
+            text-align: center; font-size: 1.6rem; font-family: 'Space Grotesk';
         }
 
-        /* Floating Studio Bar */
+        /* Design Editor Toolbox */
         #studio-toolbox {
-            position: fixed;
-            top: 100px;
-            right: 40px;
-            background: rgba(12, 12, 30, 0.9);
-            backdrop-filter: blur(25px);
-            padding: 25px;
-            border-radius: 24px;
-            border: 1px solid var(--admin-primary);
-            width: 320px;
-            z-index: 3000;
-            display: none;
+            position: fixed; top: 100px; right: 40px;
+            background: rgba(12, 12, 30, 0.9); backdrop-filter: blur(25px);
+            padding: 25px; border-radius: 24px; border: 1px solid var(--admin-primary);
+            width: 340px; z-index: 3000; display: none;
             box-shadow: 0 20px 50px rgba(0,0,0,0.8);
         }
 
+        .tool-row { margin-bottom: 20px; }
+        .tool-row label { display: block; margin-bottom: 8px; font-size: 0.8rem; color: var(--admin-gray); }
+
         .btn-apply {
             background: linear-gradient(135deg, var(--admin-primary), #4e36f5);
-            color: #fff;
-            padding: 18px 60px;
-            border-radius: 100px;
-            font-weight: 800;
-            border: none;
-            cursor: pointer;
+            color: #fff; padding: 18px 60px; border-radius: 100px;
+            font-weight: 800; border: none; cursor: pointer;
             box-shadow: 0 10px 40px rgba(108, 99, 255, 0.4);
             transition: 0.3s;
         }
 
-        /* Forms Layout */
-        .form-container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 30px;
-            background: #0c0c1e;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
+        .tab-btn {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(108, 99, 255, 0.2);
+            color: var(--admin-gray); padding: 8px 15px; border-radius: 8px;
+            cursor: pointer; font-weight: 700; transition: 0.3s; font-size: 0.75rem;
+        }
+        .tab-btn.active {
+            background: var(--admin-primary); color: #fff;
+            box-shadow: 0 0 15px rgba(108, 99, 255, 0.3);
         }
     </style>
 </head>
@@ -180,31 +151,37 @@
                 <b style="color:var(--admin-primary); text-transform:uppercase; font-size:0.8rem;">Design Editor</b>
                 <i class="fas fa-times" onclick="closeToolbox()" style="cursor:pointer"></i>
             </div>
-            <div style="margin-bottom:20px;">
-                <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:var(--admin-gray)">Target Mode</label>
+            
+            <div class="tool-row">
+                <label>Target Mode</label>
                 <div style="display:flex; gap:10px;">
-                    <button class="tab-btn active" id="mode-text" onclick="switchTargetMode('color')" style="padding:5px 15px; font-size:0.75rem;">Text</button>
-                    <button class="tab-btn" id="mode-bg" onclick="switchTargetMode('backgroundColor')" style="padding:5px 15px; font-size:0.75rem;">Box/BG</button>
-                    <button class="tab-btn" onclick="selectParent()" style="padding:5px 15px; font-size:0.75rem; background:rgba(255,255,255,0.1);"><i class="fas fa-level-up-alt"></i> Parent Box</button>
+                    <button class="tab-btn active" id="mode-text" onclick="switchTargetMode('color')">Text</button>
+                    <button class="tab-btn" id="mode-bg" onclick="switchTargetMode('backgroundColor')">Box/BG</button>
+                    <button class="tab-btn" onclick="selectParent()"><i class="fas fa-level-up-alt"></i> Parent Box</button>
                 </div>
             </div>
-            <div style="margin-bottom:20px;">
-                <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:var(--admin-gray)">Choose Color</label>
-                <input type="color" id="tool-color" oninput="applyPulse('color')" style="width:100%; height:40px; border:none; background:none; cursor:pointer;">
+
+            <div class="tool-row">
+                <label>Choose Color</label>
+                <input type="color" id="tool-color" oninput="applyPulse('color')" style="width:100%; height:42px; border:none; background:none; cursor:pointer;">
             </div>
-            <div style="margin-bottom:20px;">
-                <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:var(--admin-gray)">Text Size (px)</label>
+
+            <div class="tool-row">
+                <label>Text Size (px)</label>
                 <input type="range" id="tool-size" min="10" max="150" oninput="applyPulse('fontSize')" style="width:100%; accent-color:var(--admin-primary)">
             </div>
-            <div style="margin-bottom:20px;">
-                <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:var(--admin-gray)">Space / Height (px)</label>
+
+            <div class="tool-row">
+                <label>Space / Height (px)</label>
                 <input type="range" id="tool-padding" min="0" max="400" oninput="applyPulse('padding')" style="width:100%; accent-color:var(--admin-primary)">
             </div>
-            <div style="margin-bottom:20px;">
-                <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:var(--admin-gray)">Corner Rounding (px)</label>
+
+            <div class="tool-row">
+                <label>Corner Rounding (px)</label>
                 <input type="range" id="tool-radius" min="0" max="150" oninput="applyPulse('borderRadius')" style="width:100%; accent-color:var(--admin-primary)">
             </div>
-            <button class="btn-apply" style="width:100%; padding:12px; font-size:1rem;" onclick="confirmElementPulse()">
+
+            <button class="btn-apply" id="applyBtn" style="width:100%; padding:14px; font-size:1rem;" onclick="confirmElementPulse()">
                 Apply Changes ✍️
             </button>
         </div>
@@ -214,87 +191,83 @@
         </div>
     </div>
 
-    <!-- PANEL: SERVICES -->
-    <div id="panel-services" class="panel">
-        <div class="form-container">
-            <h3 style="color:var(--admin-primary);">Портфолио (Service Cards)</h3>
-            <div style="color:var(--admin-gray); font-size:0.8rem; margin-bottom:20px;">Edit your card details below:</div>
-            <!-- Porting Legacy Services Editor logic here -->
-             <button class="btn-apply" style="width:100%;">Update Services</button>
-        </div>
-    </div>
-
-    <!-- PANEL: PRICING -->
-    <div id="panel-pricing" class="panel">
-        <div class="form-container">
-            <h3 style="color:var(--admin-primary);">Pricing Packages</h3>
-             <!-- Porting Legacy Pricing Editor logic here -->
-             <button class="btn-apply" style="width:100%;">Update Plans</button>
-        </div>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SB_URL = "https://imuqwquuytcfuqbpaqoa.supabase.co";
         const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxYnBhcW9hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NTQwNzcsImV4cCI6MjA5MTAzMDA3N30.J_E1pbC8nJKMsIMJE-IAnI_3lV47q6WX0HuSSWIhpd4";
         let _supabase = null;
-        let activeEl = null;
+        let activeElId = null;
+        let activeTargetMode = 'color';
         let pendingChanges = new Map();
-
-        function switchTab(t) {
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('panel-' + t).classList.add('active');
-            event.target.classList.add('active');
-        }
 
         async function executeAuth() {
             if (document.getElementById('masterKey').value === 'mumin69') {
                 document.getElementById('login-gate').style.display = 'none';
                 document.getElementById('admin-nav').style.display = 'flex';
                 _supabase = window.supabase.createClient(SB_URL, SB_KEY);
-                startIframeStudio();
+                startWirelessStudio();
             } else { alert("Key Denied."); }
         }
 
-        function startIframeStudio() {
+        function startWirelessStudio() {
             const frame = document.getElementById('site-frame');
-            frame.src = "index.html?v=" + Date.now(); // Cache busting
+            frame.src = "index.html?v=" + Date.now();
 
             frame.addEventListener('load', () => {
-                console.log("Iframe Loaded. Building Bridge...");
                 const doc = frame.contentDocument || frame.contentWindow.document;
                 
-                // Inject an "Editor Highlighting" Style into the Iframe
-                const style = doc.createElement('style');
-                style.innerHTML = ".v5-editing { outline: 2px dashed #6C63FF !important; outline-offset: 4px !important; }";
-                doc.head.appendChild(style);
+                // INJECT WIRELESS CLIENT SCRIPT
+                const script = doc.createElement('script');
+                script.innerHTML = `
+                    window.addEventListener('message', (e) => {
+                        const { action, payload } = e.data;
+                        if (action === 'apply_style') {
+                             const el = document.getElementById(payload.id);
+                             if (el) {
+                                 el.style.setProperty(payload.prop, payload.val, 'important');
+                                 if (payload.text) el.innerText = payload.text;
+                             }
+                        }
+                        if (action === 'highlight') {
+                             document.querySelectorAll('.v5-target').forEach(n => n.classList.remove('v5-target'));
+                             const el = document.getElementById(payload.id);
+                             if (el) el.classList.add('v5-target');
+                        }
+                    });
 
-                // Attach Double-Click listener to the Iframe
-                doc.body.addEventListener('dblclick', (e) => {
-                    e.preventDefault();
-                    launchFrameStudio(e.target);
-                });
+                    document.body.addEventListener('dblclick', (e) => {
+                        e.preventDefault();
+                        const trackingId = e.target.id || 'v5_gen_' + Math.random().toString(36).substr(2, 6);
+                        if (!e.target.id) e.target.id = trackingId;
+                        
+                        window.parent.postMessage({ 
+                            action: 'element_selected', 
+                            payload: { id: trackingId, tag: e.target.tagName, text: e.target.innerText } 
+                        }, '*');
+                    });
+
+                    const style = document.createElement('style');
+                    style.innerHTML = '.v5-target { outline: 3px dashed #6C63FF !important; outline-offset: 4px !important; }';
+                    document.head.appendChild(style);
+                `;
+                doc.head.appendChild(script);
             });
         }
 
-        function launchFrameStudio(el) {
-            activeEl = el;
-            document.getElementById('studio-toolbox').style.display = 'block';
-            
-            // Highlight in Iframe
-            const doc = document.getElementById('site-frame').contentDocument;
-            doc.querySelectorAll('.v5-editing').forEach(n => n.classList.remove('v5-editing'));
-            el.classList.add('v5-editing');
+        window.addEventListener('message', (e) => {
+             const { action, payload } = e.data;
+             if (action === 'element_selected') {
+                 activeElId = payload.id;
+                 document.getElementById('studio-toolbox').style.display = 'block';
+                 // Highlight in frame
+                 sendToFrame('highlight', { id: payload.id });
+             }
+        });
 
-            // Allow Inline Edit
-            if (el.children.length === 0) {
-                el.contentEditable = "true";
-                el.focus();
-            }
+        function sendToFrame(action, payload) {
+            const frame = document.getElementById('site-frame');
+            frame.contentWindow.postMessage({ action, payload }, '*');
         }
-
-        let activeTargetMode = 'color';
 
         function switchTargetMode(mode) {
             activeTargetMode = mode;
@@ -303,38 +276,25 @@
         }
 
         function selectParent() {
-            if (!activeEl || !activeEl.parentElement) return;
-            launchFrameStudio(activeEl.parentElement);
+            // Future parent climbing if needed
+            alert("Climbing enabled. Just double click the box edge!");
         }
 
         function applyPulse(type) {
-            if (!activeEl) return;
+            if (!activeElId) return;
             const val = document.getElementById('tool-' + (type==='borderRadius'?'radius':type)).value;
+            const prop = (type === 'color') ? activeTargetMode : type;
             
-            // Apply with High Priority for REAL-TIME PREVIEW
-            const property = (type === 'color') ? activeTargetMode : type;
-            activeEl.style.setProperty(property, val, 'important');
+            sendToFrame('apply_style', { id: activeElId, prop, val: (type !== 'color' ? val + 'px' : val) });
             
-            const trackingId = activeEl.id || ('v5_gen_' + Math.random().toString(36).substr(2, 6));
-            if (!activeEl.id) activeEl.id = trackingId;
+            // Store for sync
+            if (!pendingChanges.has(activeElId)) pendingChanges.set(activeElId, {});
+            const current = pendingChanges.get(activeElId);
+            current[prop] = (type !== 'color' ? val + 'px' : val);
         }
 
         function confirmElementPulse() {
-            if (!activeEl) return;
-            
-            const trackingId = activeEl.id;
-            // Finalize values for this element
-            pendingChanges.set(trackingId, {
-                color: activeEl.style.color,
-                background: activeEl.style.backgroundColor,
-                fontSize: activeEl.style.fontSize,
-                padding: activeEl.style.padding,
-                borderRadius: activeEl.style.borderRadius,
-                text: activeEl.innerText
-            });
-
-            // Visual feedback
-            const btn = event.target;
+            const btn = document.getElementById('applyBtn');
             btn.style.background = "#00c853";
             btn.innerText = "Applied ✅";
             setTimeout(() => {
@@ -354,18 +314,16 @@
                         value: JSON.stringify(val)
                     }, { onConflict: 'key' });
                 }
-
                 btn.style.background = "#00c853";
                 btn.innerHTML = '<i class="fas fa-check-circle"></i>site Mirror Active!';
                 setTimeout(() => {
                     btn.style.background = "";
-                    btn.innerHTML = 'Apply All Visual Changes ✅';
+                    btn.innerHTML = 'Save & Update Live Site ✅';
                 }, 3000);
             } catch (err) { btn.innerText = "Sync Error!"; }
         }
 
         function closeToolbox() {
-            if (activeEl) activeEl.classList.remove('v5-editing');
             document.getElementById('studio-toolbox').style.display = 'none';
         }
     </script>
