@@ -206,31 +206,16 @@
 
     <div class="toast" id="toast">Successfully updated live site! 🚀</div>
 
+    <!-- 1. LOAD SUPABASE SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- 2. CORE AUTH LOGIC (No dependencies) -->
     <script>
-        console.log("WebCraft Admin Script Loading...");
-
-        const SUPABASE_URL = 'https://imuqwquuytcfuqbpaqoa.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxYnBhcW9hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NTQwNzcsImV4cCI6MjA5MTAzMDA3N30.J_E1pbC8nJKMsIMJE-IAnI_3lV47q6WX0HuSSWIhpd4';
-        
-        let supabase;
-        try {
-            // Standard initialization for Supabase v2 CDN
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            console.log("Supabase initialized successfully.");
-        } catch (err) {
-            console.error("Supabase Error:", err);
-        }
-
         function login() {
             const keyInput = document.getElementById('master-key');
-            if (!keyInput) {
-                console.error("Master key input not found");
-                return;
-            }
-            const key = keyInput.value;
-            console.log("Login attempt...");
+            if (!keyInput) return;
             
+            const key = keyInput.value;
             if (key === 'mumin69') {
                 localStorage.setItem('admin_auth', 'true');
                 showDashboard();
@@ -245,54 +230,79 @@
         }
 
         function showDashboard() {
-            console.log("Revealing Dashboard...");
-            const authGate = document.getElementById('auth-gate');
-            const dashboard = document.getElementById('main-dashboard');
-            const saveBar = document.getElementById('save-bar');
+            document.getElementById('auth-gate').style.display = 'none';
+            const dash = document.getElementById('main-dashboard');
+            const bar = document.getElementById('save-bar');
+            if (dash) dash.style.display = 'block';
+            if (bar) bar.style.display = 'flex';
             
-            if (authGate) authGate.style.display = 'none';
-            if (dashboard) dashboard.style.display = 'block';
-            if (saveBar) saveBar.style.display = 'flex';
-            
-            loadData();
+            // Trigger data load if Supabase is ready
+            if (typeof initAndLoad === 'function') {
+                initAndLoad();
+            }
+        }
+
+        // Auto-check on load
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('admin_auth') === 'true') {
+                showDashboard();
+            }
+        });
+    </script>
+
+    <!-- 3. DATABASE SYNC LOGIC -->
+    <script>
+        const SUPABASE_URL = 'https://imuqwquuytcfuqbpaqoa.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxYnBhcW9hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NTQwNzcsImV4cCI6MjA5MTAzMDA3N30.J_E1pbC8nJKMsIMJE-IAnI_3lV47q6WX0HuSSWIhpd4';
+        
+        let supabase;
+
+        function initAndLoad() {
+            try {
+                if (!window.supabase) {
+                    console.error("Supabase SDK not loaded yet.");
+                    return;
+                }
+                if (!supabase) {
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                }
+                loadData();
+            } catch (err) {
+                console.error("Supabase Init Error:", err);
+            }
         }
 
         async function loadData() {
-            if (!supabase) {
-                console.error("Cannot load data: Supabase not initialized");
-                return;
-            }
+            if (!supabase) return;
             try {
-                // 1. Load Contact Info
                 const { data: settings } = await supabase.from('site_settings').select('*');
                 if (settings) {
-                    const phone = settings.find(s => s.key === 'primary_phone')?.value || '+91 84929 22783';
-                    const email = settings.find(s => s.key === 'primary_email')?.value || 'bhatillahi21@gmail.com';
-                    document.getElementById('site_phone').value = phone;
-                    document.getElementById('site_email').value = email;
+                    const phone = settings.find(s => s.key === 'primary_phone')?.value;
+                    const email = settings.find(s => s.key === 'primary_email')?.value;
+                    if (phone) document.getElementById('site_phone').value = phone;
+                    if (email) document.getElementById('site_email').value = email;
                 }
 
-                // 2. Load Pricing
                 const { data: pricing } = await supabase.from('pricing').select('*').order('id', { ascending: true });
-                if (pricing && pricing.length > 0) {
+                if (pricing) {
                     pricing.forEach((item, i) => {
-                        const card = document.querySelectorAll('.pricing-card')[i];
-                        if (card) {
-                            card.querySelector('.p-badge').value = item.badge || '';
-                            card.querySelector('.p-name').value = item.name || '';
-                            card.querySelector('.p-price').value = item.price || '';
-                            card.querySelector('.p-features').value = item.features || '';
-                            card.querySelector('.p-featured').checked = item.featured || false;
+                        const cards = document.querySelectorAll('.pricing-card');
+                        if (cards[i]) {
+                            cards[i].querySelector('.p-badge').value = item.badge || '';
+                            cards[i].querySelector('.p-name').value = item.name || '';
+                            cards[i].querySelector('.p-price').value = item.price || '';
+                            cards[i].querySelector('.p-features').value = item.features || '';
+                            cards[i].querySelector('.p-featured').checked = item.featured || false;
                         }
                     });
                 }
-            } catch (e) {
-                console.error("Data Load Error:", e);
-            }
+            } catch (e) { console.error("Load Error:", e); }
         }
 
         async function saveAll() {
             const btn = document.getElementById('saveBtn');
+            if (!supabase) { alert("Database not connected. Please refresh."); return; }
+            
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
 
@@ -318,8 +328,7 @@
                 await supabase.from('pricing').upsert(pricingData, { onConflict: 'id' });
                 showToast();
             } catch (err) {
-                console.error(err);
-                alert('Error saving data. Please check console.');
+                alert('Error saving: ' + err.message);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-save"></i> Save & Publish Updates';
@@ -331,13 +340,7 @@
             t.style.display = 'block';
             setTimeout(() => t.style.display = 'none', 3000);
         }
-
-        // Auto-login check on page load
-        window.onload = () => {
-            if (localStorage.getItem('admin_auth') === 'true') {
-                showDashboard();
-            }
-        };
+    </script>
     </script>
 </body>
 </html>
