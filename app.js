@@ -796,6 +796,14 @@ function renderPricing(data) {
     if (!grid) return;
     grid.innerHTML = '';
     data.forEach((pkg, index) => {
+        // Sync Hero Prices with the FIRST (Starter) plan
+        if (index === 0) {
+            const starterPrice = pkg.price;
+            ['hero-starter-price', 'hero-price-badge', 'hero-stat-price'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = starterPrice;
+            });
+        }
         const delay = index * 150;
         grid.innerHTML += `
       <div class="pricing-card ${pkg.featured ? 'featured' : ''}" data-aos="fade-up" data-delay="${delay}">
