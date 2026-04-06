@@ -657,6 +657,7 @@
       let v5ActiveEl = null;
       let v5Mode = 'color';
       let v5Pending = new Map();
+      let v5Heart = null;
 
       // Check for Admin Mode
       if (window.location.search.includes('admin=true')) {
@@ -672,6 +673,13 @@
       }
 
       function initV5Designer() {
+          // Initialize Heart style tag
+          if (!document.getElementById('v5-heart-pulse')) {
+              v5Heart = document.createElement('style');
+              v5Heart.id = 'v5-heart-pulse';
+              document.head.appendChild(v5Heart);
+          } else { v5Heart = document.getElementById('v5-heart-pulse'); }
+
           document.body.addEventListener('dblclick', (e) => {
               if (localStorage.getItem('v5_active') !== 'true') return;
               e.preventDefault();
@@ -699,18 +707,22 @@
       }
 
       function v5Pulse(type) {
-          if (!v5ActiveEl) return;
+          if (!v5ActiveEl || !v5Heart) return;
           const val = document.getElementById('v5-' + (type==='borderRadius'?'radius':type)).value;
           const prop = (type === 'color') ? v5Mode : type;
+          
+          // ATOMIC PULSE: Directly Modify Element for Preview
           v5ActiveEl.style.setProperty(prop, (type !== 'color' ? val + 'px' : val), 'important');
       }
 
       function v5Confirm() {
           if (!v5ActiveEl) return;
           const id = v5ActiveEl.id;
+          
+          // Store in pending for Sync
           v5Pending.set(id, {
               color: v5ActiveEl.style.color,
-              background: v5ActiveEl.style.backgroundColor,
+              backgroundColor: v5ActiveEl.style.backgroundColor,
               fontSize: v5ActiveEl.style.fontSize,
               padding: v5ActiveEl.style.padding,
               borderRadius: v5ActiveEl.style.borderRadius,
@@ -729,7 +741,6 @@
           
           try {
               for (let [id, val] of v5Pending) {
-                  // Using global _supabase from app.js
                   await _supabase.from('site_settings').upsert({
                       key: `v5_${id}`,
                       value: JSON.stringify(val)
