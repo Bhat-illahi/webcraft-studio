@@ -2092,3 +2092,25 @@ img {
     opacity: 0.5; /* Fade background on mobile */
   }
 }
+
+/* ===== DYNAMIC CONTENT STYLES ===== */
+#servicesGridDynamic, #pricingGridDynamic {
+  min-height: 200px;
+  position: relative;
+}
+
+.loading-spinner {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  font-family: 'Space Grotesk';
+  font-size: 1.2rem;
+  color: var(--primary);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; transform: scale(0.98); }
+  50% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.5; transform: scale(0.98); }
+}

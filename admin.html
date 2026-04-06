@@ -3,97 +3,545 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Admin Toolbox – WebCraft Studio</title>
+<title>Website Editor – WebCraft Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <link rel="stylesheet" href="style.css"/>
 <style>
-  body { background: #050510; display: flex; align-items: flex-start; justify-content: center; padding-top: 50px; min-height: 100vh; }
-  .admin-panel { background: var(--surface); border: 1px solid var(--primary); padding: 40px; border-radius: 20px; width: 100%; max-width: 600px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); }
-  .admin-header { margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
-  .admin-header h1 { font-size: 1.5rem; font-family: 'Space Grotesk'; }
-  .tool-box { margin-bottom: 40px; }
-  .tool-box h2 { font-size: 1rem; margin-bottom: 20px; color: var(--primary); }
-  .input-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 20px; }
-  .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
-  .back-btn { margin-top: 30px; display: inline-block; color: var(--text-muted); font-size: 0.9rem; }
-  .back-btn:hover { color: #fff; text-decoration: underline; }
+  :root { --admin-primary: #6C63FF; --admin-bg: #050510; --admin-surface: #0d0d1a; --admin-border: rgba(255,255,255,0.1); }
+  body { background: var(--admin-bg); min-height: 100vh; color: #fff; padding: 20px; font-family: 'Inter', sans-serif; }
+  .admin-container { max-width: 1100px; margin: 0 auto; }
+  
+  .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; border-bottom: 1px solid var(--admin-border); padding-bottom: 20px; }
+  .status-badge { font-size: 0.75rem; padding: 4px 12px; border-radius: 50px; background: rgba(255,255,255,0.05); display: flex; align-items: center; gap: 6px; margin-top: 5px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #666; }
+  .status-dot.online { background: #51CF66; box-shadow: 0 0 10px #51CF66; }
+  
+  .editor-section { margin-bottom: 50px; }
+  .section-title { font-size: 1.1rem; color: var(--admin-primary); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--admin-border); padding-bottom: 10px; font-weight: 700; }
+  .section-title span { display: flex; align-items: center; gap: 10px; }
+  
+  .editor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+  .editor-card { background: var(--admin-surface); border: 1px solid var(--admin-border); border-radius: 16px; padding: 24px; position: relative; }
+  .editor-card:hover { border-color: var(--admin-primary); }
+  
+  .form-group { margin-bottom: 15px; }
+  .form-group label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-group input, .form-group textarea { width: 100%; background: #050510; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 10px; font-size: 0.9rem; transition: border 0.3s; }
+  .form-group input:focus { border-color: var(--admin-primary); outline: none; }
+  
+  .save-btn { width: 100%; padding: 12px; background: var(--admin-primary); color: #fff; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .design-group { display: none; margin-bottom: 15px; }
+  .design-group.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } }
+  .back-btn { display: inline-flex; align-items: center; gap: 8px; color: #fff; text-decoration: none; font-size: 0.9rem; padding: 10px 20px; background: rgba(255,255,255,0.05); border-radius: 10px; border: 1px solid var(--admin-border); transition: 0.3s; }
+  .back-btn:hover { background: var(--admin-primary); border-color: var(--admin-primary); }
+
+  /* LOGIN GATE STYLES */
+  #login-gate { 
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background: #0a0a0a; z-index: 9999; display: flex; align-items: center; justify-content: center;
+  }
+  .login-card { 
+      background: rgba(255,255,255,0.03); padding: 40px; border-radius: 20px; text-align: center;
+      border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); width: 100%; max-width: 350px;
+  }
+  .login-card input { 
+      width: 100%; padding: 15px; margin: 20px 0; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); 
+      background: rgba(0,0,0,0.3); color: white; text-align: center; font-size: 1.1rem; letter-spacing: 2px;
+  }
+  .login-card h2 { margin: 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px; }
+  .hidden { display: none !important; }
+
+  .auth-overlay { position: fixed; inset: 0; background: var(--admin-bg); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+  .auth-card { background: var(--admin-surface); padding: 40px; border-radius: 20px; border: 1px solid var(--admin-primary); text-align: center; max-width: 400px; width: 100%; }
 </style>
 </head>
 <body>
 
-<div class="admin-panel">
-  <div class="admin-header">
-    <h1><i class="fas fa-user-shield"></i> Owner's Toolbox</h1>
-    <p style="font-size: 0.9rem; color: var(--text-muted);">Quickly generate message templates for your clients.</p>
+  <!-- SECURITY GATE -->
+  <div id="login-gate">
+      <div class="login-card">
+          <i class="fas fa-lock" style="font-size: 2rem; color: var(--admin-primary); margin-bottom: 20px;"></i>
+          <h2>Admin Gate</h2>
+          <p style="color: #888; font-size: 0.8rem;">Enter secret key to manage WebCraft</p>
+          <input type="password" id="admin-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter') verifyAdmin()">
+          <button class="save-btn" onclick="verifyAdmin()">Unlock Dashboard</button>
+      </div>
   </div>
 
-  <div class="tool-box">
-    <h2><i class="fas fa-check-circle"></i> Payment Confirmation Generator</h2>
-    <div class="input-grid">
-      <div class="form-group">
-        <label>Customer Name</label>
-        <input type="text" id="custName" placeholder="e.g. Aman Kumar"/>
-      </div>
-      <div class="form-group">
-        <label>Customer Phone (with country code)</label>
-        <input type="tel" id="custPhone" placeholder="e.g. 91XXXXXXXXXX"/>
-      </div>
-      <div class="form-group">
-        <label>Amount Received</label>
-        <input type="text" id="amount" placeholder="e.g. ₹3500"/>
-      </div>
-    </div>
-    <div class="btn-group">
-      <button onclick="sendConfirmation('payment')" class="btn btn-whatsapp">
-        <i class="fab fa-whatsapp"></i> Send Payment Confirmation
-      </button>
-      <button onclick="sendConfirmation('welcome')" class="btn btn-primary">
-        <i class="fab fa-whatsapp"></i> Send Welcome Message
-      </button>
-    </div>
-  </div>
+  <div id="admin-content" class="hidden">
 
-  <div class="tool-box">
-    <h2><i class="fas fa-copy"></i> Quick Templates</h2>
-    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Commonly used professional snippets:</p>
-    <div class="btn-group">
-      <button onclick="copyToClipboard('Meeting Link: meet.google.com/xyz-abc')" class="btn btn-outline sm">Meeting Link</button>
-      <button onclick="copyToClipboard('Order Confirmed: Processing your design now.')" class="btn btn-outline sm">Order Confirmed</button>
+<div class="admin-container">
+  <header class="admin-header">
+    <div>
+      <h1 style="font-family:'Space Grotesk'"><i class="fas fa-magic"></i> Live Website Editor</h1>
+      <div class="status-badge" id="dbStatus">
+        <div class="status-dot"></div>
+        <span>Connecting...</span>
+      </div>
     </div>
-  </div>
+    <a href="index.html" class="back-btn"><i class="fas fa-eye"></i> View Live Site</a>
+  </header>
 
-  <a href="index.html" class="back-btn">← Back to Main Website</a>
+  <section class="editor-section">
+    <div class="section-title">
+      <span><i class="fas fa-cog"></i> General Site Settings</span>
+      <button class="btn btn-outline sm" onclick="loadContent()" title="Refresh List"><i class="fas fa-sync"></i></button>
+    </div>
+    <div class="editor-grid">
+      <div class="editor-card">
+        <div class="form-group">
+          <label>WhatsApp Number</label>
+          <input type="text" id="set-phone" placeholder="e.g. 918492922783">
+        </div>
+        <button class="save-btn" onclick="saveSetting('primary_phone', 'set-phone')"><i class="fas fa-save"></i> Save Phone</button>
+      </div>
+      <div class="editor-card">
+        <div class="form-group">
+          <label>Business Email</label>
+          <input type="email" id="set-email" placeholder="e.g. hello@gmail.com">
+        </div>
+        <button class="save-btn" onclick="saveSetting('primary_email', 'set-email')"><i class="fas fa-save"></i> Save Email</button>
+      </div>
+      <div class="editor-card">
+        <div class="form-group">
+          <label>Working Hours</label>
+          <input type="text" id="set-hours" placeholder="e.g. Mon-Sat: 9AM - 9PM">
+        </div>
+        <button class="save-btn" onclick="saveSetting('working_hours', 'set-hours')"><i class="fas fa-save"></i> Save Hours</button>
+      </div>
+      <div class="editor-card" style="grid-column: 1 / -1;">
+        <!-- INTERACTIVE PREVIEW -->
+        <div style="margin-bottom: 25px; border: 1px dashed rgba(255,255,255,0.1); border-radius: 15px; padding: 40px; text-align: center; background: url('https://w.wallhaven.cc/full/1p/wallhaven-1p398v.jpg'); background-size: cover; position: relative;">
+          <div style="position: absolute; top: 10px; left: 10px; font-size: 0.6rem; color: rgba(255,255,255,0.5); text-transform: uppercase; background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 5px;">Live Preview (Click parts to design)</div>
+          <div id="preview-wrap" style="padding: 20px 0;">
+            <div id="note-preview" onclick="focusEditor('box')" style="margin: 0 auto; transition: all 0.2s; cursor: pointer; min-height: 40px; min-width: 100px; display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap;">
+              <i id="preview-icon" onclick="event.stopPropagation(); focusEditor('icon')" class="fas fa-exclamation-circle" style="transition: 0.2s; cursor: pointer;"></i>
+              <p style="margin:0;"><b id="preview-prefix" onclick="event.stopPropagation(); focusEditor('prefix')" style="cursor: pointer; transition: 0.2s; min-width: 20px; display: inline-block;"></b> <span id="preview-msg" onclick="event.stopPropagation(); focusEditor('msg')" style="cursor: pointer; transition: 0.2s; min-width: 20px; display: inline-block;"></span></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- MANUAL TABS (Safety) -->
+        <div style="display: flex; gap: 5px; margin-bottom: 10px;">
+            <button class="btn btn-outline sm" onclick="focusEditor('icon')">Icon</button>
+            <button class="btn btn-outline sm" onclick="focusEditor('prefix')">Prefix</button>
+            <button class="btn btn-outline sm" onclick="focusEditor('msg')">Message</button>
+            <button class="btn btn-outline sm" onclick="focusEditor('box')">Box Style</button>
+            <button class="btn btn-outline sm" style="margin-left: auto; border-color: rgba(255,107,107,0.3); color: #ff6b6b;" onclick="restoreDefaults()"><i class="fas fa-undo"></i> Reset Text</button>
+        </div>
+
+        <!-- CONTEXTUAL CONTROLS -->
+        <div id="editor-panels" style="display: grid; grid-template-columns: 1fr; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 15px;">
+          
+          <!-- TEXT PART -->
+          <div style="padding: 15px; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px;">
+            <h4 id="panel-title" style="margin:0 0 15px 0; color: #888; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;">Click a part to start designing</h4>
+            
+            <div id="group-icon" class="design-group">
+                <label>Icon Color & Size</label>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <input type="color" id="set-note-accent" oninput="updatePreview()">
+                    <input type="range" id="set-note-icon-size" min="10" max="60" value="20" oninput="updatePreview()">
+                </div>
+            </div>
+
+            <div id="group-prefix" class="design-group">
+                <label>Prefix (BOLD) Settings</label>
+                <input type="text" id="set-note-prefix" oninput="updatePreview()" placeholder="Note:">
+                <div style="display:flex; gap:10px; align-items:center; margin-top:10px;">
+                    <input type="color" id="set-note-prefix-color" oninput="updatePreview()">
+                    <input type="range" id="set-note-prefix-size" min="10" max="40" value="18" oninput="updatePreview()">
+                </div>
+            </div>
+
+            <div id="group-msg" class="design-group">
+                <label>Main Message Settings</label>
+                <textarea id="set-note" rows="2" oninput="updatePreview()" placeholder="Message..."></textarea>
+                <div style="display:flex; gap:10px; align-items:center; margin-top:10px;">
+                    <input type="color" id="set-note-color" oninput="updatePreview()">
+                    <input type="range" id="set-note-msg-size" min="10" max="40" value="16" oninput="updatePreview()">
+                </div>
+            </div>
+
+            <div id="group-box" class="design-group">
+                <label>Box Style (Glassmorphism)</label>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div><span style="font-size:0.6rem;">Background</span><input type="color" id="set-note-bg" value="#1a1a2e" oninput="updatePreview()"></div>
+                    <div><span style="font-size:0.6rem;">Glass Blur</span><input type="range" id="set-note-blur" min="0" max="25" value="10" oninput="updatePreview()"></div>
+                    <div><span style="font-size:0.6rem;">Width (px)</span><input type="range" id="set-note-width" min="200" max="1100" step="10" oninput="updatePreview()"></div>
+                    <div><span style="font-size:0.6rem;">Corners</span><input type="range" id="set-note-radius" min="0" max="50" step="1" oninput="updatePreview()"></div>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:15px;">
+                    <button class="btn btn-outline sm" onclick="setAlign('left')">L</button>
+                    <button class="btn btn-outline sm" onclick="setAlign('center')">C</button>
+                    <button class="btn btn-outline sm" onclick="setAlign('right')">R</button>
+                    <input type="hidden" id="set-note-align" value="center">
+                </div>
+                <div style="margin-top:15px; display:flex; align-items:center; gap:10px;">
+                    <input type="checkbox" id="set-note-box" onchange="updatePreview()">
+                    <span>Enable Box Background</span>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="save-btn" style="margin-top:20px;" onclick="saveNoteDesign()"><i class="fas fa-cloud-upload-alt"></i> Apply Live Design</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="editor-section">
+    <div class="section-title">
+      <span><i class="fas fa-concierge-bell"></i> Edit Services</span>
+      <div style="display:flex; gap:10px;">
+        <button class="save-btn" style="width:auto; padding: 8px 16px; background:#51CF66;" onclick="createNewService()">
+          <i class="fas fa-plus"></i> Add Service
+        </button>
+        <button class="btn btn-outline sm" onclick="loadContent()"><i class="fas fa-sync"></i></button>
+      </div>
+    </div>
+    <div class="editor-grid" id="servicesEditor">
+      <!-- Loading... -->
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="editor-section">
+    <div class="section-title">
+      <span><i class="fas fa-tags"></i> Edit Pricing Plans</span>
+      <div style="display:flex; gap:10px;">
+        <button class="save-btn" style="width:auto; padding: 8px 16px; background:#51CF66;" onclick="createNewPricing()">
+          <i class="fas fa-plus"></i> Add Plan
+        </button>
+        <button class="btn btn-outline sm" onclick="loadContent()"><i class="fas fa-sync"></i></button>
+      </div>
+    </div>
+    <div class="editor-grid" id="pricingEditor">
+      <!-- Loading... -->
+    </div>
+  </section>
 </div>
 
-<script>
-function sendConfirmation(type) {
-    const name = document.getElementById('custName').value.trim() || 'Client';
-    const phone = document.getElementById('custPhone').value.trim();
-    const amount = document.getElementById('amount').value.trim() || '';
+  </div> <!-- END ADMIN CONTENT -->
 
-    if (!phone) {
-        alert("Please enter the customer phone number.");
-        return;
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // SECURITY LOGIN LOGIC
+    function verifyAdmin() {
+        const pass = document.getElementById('admin-pass').value;
+        if (pass === 'admin123') {
+            sessionStorage.setItem('webcraft_admin', 'true');
+            showDashboard();
+        } else {
+            alert("❌ Access Denied: Incorrect Password");
+        }
     }
 
-    let msg = "";
-    if (type === 'payment') {
-        msg = `✅ *PAYMENT CONFIRMED — WebCraft Studio*\n\nHi ${name},\n\nWe have successfully received your payment of *${amount}*. \n\nThank you for choosing WebCraft Studio! Your website project is now officially in progress. We'll share the first draft with you shortly.\n\nBest regards,\nWebCraft Team`;
-    } else {
-        msg = `👋 *WELCOME — WebCraft Studio*\n\nHi ${name},\n\nThank you for reaching out! We are excited to build your professional website. Let's discuss your requirements in detail here.\n\nBest regards,\nWebCraft Team`;
+    function showDashboard() {
+        document.getElementById('login-gate').classList.add('hidden');
+        document.getElementById('admin-content').classList.remove('hidden');
+        initAdmin();
     }
 
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-    window.open(url, '_blank');
-}
+    // CHECK AUTH ON LOAD
+    window.onload = () => {
+        if (sessionStorage.getItem('webcraft_admin') === 'true') {
+            showDashboard();
+        }
+    }
 
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        alert("Copied: " + text);
+    async function initAdmin() {
+      // Setup Supabase
+      const SUPABASE_URL = 'https://imuqwquuytcfuqbpaqoa.supabase.co';
+      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxYnBhcW9hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NTQwNzcsImV4cCI6MjA5MTAzMDA3N30.J_E1pbC8nJKMsIMJE-IAnI_3lV47q6WX0HuSSWIhpd4';
+      const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      window._supabase = _supabase; // Global access for functions
+
+      loadContent();
+    }
+
+async function loadContent() {
+  const dot = document.querySelector('.status-dot');
+  const span = document.querySelector('#dbStatus span');
+
+  try {
+    // 1. Fetch Services & Pricing
+    const { data: services } = await _supabase.from('services').select('*').order('id', { ascending: true });
+    const { data: pricing } = await _supabase.from('pricing').select('*').order('id', { ascending: true });
+    
+    // 2. Fetch Settings (Safe fetch - don't crash if table missing yet)
+    let settingsData = [];
+    try {
+      const { data: set } = await _supabase.from('site_settings').select('*');
+      if (set) settingsData = set;
+    } catch(e) {}
+
+    settingsData.forEach(s => {
+      if (s.key === 'primary_phone') document.getElementById('set-phone').value = s.value;
+      if (s.key === 'primary_email') document.getElementById('set-email').value = s.value;
+      if (s.key === 'working_hours') {
+        const hr = document.getElementById('dynamic_hours');
+        if (hr) hr.innerText = s.value;
+        document.getElementById('set-hours').value = s.value;
+      }
+      if (s.key === 'note_prefix') document.getElementById('set-note-prefix').value = s.value;
+      if (s.key === 'note_width') document.getElementById('set-note-width').value = s.value;
+      if (s.key === 'note_radius') document.getElementById('set-note-radius').value = s.value;
+      if (s.key === 'note_align') document.getElementById('set-note-align').value = s.value;
+      if (s.key === 'note_bg') document.getElementById('set-note-bg').value = s.value;
+      if (s.key === 'note_blur') document.getElementById('set-note-blur').value = s.value;
+      if (s.key === 'note_icon_size') document.getElementById('set-note-icon-size').value = s.value;
+      if (s.key === 'note_prefix_size') document.getElementById('set-note-prefix-size').value = s.value;
+      if (s.key === 'note_msg_size') document.getElementById('set-note-msg-size').value = s.value;
+      if (s.key === 'demo_note') document.getElementById('set-note').value = s.value;
+      if (s.key === 'note_color') document.getElementById('set-note-color').value = s.value;
+      if (s.key === 'note_accent') {
+        document.getElementById('set-note-accent').value = s.value;
+        document.getElementById('set-note-prefix-color').value = s.value;
+      }
+      if (s.key === 'note_box') document.getElementById('set-note-box').checked = (s.value === 'YES');
     });
-}
-</script>
+    updatePreview();
+    focusEditor('box');
 
+    renderServices(services || []);
+    renderPricing(pricing || []);
+
+    dot.classList.add('online');
+    span.innerText = "Database Online";
+  } catch (err) {
+    span.innerText = "Connection Error!";
+    console.error(err);
+  }
+}
+
+function renderServices(data) {
+  const container = document.getElementById('servicesEditor');
+  if (data.length === 0) {
+    container.innerHTML = '<div class="editor-card" style="text-align:center; opacity:0.5;"><p>Database empty. Click "Add Service" to start.</p></div>';
+    return;
+  }
+  container.innerHTML = data.map(item => `
+    <div class="editor-card">
+      <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
+        <span style="font-weight:700; color:var(--admin-primary); font-size:0.8rem;">SERVICE #${item.id}</span>
+        <button onclick="deleteRow('services', ${item.id})" style="border:none; background:none; color:#FF6B6B; cursor:pointer;"><i class="fas fa-trash"></i></button>
+      </div>
+      <div class="form-group"><label>Icon (Emoji)</label><input type="text" id="svc-icon-${item.id}" value="${item.icon}"></div>
+      <div class="form-group"><label>Title</label><input type="text" id="svc-title-${item.id}" value="${item.title}"></div>
+      <div class="form-group"><label>Desc</label><textarea id="svc-desc-${item.id}" rows="2">${item.desc_text}</textarea></div>
+      <button class="save-btn" onclick="saveService(${item.id})"><i class="fas fa-save"></i> Save</button>
+    </div>
+  `).join('');
+}
+
+function renderPricing(data) {
+  const container = document.getElementById('pricingEditor');
+  if (data.length === 0) {
+    container.innerHTML = '<div class="editor-card" style="text-align:center; opacity:0.5;"><p>No pricing found.</p></div>';
+    return;
+  }
+  container.innerHTML = data.map(item => `
+    <div class="editor-card">
+      <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
+        <span style="font-weight:700; color:var(--admin-primary); font-size:0.8rem;">PLAN #${item.id}</span>
+        <button onclick="deleteRow('pricing', ${item.id})" style="border:none; background:none; color:#FF6B6B; cursor:pointer;"><i class="fas fa-trash"></i></button>
+      </div>
+      <div class="form-group"><label>Badge</label><input type="text" id="prc-badge-${item.id}" value="${item.badge}"></div>
+      <div class="form-group"><label>Price</label><input type="text" id="prc-price-${item.id}" value="${item.price}"></div>
+      <div class="form-group"><label>Features</label><textarea id="prc-feat-${item.id}" rows="2">${item.features}</textarea></div>
+      <button class="save-btn" onclick="savePricing(${item.id})"><i class="fas fa-save"></i> Save</button>
+    </div>
+  `).join('');
+}
+
+// ACTION FUNCTIONS
+async function saveSetting(key, inputId) {
+  const val = document.getElementById(inputId).value;
+  const btn = event.currentTarget;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+  // UPSERT: Create the row if it doesn't exist, otherwise update it.
+  const { error } = await _supabase.from('site_settings').upsert(
+    { key: key, value: val }, 
+    { onConflict: 'key' }
+  );
+  
+  if (!error) {
+    btn.classList.add('success');
+    btn.innerHTML = '<i class="fas fa-check"></i> SAVED TO CLOUD';
+    setTimeout(() => {
+      btn.classList.remove('success');
+      btn.innerHTML = '<i class="fas fa-save"></i> Update ' + key.split('_')[1];
+    }, 2000);
+  } else {
+    alert("❌ Connection Error: " + error.message);
+    btn.innerHTML = '<i class="fas fa-save"></i> Retry';
+    btn.disabled = false;
+  }
+}
+
+function focusEditor(part) {
+    document.querySelectorAll('.design-group').forEach(g => g.classList.remove('active'));
+    const target = document.getElementById('group-' + part);
+    if (target) {
+        target.classList.add('active');
+        document.getElementById('panel-title').innerText = part.toUpperCase() + " DESIGN SETTINGS";
+    }
+}
+
+function restoreDefaults() {
+    if(confirm("Restore default text? Your design (colors/sizes) will stay same.")) {
+        document.getElementById('set-note-prefix').value = "Important Note:";
+        document.getElementById('set-note').value = "These are sample demo websites & are not functional.";
+        updatePreview();
+    }
+}
+
+function updatePreview() {
+  const prefix = document.getElementById('set-note-prefix').value;
+  const prefixSize = document.getElementById('set-note-prefix-size').value;
+  const prefixColor = document.getElementById('set-note-prefix-color').value;
+  
+  const msg = document.getElementById('set-note').value;
+  const msgSize = document.getElementById('set-note-msg-size').value;
+  const msgColor = document.getElementById('set-note-color').value;
+  
+  const iconSize = document.getElementById('set-note-icon-size').value;
+  const accent = document.getElementById('set-note-accent').value;
+  
+  const bg = document.getElementById('set-note-bg').value;
+  const blur = document.getElementById('set-note-blur').value;
+  const width = document.getElementById('set-note-width').value;
+  const radius = document.getElementById('set-note-radius').value;
+  const align = document.getElementById('set-note-align').value;
+  const isBox = document.getElementById('set-note-box').checked;
+
+  const preview = document.getElementById('note-preview');
+  const icon = document.getElementById('preview-icon');
+  const pre = document.getElementById('preview-prefix');
+  const txt = document.getElementById('preview-msg');
+
+  pre.innerText = prefix;
+  pre.style.color = prefixColor;
+  pre.style.fontSize = prefixSize + 'px';
+  
+  icon.style.color = accent;
+  icon.style.fontSize = iconSize + 'px';
+  
+  txt.innerText = msg;
+  txt.style.color = msgColor;
+  txt.style.fontSize = msgSize + 'px';
+  
+  preview.style.maxWidth = width + 'px';
+  preview.style.borderRadius = radius + 'px';
+  
+  if (align === 'left') { preview.style.margin = "0 auto 0 0"; preview.style.textAlign = "left"; }
+  else if (align === 'right') { preview.style.margin = "0 0 0 auto"; preview.style.textAlign = "right"; }
+  else { preview.style.margin = "0 auto"; preview.style.textAlign = "center"; }
+
+  if (isBox) {
+    preview.style.background = hexToRgba(bg, 0.2); // Forced semi-transparency for Glass
+    preview.style.backdropFilter = `blur(${blur}px)`;
+    preview.style.webkitBackdropFilter = `blur(${blur}px)`;
+    preview.style.border = '1px solid rgba(255,255,255,0.1)';
+    preview.style.padding = '20px';
+  } else {
+    preview.style.background = 'none';
+    preview.style.backdropFilter = `none`;
+    preview.style.border = 'none';
+    preview.style.padding = '5px';
+  }
+}
+
+function hexToRgba(hex, alpha) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function setAlign(val) {
+  document.getElementById('set-note-align').value = val;
+  updatePreview();
+}
+
+async function saveNoteDesign() {
+  const btn = event.currentTarget;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Applying Design Studio Settings...';
+
+  const updates = [
+    { key: 'note_prefix', value: document.getElementById('set-note-prefix').value },
+    { key: 'note_prefix_color', value: document.getElementById('set-note-prefix-color').value },
+    { key: 'note_prefix_size', value: document.getElementById('set-note-prefix-size').value },
+    { key: 'demo_note', value: document.getElementById('set-note').value },
+    { key: 'note_color', value: document.getElementById('set-note-color').value },
+    { key: 'note_msg_size', value: document.getElementById('set-note-msg-size').value },
+    { key: 'note_accent', value: document.getElementById('set-note-accent').value },
+    { key: 'note_icon_size', value: document.getElementById('set-note-icon-size').value },
+    { key: 'note_bg', value: document.getElementById('set-note-bg').value },
+    { key: 'note_blur', value: document.getElementById('set-note-blur').value },
+    { key: 'note_width', value: document.getElementById('set-note-width').value },
+    { key: 'note_radius', value: document.getElementById('set-note-radius').value },
+    { key: 'note_align', value: document.getElementById('set-note-align').value },
+    { key: 'note_box', value: document.getElementById('set-note-box').checked ? 'YES' : 'NO' }
+  ];
+
+  const { error } = await _supabase.from('site_settings').upsert(updates, { onConflict: 'key' });
+
+  if (!error) {
+    btn.innerHTML = '<i class="fas fa-check"></i> DESIGN STUDIO LIVE!';
+    setTimeout(() => {
+      btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Apply Live Design';
+      btn.disabled = false;
+    }, 2000);
+  } else {
+    alert("Error: " + error.message);
+    btn.disabled = false;
+  }
+}
+
+async function saveService(id) {
+  const { error } = await _supabase.from('services').update({
+    icon: document.getElementById(`svc-icon-${id}`).value,
+    title: document.getElementById(`svc-title-${id}`).value,
+    desc_text: document.getElementById(`svc-desc-${id}`).value
+  }).eq('id', id);
+  if (!error) alert("Saved!");
+}
+
+async function savePricing(id) {
+  const { error } = await _supabase.from('pricing').update({
+    badge: document.getElementById(`prc-badge-${id}`).value,
+    price: document.getElementById(`prc-price-${id}`).value,
+    features: document.getElementById(`prc-feat-${id}`).value
+  }).eq('id', id);
+  if (!error) alert("Saved!");
+}
+
+async function createNewService() {
+  await _supabase.from('services').insert([{ icon: '✨', title: 'New Service', desc_text: '...', clr: '#6C63FF', link: '#' }]);
+  loadContent();
+}
+
+async function createNewPricing() {
+  await _supabase.from('pricing').insert([{ badge: 'New', price: '₹0', name: 'Plan', features: '...', featured: false, action_type: '#' }]);
+  loadContent();
+}
+
+async function deleteRow(table, id) {
+  if (confirm("Delete this?")) {
+    await _supabase.from(table).delete().eq('id', id);
+    loadContent();
+  }
+}
+
+document.getElementById('adminPass').addEventListener('keypress', (e) => { if (e.key === 'Enter') checkAuth(); });
+</script>
 </body>
 </html>

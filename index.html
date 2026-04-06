@@ -96,10 +96,11 @@
       <div class="section-header">
         <span class="section-tag">Our Work</span>
         <h2>Portfolio <span class="gradient-text">Showcase</span></h2>
-        <p class="portfolio-demo-note" id="portfolioDemoNoteV2" style="background: rgba(255,107,107,0.1); border: 2px solid #FF6B6B; padding: 20px; border-radius: 12px; margin-top: 20px;"><i class="fas fa-exclamation-circle" style="color: #FF6B6B; font-size: 1.5rem; margin-right: 12px;"></i>
-          <strong style="color: #FF6B6B;">Important Note:</strong>
-          These are sample demo websites & are not functional. The customized ones we build for you will be even better!
-        </p>
+        <div class="demo-note" data-aos="fade-up">
+        <i class="fas fa-exclamation-circle"></i>
+        <p id="dynamic_demo_note">Important Note: These are sample demo websites & are not functional. The customized ones we
+          build for you will be even better!</p>
+      </div>
       </div>
       <div class="portfolio-grid reveal-up">
         <a href="demo-salon.html" target="_blank" class="portfolio-item-link">
@@ -252,55 +253,9 @@
         <h2>Our <span class="gradient-text">Services</span></h2>
         <p>From basic landing pages to full business websites, we've got you covered</p>
       </div>
-      <div class="services-grid reveal-up">
-        <a href="gallery-salon.html" class="service-item-link">
-          <div class="service-card" data-aos="fade-up">
-            <div class="service-icon" style="--clr:#6C63FF">✂️</div>
-            <h3>Salon & Spa Websites</h3>
-            <p>Beautiful booking-enabled websites for salons, spas, and beauty studios with appointment features.</p>
-            <span class="btn btn-sm btn-primary">View Demos &rarr;</span>
-          </div>
-        </a>
-        <a href="gallery-barber.html" class="service-item-link">
-          <div class="service-card" data-aos="fade-up" data-delay="100">
-            <div class="service-icon" style="--clr:#FF6584">💈</div>
-            <h3>Barber Shop Sites</h3>
-            <p>Masculine, modern designs for barber shops with gallery, services, and online booking.</p>
-            <span class="btn btn-sm btn-primary">View Demos &rarr;</span>
-          </div>
-        </a>
-        <a href="gallery-jewelry.html" class="service-item-link">
-          <div class="service-card" data-aos="fade-up" data-delay="200">
-            <div class="service-icon" style="--clr:#FFD43B">💍</div>
-            <h3>Jewellery Websites</h3>
-            <p>Luxurious, product-showcasing websites for goldsmith and jewellery businesses.</p>
-            <span class="btn btn-sm btn-primary">View Demos &rarr;</span>
-          </div>
-        </a>
-        <a href="gallery-business.html" class="service-item-link">
-          <div class="service-card" data-aos="fade-up" data-delay="300">
-            <div class="service-icon" style="--clr:#51CF66">🏪</div>
-            <h3>Small Business Sites</h3>
-            <p>Professional landing pages for local shops, clinics, restaurants, and all businesses.</p>
-            <span class="btn btn-sm btn-primary">View Demos &rarr;</span>
-          </div>
-        </a>
-        <a href="gallery-ecommerce.html" class="service-item-link">
-          <div class="service-card" data-aos="fade-up" data-delay="400">
-            <div class="service-icon" style="--clr:#339AF0">🛒</div>
-            <h3>E-Commerce Stores</h3>
-            <p>Online stores with product listings, cart, and payment integration for selling online.</p>
-            <span class="btn btn-sm btn-primary">View Demos &rarr;</span>
-          </div>
-        </a>
-        <a href="gallery-portfolio.html" class="service-item-link">
-          <div class="service-card" data-aos="fade-up" data-delay="500">
-            <div class="service-icon" style="--clr:#F06595">📱</div>
-            <h3>Portfolio Websites</h3>
-            <p>Showcase your work beautifully with a personal or professional portfolio website.</p>
-            <span class="btn btn-sm btn-primary">View Demos &rarr;</span>
-          </div>
-        </a>
+      <div class="services-grid reveal-up" id="servicesGridDynamic">
+        <!-- Dynamic Services will be injected here by app.js -->
+        <div class="loading-spinner">✨ Loading Services...</div>
       </div>
     </div>
   </section>
@@ -365,53 +320,9 @@
         <h2>Simple, Transparent <span class="gradient-text">Pricing</span></h2>
         <p>No hidden charges. You get exactly what you pay for.</p>
       </div>
-      <div class="pricing-grid">
-        <div class="pricing-card">
-          <div class="pricing-badge">Starter</div>
-          <div class="pricing-price">₹2500 <span>– ₹3000</span></div>
-          <div class="pricing-name">Basic Page</div>
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> 1-Page Website</li>
-            <li><i class="fas fa-check"></i> Mobile Friendly</li>
-            <li><i class="fas fa-check"></i> Contact Form</li>
-            <li><i class="fas fa-check"></i> Basic SEO</li>
-            <li class="no"><i class="fas fa-times"></i> No Animations</li>
-            <li class="no"><i class="fas fa-times"></i> No Gallery</li>
-          </ul>
-          <a href="#order" class="btn btn-outline"
-            onclick="selectPackage('Small Business / Shop', '₹2500 – ₹3000 (Basic)')">Start Project</a>
-        </div>
-        <div class="pricing-card featured">
-          <div class="popular-tag">Most Popular</div>
-          <div class="pricing-badge">Professional</div>
-          <div class="pricing-price">₹3000 <span>– ₹5000</span></div>
-          <div class="pricing-name">Business Website</div>
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> Multi-Page Site</li>
-            <li><i class="fas fa-check"></i> Modern Animations</li>
-            <li><i class="fas fa-check"></i> Photo Gallery</li>
-            <li><i class="fas fa-check"></i> WhatsApp Integration</li>
-            <li><i class="fas fa-check"></i> SEO Optimized</li>
-            <li><i class="fas fa-check"></i> Mobile Responsive</li>
-          </ul>
-          <a href="#order" class="btn btn-primary"
-            onclick="selectPackage('Small Business / Shop', '₹3000 – ₹5000 (Professional)')">Start Project</a>
-        </div>
-        <div class="pricing-card">
-          <div class="pricing-badge">Premium</div>
-          <div class="pricing-price">₹5000<span class="plus-icon" style="color:white;">+</span></div>
-          <div class="pricing-name">E-Commerce / Advanced</div>
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> Online Store</li>
-            <li><i class="fas fa-check"></i> Payment Gateway</li>
-            <li><i class="fas fa-check"></i> Product Management</li>
-            <li><i class="fas fa-check"></i> Admin Panel</li>
-            <li><i class="fas fa-check"></i> Advanced SEO</li>
-            <li><i class="fas fa-check"></i> Priority Support</li>
-          </ul>
-          <a href="#order" class="btn btn-outline" onclick="selectPackage('E-Commerce Store', '₹5000+ (Premium)')">Order
-            Now</a>
-        </div>
+      <div class="pricing-grid" id="pricingGridDynamic">
+        <!-- Dynamic Pricing will be injected here by app.js -->
+        <div class="loading-spinner">💰 Loading Plans...</div>
       </div>
     </div>
   </section>
@@ -523,19 +434,19 @@
         <div class="contact-card">
           <i class="fab fa-whatsapp"></i>
           <h3>WhatsApp</h3>
-          <p>+91 84929 22783</p>
-          <a href="https://wa.me/918492922783" target="_blank" class="btn btn-whatsapp sm">Message Us</a>
+          <p id="dynamic_phone">+91 84929 22783</p>
+          <a href="https://wa.me/918492922783" target="_blank" class="btn btn-whatsapp sm" id="dynamic_whatsapp_link">Message Us</a>
         </div>
         <div class="contact-card">
           <i class="fas fa-envelope"></i>
           <h3>Email</h3>
-          <p>bhatillahi21@gmail.com</p>
-          <a href="mailto:bhatillahi21@gmail.com" class="btn btn-outline sm">Send Email</a>
+          <p id="dynamic_email">bhatillahi21@gmail.com</p>
+          <a href="mailto:bhatillahi21@gmail.com" class="btn btn-outline sm" id="dynamic_email_link">Send Email</a>
         </div>
         <div class="contact-card">
           <i class="fas fa-clock"></i>
           <h3>Working Hours</h3>
-          <p>Mon – Sat: 9 AM – 9 PM</p>
+          <p id="dynamic_hours">Mon – Sat: 9 AM – 9 PM</p>
           <span class="available-badge" id="workingStatus">🕒 Checking Status...</span>
         </div>
       </div>
@@ -627,7 +538,9 @@
     </div>
   </div>
 
-  <script src="app.js?v=6"></script>
+  <!-- Supabase Cloud Database SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js?v=SupabaseCMS"></script>
 </body>
 
 </html>
