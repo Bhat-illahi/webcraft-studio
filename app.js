@@ -838,14 +838,18 @@ async function loadSiteSettings() {
         if (banner) {
             const isVisible = s('note_box') === 'true' || s('note_box') === 'YES';
             banner.style.display = isVisible ? 'flex' : 'none';
+            if (isVisible) {
+                banner.style.flexDirection = 'column';
+                banner.style.textAlign = 'center';
+            }
             if (s('note_bg')) {
                 const hex = s('note_bg');
-                // Force 30% transparency if it's a solid hex color to ensure GLASS look
+                // Force 45% transparency if it's a solid hex color to ensure GLASS look
                 if (hex.startsWith('#')) {
                     const r = parseInt(hex.slice(1, 3), 16);
                     const g = parseInt(hex.slice(3, 5), 16);
                     const b = parseInt(hex.slice(5, 7), 16);
-                    banner.style.background = `rgba(${r}, ${g}, ${b}, 0.35)`;
+                    banner.style.background = `rgba(${r}, ${g}, ${b}, 0.45)`;
                 } else {
                     banner.style.background = hex;
                 }

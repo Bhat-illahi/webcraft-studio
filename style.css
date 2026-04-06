@@ -418,6 +418,33 @@ img {
   z-index: 2;
 }
 
+.demo-note {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 15px !important;
+  text-align: center !important;
+  margin: 30px auto;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  transition: all 0.4s ease;
+  overflow: hidden;
+}
+
+.demo-note .note-icon {
+  font-size: 2.2rem;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.demo-note p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
 .hero-badge {
   display: inline-flex;
   align-items: center;
