@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebCraft V5 • Visual Master Designer</title>
+    <title>WebCraft V5 • High-Visible Visual Master</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
     <style>
         :root {
-            --admin-bg: #050510;
+            --admin-bg: #000000;
             --admin-card: #0c0c1e;
             --admin-primary: #6C63FF;
             --admin-accent: #00f2fe;
@@ -22,12 +22,12 @@
             background: var(--admin-bg);
             color: var(--admin-text);
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+            overflow: hidden;
             width: 100vw;
             height: 100vh;
         }
 
-        /* Top Unified Navigation */
+        /* Top Bar Unified */
         .admin-nav {
             position: fixed;
             top: 0;
@@ -38,42 +38,28 @@
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(108, 99, 255, 0.2);
             z-index: 2000;
-            display: none; /* Shown after auth */
+            display: none;
             align-items: center;
             justify-content: space-between;
             padding: 0 40px;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--admin-text);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo i {
-            color: var(--admin-primary);
-        }
-
-        /* The Designer Canvas */
         #designer-canvas {
             width: 100%;
             height: 100vh;
-            border: none;
-            background: #fff;
+            background: #000;
             overflow-y: auto;
-            display: none; /* Shown after auth */
+            display: none;
             padding-top: 70px;
             box-sizing: border-box;
+            color: #fff; /* Ensure text is white against black */
         }
 
         /* Login Gate */
         #login-gate {
             position: fixed;
             inset: 0;
-            background: var(--admin-bg);
+            background: #000;
             z-index: 9999;
             display: flex;
             align-items: center;
@@ -81,13 +67,13 @@
         }
 
         .login-card {
-            background: var(--admin-card);
+            background: #0c0c1e;
             padding: 50px;
             border-radius: 25px;
             border: 1px solid var(--admin-primary);
-            width: 350px;
+            width: 400px;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            box-shadow: 0 0 50px rgba(108, 99, 255, 0.2);
         }
 
         .login-card input {
@@ -95,60 +81,88 @@
             padding: 15px;
             border-radius: 12px;
             background: #000;
-            border: 1px solid #333;
+            border: 1px solid var(--admin-primary);
             color: #fff;
             margin: 20px 0;
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
+            font-family: 'Space Grotesk';
         }
 
-        .btn-auth {
-            background: var(--admin-primary);
-            color: #fff;
-            border: none;
-            padding: 15px;
-            width: 100%;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 1.1rem;
-        }
-
-        /* Floating Toolbox */
-        #magic-toolbox {
+        /* Floating Studio Bar */
+        #studio-toolbox {
             position: fixed;
-            bottom: 120px;
+            top: 100px;
             right: 40px;
-            background: rgba(12, 12, 30, 0.9);
+            background: rgba(12, 12, 30, 0.95);
             backdrop-filter: blur(20px);
-            padding: 20px;
-            border-radius: 20px;
+            padding: 25px;
+            border-radius: 24px;
             border: 1px solid var(--admin-primary);
-            width: 300px;
+            width: 320px;
             z-index: 3000;
             display: none;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
         }
 
         .tool-row {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .tool-row label {
             display: block;
-            margin-bottom: 5px;
-            font-size: 0.8rem;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
             color: var(--admin-gray);
         }
 
-        /* Bottom Fixed Save Bar */
+        input[type="color"] {
+            border: none;
+            background: none;
+            width: 100%;
+            height: 40px;
+            cursor: pointer;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--admin-primary);
+        }
+
+        /* Bottom Mirror Fix Bar */
         .apply-bar {
             position: fixed;
-            bottom: 30px;
+            bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 2500;
             display: none;
+        }
+
+        .btn-apply {
+            background: linear-gradient(135deg, var(--admin-primary), #4e36f5);
+            color: #fff;
+            padding: 18px 60px;
+            border-radius: 100px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(108, 99, 255, 0.4);
+            transition: 0.3s;
+        }
+
+        .btn-apply:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 60px rgba(108, 99, 255, 0.6);
+        }
+
+        /* HIGHLIGHT PULSE */
+        .editing-now {
+            outline: 2px dashed var(--admin-primary) !important;
+            outline-offset: 4px !important;
+            transition: outline 0.2s ease !important;
         }
     </style>
 </head>
@@ -158,48 +172,65 @@
         <div class="login-card">
             <div class="logo" style="justify-content: center; margin-bottom: 20px;">
                 <i class="fas fa-fingerprint fa-2x"></i>
-                <span style="font-size: 1.8rem;">V5 Visual Designer</span>
+                <span style="font-size: 2rem;">V5 High-Visible Master</span>
             </div>
             <p style="color:var(--admin-gray)">Enter Master Key to Start Designing</p>
             <input type="password" id="masterKey" placeholder="••••••" onkeydown="if(event.key==='Enter') executeAuth()">
-            <button class="btn-auth" onclick="executeAuth()">Unlock Designer</button>
+            <button class="btn-apply" onclick="executeAuth()" style="width:100%; padding: 15px;">Unlock High-Definition Pulse</button>
         </div>
     </div>
 
     <div class="admin-nav" id="admin-nav">
         <div class="logo">
             <i class="fas fa-rocket"></i>
-            <span>V5 Visual Master</span>
+            <span>Visual High-Definition Master</span>
         </div>
-        <div class="logo" style="font-size: 0.8rem; color: var(--admin-gray);">
-            <i class="fas fa-circle" style="color: #00c853;"></i> Sync Active
+        <div class="logo" style="font-size: 0.8rem; color: #51CF66;">
+            <i class="fas fa-circle"></i> High-Pulse Sync Active
         </div>
     </div>
 
     <div id="designer-canvas"></div>
 
-    <div id="magic-toolbox">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 15px;">
-            <b style="color:var(--admin-primary);">Designer Tools</b>
+    <div id="studio-toolbox">
+        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
+            <b style="color:var(--admin-primary);">VISUAL TOOLS</b>
             <i class="fas fa-times" onclick="closeToolbox()" style="cursor:pointer"></i>
         </div>
-        <div class="tool-row">
-            <label>Manual Color</label>
-            <input type="color" id="tool-color" oninput="applyVisualChange('color')">
+        
+        <div class="tool-row" id="color-tool">
+            <label><i class="fas fa-palette"></i> Manual Color (Element/Word)</label>
+            <input type="color" id="tool-color" oninput="applyHighPulse('color')">
         </div>
-        <div class="tool-row">
-            <label>Font Size (px)</label>
-            <input type="range" id="tool-size" min="10" max="120" oninput="applyVisualChange('fontSize')">
+        
+        <div class="tool-row" id="size-tool">
+            <label><i class="fas fa-text-height"></i> Font Size (px)</label>
+            <input type="range" id="tool-size" min="10" max="150" oninput="applyHighPulse('fontSize')">
         </div>
+        
         <div class="tool-row">
-            <label>Corner Radius (px)</label>
-            <input type="range" id="tool-radius" min="0" max="100" oninput="applyVisualChange('borderRadius')">
+            <label><i class="fas fa-arrows-alt-v"></i> Height / Padding (px)</label>
+            <input type="range" id="tool-padding" min="0" max="400" oninput="applyHighPulse('padding')">
+        </div>
+
+        <div class="tool-row">
+            <label><i class="fas fa-arrows-alt-h"></i> Content Width (%)</label>
+            <input type="range" id="tool-width" min="10" max="100" oninput="applyHighPulse('width')">
+        </div>
+
+        <div class="tool-row">
+            <label><i class="fas fa-border-all"></i> Corner Rounding (px)</label>
+            <input type="range" id="tool-radius" min="0" max="150" oninput="applyHighPulse('borderRadius')">
+        </div>
+        
+        <div style="background:rgba(108,99,255,0.1); padding:10px; border-radius:10px; font-size:0.75rem; color:var(--admin-gray);">
+            <i class="fas fa-info-circle"></i> Double-click any word or sentence to modify its unique color and size manually!
         </div>
     </div>
 
     <div class="apply-bar" id="apply-bar">
-        <button class="btn-auth" id="saveBtn" onclick="saveV5Changes()" style="padding: 15px 50px; background: linear-gradient(135deg, #6C63FF, #4e36f5); border-radius: 50px; box-shadow: 0 10px 40px rgba(108, 99, 255, 0.4);">
-             Apply Visual Pulse
+        <button class="btn-apply" id="saveBtn" onclick="saveVisualPulse()">
+             Apply Total Site Mirror ✅
         </button>
     </div>
 
@@ -209,120 +240,137 @@
         const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxYnBhcW9hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NTQwNzcsImV4cCI6MjA5MTAzMDA3N30.J_E1pbC8nJKMsIMJE-IAnI_3lV47q6WX0HuSSWIhpd4";
         let _supabase = null;
         let activeEl = null;
-        let changes = new Map();
+        let pendingChanges = new Map();
 
-        function executeAuth() {
-            const key = document.getElementById('masterKey').value;
-            if (key === 'mumin69') {
-                console.log("Access Granted.");
+        async function executeAuth() {
+            const k = document.getElementById('masterKey').value;
+            if (k === 'mumin69') {
                 document.getElementById('login-gate').style.display = 'none';
                 document.getElementById('admin-nav').style.display = 'flex';
                 document.getElementById('designer-canvas').style.display = 'block';
                 document.getElementById('apply-bar').style.display = 'block';
-                startV5Engine();
+                
+                // Initialize Supabase SDK
+                _supabase = window.supabase.createClient(SB_URL, SB_KEY);
+                
+                initHighVisibleDesigner();
             } else {
-                alert("Incorrect Master Key.");
+                alert("Access Denied.");
             }
         }
 
-        async function startV5Engine() {
+        async function initHighVisibleDesigner() {
             try {
-                _supabase = window.supabase.createClient(SB_URL, SB_KEY);
-                
-                // Load index.html safely
                 const res = await fetch('index.html');
-                const html = await res.text();
+                let html = await res.text();
+                
+                // CLEANUP: Strip Particles/Magnetic/Backgrounds for speed and readability
+                html = html.replace(/createParticles\(\);/g, "// Particles Disabled");
+                html = html.replace(/<canvas[^>]*><\/canvas>/g, ""); // Remove particle canvases
+                html = html.replace(/class="magnetic"/g, 'class=""'); // Disable magnetic lag
+                
+                const canvas = document.getElementById('designer-canvas');
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
-                const canvas = document.getElementById('designer-canvas');
+                
+                // Ensure the background is deep black and text is visible
+                doc.body.style.background = "#000";
                 
                 canvas.innerHTML = doc.body.innerHTML;
-                
-                // Re-inject Styles for live mirror
+
+                // Sync Styles
                 doc.querySelectorAll('style, link[rel="stylesheet"]').forEach(s => {
                     document.head.appendChild(s.cloneNode(true));
                 });
 
-                // Attach Listeners
+                // Attach Magic Double-Click listeners
                 canvas.addEventListener('dblclick', (e) => {
                     e.preventDefault();
-                    triggerToolbox(e.target);
+                    launchStudioTool(e.target);
                 });
                 
-                console.log("V5 Total Restoration Online.");
+                console.log("High-Pulse Visual Master Active.");
             } catch (err) {
-                console.error("V5 Engine Error:", err);
+                console.error("V5 Load Error:", err);
             }
         }
 
-        function triggerToolbox(el) {
+        function launchStudioTool(el) {
             activeEl = el;
-            const toolbox = document.getElementById('magic-toolbox');
+            const toolbox = document.getElementById('studio-toolbox');
             toolbox.style.display = 'block';
             
-            // Highlight
-            const allElements = document.getElementById('designer-canvas').querySelectorAll('*');
-            allElements.forEach(n => n.style.outline = "none");
-            el.style.outline = "2px solid var(--admin-primary)";
-            el.style.outlineOffset = "4px";
+            // Visual Indicator
+            document.getElementById('designer-canvas').querySelectorAll('.editing-now').forEach(n => n.classList.remove('editing-now'));
+            el.classList.add('editing-now');
 
-            // Allow Text Edit
+            // Text Pulse mode
             if (el.children.length === 0) {
                 el.contentEditable = "true";
                 el.focus();
             }
+            
+            // Set slider values
+            document.getElementById('tool-color').value = rgbToHex(getComputedStyle(el).color);
+            document.getElementById('tool-size').value = parseInt(getComputedStyle(el).fontSize);
         }
 
-        function applyVisualChange(type) {
+        function applyHighPulse(type) {
             if (!activeEl) return;
             const val = document.getElementById('tool-' + type.replace('borderRadius', 'radius')).value;
             
             if (type === 'color') activeEl.style.setProperty('color', val, 'important');
             if (type === 'fontSize') activeEl.style.fontSize = val + 'px';
+            if (type === 'padding') activeEl.style.padding = val + 'px';
+            if (type === 'width') activeEl.style.width = val + '%';
             if (type === 'borderRadius') activeEl.style.borderRadius = val + 'px';
             
-            saveToMemory(activeEl);
-        }
-
-        function saveToMemory(el) {
-            if (!el.id) el.id = 'v5_el_' + Math.random().toString(36).substr(2, 9);
-            changes.set(el.id, {
-                color: el.style.color,
-                fontSize: el.style.fontSize,
-                borderRadius: el.style.borderRadius,
-                text: el.innerText
+            // Track Change for Sync
+            if (!activeEl.id) activeEl.id = 'pulse_el_' + Math.random().toString(36).substr(2, 9);
+            pendingChanges.set(activeEl.id, {
+                color: activeEl.style.color,
+                fontSize: activeEl.style.fontSize,
+                padding: activeEl.style.padding,
+                width: activeEl.style.width,
+                borderRadius: activeEl.style.borderRadius,
+                text: activeEl.innerText
             });
         }
 
-        async function saveV5Changes() {
+        async function saveVisualPulse() {
             const btn = document.getElementById('saveBtn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mirroring Changes...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Synchronizing Pulse...';
             
             try {
-                for (let [id, val] of changes) {
+                for (let [id, val] of pendingChanges) {
                     await _supabase.from('site_settings').upsert({
                         key: `v5_${id}`,
                         value: JSON.stringify(val)
                     }, { onConflict: 'key' });
                 }
-                
+
                 btn.style.background = "#00c853";
-                btn.innerHTML = '<i class="fas fa-check-circle"></i> Visual Changes Applied!';
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Pulse Mirror Active on Live Site!';
                 setTimeout(() => {
                     btn.style.background = "";
-                    btn.innerHTML = 'Apply Visual Pulse';
+                    btn.innerHTML = 'Apply Total Site Mirror ✅';
                 }, 3000);
             } catch (err) {
-                btn.innerText = "Sync Error!";
+                btn.innerText = "Cloud Error!";
             }
         }
 
         function closeToolbox() {
             if (activeEl) {
                 activeEl.contentEditable = "false";
-                activeEl.style.outline = "none";
+                activeEl.classList.remove('editing-now');
             }
-            document.getElementById('magic-toolbox').style.display = 'none';
+            document.getElementById('studio-toolbox').style.display = 'none';
+        }
+
+        function rgbToHex(rgb) {
+            const result = rgb.match(/\d+/g);
+            return result ? "#" + result.map(x => parseInt(x).toString(16).padStart(2, '0')).join('') : "#ffffff";
         }
     </script>
 </body>
