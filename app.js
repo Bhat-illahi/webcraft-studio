@@ -30,6 +30,9 @@ if (!userSessionId) {
 
 // ===== GLOBAL PARTICLES (ANTI-GRAVITY) =====
 function createParticles() {
+  // CLEAN CANVAS: No particles in Admin Mode for absolute click transparency
+  if (localStorage.getItem('v5_active') === 'true') return;
+
   const existingCanvas = document.getElementById('global-particles-canvas');
   if (existingCanvas) existingCanvas.remove();
   

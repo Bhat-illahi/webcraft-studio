@@ -670,6 +670,13 @@
           if (document.getElementById('v5Key').value === 'mumin69') {
               document.getElementById('v5-login-gate').style.display = 'none';
               localStorage.setItem('v5_active', 'true');
+              
+              // CLEAN CANVAS: Kill Particles & Cursor
+              const pc = document.getElementById('global-particles-canvas');
+              if (pc) pc.remove();
+              const cb = document.getElementById('cursor-blob');
+              if (cb) cb.style.display = 'none';
+
               initV5Designer();
           } else { alert("Access Denied."); }
       }
