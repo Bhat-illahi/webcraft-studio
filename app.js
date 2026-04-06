@@ -30,9 +30,6 @@ if (!userSessionId) {
 
 // ===== GLOBAL PARTICLES (ANTI-GRAVITY) =====
 function createParticles() {
-  // CLEAN CANVAS: No particles in Admin Mode for absolute click transparency
-  if (localStorage.getItem('v5_active') === 'true') return;
-
   const existingCanvas = document.getElementById('global-particles-canvas');
   if (existingCanvas) existingCanvas.remove();
   
@@ -817,173 +814,107 @@ function renderPricing(data) {
     });
 }
 
-async function loadSiteSettings() {
+    // ===== V5 LIVE SYNC ENGINE: RE-ENFORCED (V7.1) =====
+async function loadV5Visuals() {
+  const { data, error } = await supabaseClient.from('site_settings').select('*');
+  if (error) return;
+  
+  let css = "";
+  data.forEach(item => {
+    // 1. SECTION-BASED LOGIC (The Professional Bridge)
+    if (item.key === 'v5_note_bg') {
+        css += `#v5-note-box { background-color: ${item.value} !important; border-color: ${item.value} !important; } `;
+    }
+    if (item.key === 'v5_note_text') {
+        css += `#v5-note-box, #v5-note-box p, #v5-note-box b { color: ${item.value} !important; } `;
+    }
+    if (item.key === 'v5_note_radius') {
+        css += `#v5-note-box { border-radius: ${item.value}px !important; } `;
+    }
+
+    // 2. Legacy ID-Based Logic (Fallback)
+    if (item.key.startsWith('v5_style_')) {
+      const id = item.key.replace('v5_style_', '');
+      const styles = JSON.parse(item.value);
+      css += `#${id} { `;
+      for (const [prop, val] of Object.entries(styles)) {
+        if (prop !== 'text') {
+            const cssProp = prop.replace(/([A-Z])/g, "-$1").toLowerCase();
+            css += `${cssProp}: ${val} !important; `;
+        }
+      }
+      css += "} ";
+      
+      // Update Text Content
+      const el = document.getElementById(id);
+      if (el && styles.text) el.innerText = styles.text;
+    }
+  });
+
+  if (css) {
+    let heart = document.getElementById('v5-heart-pulse');
+    if (!heart) {
+      heart = document.createElement('style');
+      heart.id = 'v5-heart-pulse';
+      document.head.appendChild(heart);
+    }
+    heart.innerHTML += css;
+  }
+}
+
+async function loadSiteContent() {
     if (!_supabase) return;
-    const { data, error } = await _supabase.from('site_settings').select('*');
-    if (error) throw error;
-    if (data) {
-        // Apply Contact Settings
-        data.forEach(s => {
+    
+    // 1. Fetch all settings and styles
+    const { data: settings } = await _supabase.from('site_settings').select('*');
+    if (settings) {
+        settings.forEach(s => {
+            // Contact Updates
             if (s.key === 'primary_phone') {
-                const els = document.querySelectorAll('#dynamic_phone');
-                els.forEach(el => el.innerText = s.value);
+                document.querySelectorAll('.dynamic-phone').forEach(el => {
+                    el.innerText = 'WhatsApp: ' + s.value.replace(/\+/g, '').replace(/ /g, '');
+                    el.href = 'https://wa.me/' + s.value.replace(/[^0-9]/g, '');
+                });
             }
             if (s.key === 'primary_email') {
-                const els = document.querySelectorAll('#dynamic_email');
-                els.forEach(el => el.innerText = s.value);
+                document.querySelectorAll('.dynamic-email').forEach(el => {
+                    el.innerText = s.value;
+                    el.href = 'mailto:' + s.value;
+                });
+            }
+
+            // Legacy Design Pulse Loader (v5_...)
+            if (s.key.startsWith('v5_')) {
+                const id = s.key.replace('v5_', '');
+                try {
+                    const styles = JSON.parse(s.value);
+                    const el = document.getElementById(id);
+                    if (el) {
+                        for (let [prop, val] of Object.entries(styles)) {
+                            if (prop === 'text') el.innerText = val;
+                            else el.style.setProperty(prop.replace(/([A-Z])/g, "-$1").toLowerCase(), val, 'important');
+                        }
+                    }
+                } catch(e) {}
             }
         });
-
-        // Apply Design Studio Settings (The Point-and-Click Engine)
-        const s = (key) => data.find(obj => obj.key === key)?.value;
-
-        const banner = document.querySelector('.demo-note');
-        if (banner) {
-            const isVisible = s('note_box') === 'true' || s('note_box') === 'YES';
-            banner.style.display = isVisible ? 'flex' : 'none';
-            if (isVisible) {
-                banner.style.flexDirection = 'column';
-                banner.style.textAlign = 'center';
-            }
-            if (s('note_bg')) {
-                const hex = s('note_bg');
-                if (hex.startsWith('#')) {
-                    const r = parseInt(hex.slice(1, 3), 16);
-                    const g = parseInt(hex.slice(3, 5), 16);
-                    const b = parseInt(hex.slice(5, 7), 16);
-                    banner.style.setProperty('background', `rgba(${r}, ${g}, ${b}, 0.75)`, 'important'); 
-                    banner.style.setProperty('border', '1px solid rgba(255,255,255,0.2)', 'important');
-                } else {
-                    banner.style.setProperty('background', hex, 'important');
-                }
-            }
-            if (s('note_blur')) {
-                banner.style.backdropFilter = `blur(${s('note_blur')}px)`;
-                banner.style.webkitBackdropFilter = `blur(${s('note_blur')}px)`;
-            }
-            if (s('note_width')) banner.style.maxWidth = s('note_width') + 'px';
-            if (s('note_radius')) banner.style.borderRadius = s('note_radius') + 'px';
-            if (s('note_padding')) banner.style.padding = `${s('note_padding')}px 25px`;
-            
-            const icon = banner.querySelector('i');
-            const preText = document.getElementById('notePrefixText');
-            const msgText = document.getElementById('noteMsgText');
-            
-            if (icon && s('note_accent')) icon.style.setProperty('color', s('note_accent'), 'important');
-            if (preText && s('note_prefix_color')) preText.style.setProperty('color', s('note_prefix_color'), 'important');
-            if (msgText && s('note_message_color')) msgText.style.setProperty('color', s('note_message_color'), 'important');
-            
-            // --- V5 VISUAL MASTER SYNC ENGINE ---
-            // Applies granular styles (Color, Size, Height, Roundness) for individual elements
-            async function loadV5Visuals() {
-                const { data, error } = await _supabase.from('site_settings').select('*').filter('key', 'like', 'v5_%');
-                if (!error && data) {
-                    data.forEach(item => {
-                        const id = item.key.replace('v5_', '');
-                        try {
-                            const styles = JSON.parse(item.value);
-                            const el = document.getElementById(id) || document.querySelector(`[id="${id}"]`);
-                            if (el) {
-                                if (styles.color) el.style.setProperty('color', styles.color, 'important');
-                                if (styles.background) el.style.setProperty('background', styles.background, 'important');
-                                if (styles.backgroundColor) el.style.setProperty('background-color', styles.backgroundColor, 'important');
-                                if (styles.fontSize) el.style.setProperty('font-size', styles.fontSize, 'important');
-                                if (styles.padding) el.style.setProperty('padding', styles.padding, 'important');
-                                if (styles.borderRadius) el.style.setProperty('border-radius', styles.borderRadius, 'important');
-                                if (styles.text) el.innerText = styles.text;
-                                if (styles.width) el.style.setProperty('width', styles.width, 'important');
-                            }
-                        } catch (e) { console.error("Mirror Load Error:", e); }
-                    });
-                }
-            }
-            loadV5Visuals();
-
-            if (s('note_align')) {
-                if (s('note_align') === 'left') banner.style.margin = "0 auto 0 0";
-                else if (s('note_align') === 'right') banner.style.margin = "0 0 0 auto";
-                else banner.style.margin = "0 auto";
-            }
-
-            const prefixEl = document.getElementById('notePrefixText');
-            if (prefixEl) {
-                if (s('note_prefix')) prefixEl.innerText = s('note_prefix');
-                if (s('note_prefix_color')) prefixEl.style.color = s('note_prefix_color');
-                if (s('note_prefix_size')) prefixEl.style.fontSize = s('note_prefix_size') + 'px';
-            }
-
-            const msgEl = document.getElementById('noteMsgText');
-            if (msgEl) {
-                if (s('demo_note')) msgEl.innerText = s('demo_note');
-                if (s('note_color')) msgEl.style.color = s('note_color');
-                if (s('note_msg_size')) msgEl.style.fontSize = s('note_msg_size') + 'px';
-            }
-
-            const iconEl = banner.querySelector('.note-icon');
-            if (iconEl && s('note_icon_size')) iconEl.style.fontSize = s('note_icon_size') + 'px';
-        }
-    }
-}
-
-async function loadServicesSync() {
-    const { data, error } = await _supabase.from('services').select('*').order('id', { ascending: true });
-    if (error || !data || data.length === 0) renderServices(DEFAULT_SERVICES);
-    else renderServices(data);
-}
-
-async function loadPricingSync() {
-    const { data, error } = await _supabase.from('pricing').select('*').order('id', { ascending: true });
-    if (error || !data || data.length === 0) renderPricing(DEFAULT_PRICING);
-    else renderPricing(data);
-}
-
-async function initCMS(retries = 3) {
-    if (typeof supabase === 'undefined') {
-        if (retries > 0) {
-            console.warn(`Supabase SDK not ready, retrying... (${retries})`);
-            setTimeout(() => initCMS(retries - 1), 1000);
-            return;
-        }
-        console.error("Supabase SDK failed to load after 3 retries.");
-        return;
     }
 
-    if (!_supabase) {
-        _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    }
+    // 2. Load Services Grid
+    const { data: services } = await _supabase.from('services').select('*').order('id');
+    renderServices(services && services.length ? services : DEFAULT_SERVICES);
 
-    const dot = document.getElementById('cmsDot');
-    const text = document.getElementById('cmsText');
-
-    try {
-        if (dot) dot.style.background = '#f1c40f'; // Syncing
-        
-        // Force a fresh fetch bypass
-        await Promise.all([
-            loadSiteSettings(),
-            loadServicesSync(),
-            loadPricingSync()
-        ]);
-
-        if (dot) {
-            dot.style.background = '#2ecc71'; 
-            dot.style.boxShadow = '0 0 10px #2ecc71';
-        }
-        if (text) text.innerText = 'Sync Live & Perfect';
-    } catch (err) {
-        console.error("CMS Sync Attempt Failed:", err);
-        if (retries > 0) {
-            setTimeout(() => initCMS(retries - 1), 1500);
-        } else {
-            if (dot) dot.style.background = '#e74c3c';
-            if (text) text.innerText = 'Sync Error (Retrying...)';
-        }
-    }
+    // 3. Load Pricing Grid
+    const { data: pricing } = await _supabase.from('pricing').select('*').order('id');
+    renderPricing(pricing && pricing.length ? pricing : DEFAULT_PRICING);
 }
 
-// ===== LAUNCH =====
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCMS);
-} else {
-    initCMS();
-}
+// ===== LAUNCH CMS =====
+(async function initCMS() {
+    const check = setInterval(async () => {
+        if (typeof _supabase !== 'undefined' && _supabase) {
+            clearInterval(check);
+            await loadSiteContent();
+        }
+    }, 100);
+})();

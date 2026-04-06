@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebCraft | Pricing Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --bg: #050510;
+            --surface: #0f0f1e;
+            --text: #f0f0ff;
+            --text-muted: #9090b8;
+            --border: rgba(108, 99, 255, 0.2);
+            --success: #00c853;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+
+        /* AUTH GATE */
+        #auth-gate {
+            position: fixed; inset: 0; background: var(--bg); z-index: 10000;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        .auth-box {
+            background: var(--surface); padding: 40px; border-radius: 24px; border: 1px solid var(--border);
+            width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .auth-box i { color: var(--primary); font-size: 3rem; margin-bottom: 20px; }
+        .auth-box h2 { font-family: 'Space Grotesk', sans-serif; margin-bottom: 10px; }
+        .auth-box p { color: var(--text-muted); margin-bottom: 30px; }
+        input[type="password"] {
+            width: 100%; padding: 15px; border-radius: 12px; border: 1px solid var(--border);
+            background: #000; color: #fff; font-size: 1.1rem; text-align: center; margin-bottom: 20px; outline: none;
+        }
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 15px 30px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer;
+            transition: 0.3s; width: 100%;
+        }
+        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 10px 20px rgba(108,99,255,0.3); }
+        .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+        /* MAIN DASHBOARD */
+        .dashboard { max-width: 1200px; margin: 0 auto; padding: 40px 20px; display: none; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .logout-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
+
+        .section-title { margin-bottom: 25px; border-left: 4px solid var(--primary); padding-left: 15px; }
+        .section-title h2 { font-size: 1.5rem; font-family: 'Space Grotesk', sans-serif; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-bottom: 50px; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 25px; }
+
+        .field { margin-bottom: 20px; }
+        .field label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        input[type="text"], textarea {
+            width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
+            background: #050510; color: #fff; font-family: inherit; font-size: 1rem; outline: none;
+        }
+        textarea { resize: vertical; min-height: 80px; }
+        .checkbox-field { display: flex; align-items: center; gap: 10px; font-weight: 600; cursor: pointer; }
+        input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); }
+
+        .save-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(15,15,30,0.95);
+            backdrop-filter: blur(10px); border-top: 1px solid var(--border); padding: 20px;
+            display: flex; justify-content: flex-end; z-index: 100;
+        }
+        .save-bar .btn { width: auto; min-width: 200px; }
+
+        .toast {
+            position: fixed; bottom: 100px; right: 30px; background: var(--success); color: #fff;
+            padding: 15px 25px; border-radius: 12px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: none; animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <!-- AUTH GATE -->
+    <div id="auth-gate">
+        <div class="auth-box">
+            <i class="fas fa-lock"></i>
+            <h2>Owner Access</h2>
+            <p>Enter your master key to manage pricing.</p>
+            <input type="password" id="master-key" placeholder="••••••••" onkeydown="if(event.key==='Enter') login()">
+            <button class="btn btn-primary" onclick="login()">Unlock Dashboard</button>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
+    <div class="dashboard" id="main-dashboard">
+        <header>
+            <div class="logo">⚡ WebCraft <em>Admin</em></div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </header>
+
+        <section>
+            <div class="section-title">
+                <h2>Contact Information</h2>
+            </div>
+            <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="card">
+                    <div class="field">
+                        <label>Primary Phone Number</label>
+                        <input type="text" id="site_phone" placeholder="+91 XXXX XXX XXX">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="field">
+                        <label>Primary Email Address</label>
+                        <input type="text" id="site_email" placeholder="owner@example.com">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-title">
+                <h2>Service Packages</h2>
+            </div>
+            <div class="grid" id="pricing-grid">
+                <!-- Card 1 -->
+                <div class="card pricing-card" data-idx="0">
+                    <div class="field">
+                        <label>Plan Badge</label>
+                        <input type="text" class="p-badge" placeholder="Starter">
+                    </div>
+                    <div class="field">
+                        <label>Plan Name</label>
+                        <input type="text" class="p-name" placeholder="Basic Site">
+                    </div>
+                    <div class="field">
+                        <label>Price Display</label>
+                        <input type="text" class="p-price" placeholder="₹2500 – ₹3000">
+                    </div>
+                    <div class="field">
+                        <label>Features (comma separated)</label>
+                        <textarea class="p-features" placeholder="Feature 1, Feature 2, Feature 3"></textarea>
+                    </div>
+                    <label class="checkbox-field">
+                        <input type="checkbox" class="p-featured"> Most Popular / Highlighted
+                    </label>
+                </div>
+                <!-- Card 2 -->
+                <div class="card pricing-card" data-idx="1">
+                    <div class="field">
+                        <label>Plan Badge</label>
+                        <input type="text" class="p-badge" placeholder="Professional">
+                    </div>
+                    <div class="field">
+                        <label>Plan Name</label>
+                        <input type="text" class="p-name" placeholder="Business Site">
+                    </div>
+                    <div class="field">
+                        <label>Price Display</label>
+                        <input type="text" class="p-price" placeholder="₹3000 – ₹5000">
+                    </div>
+                    <div class="field">
+                        <label>Features (comma separated)</label>
+                        <textarea class="p-features" placeholder="Feature 1, Feature 2, Feature 3"></textarea>
+                    </div>
+                    <label class="checkbox-field">
+                        <input type="checkbox" class="p-featured"> Most Popular / Highlighted
+                    </label>
+                </div>
+                <!-- Card 3 -->
+                <div class="card pricing-card" data-idx="2">
+                    <div class="field">
+                        <label>Plan Badge</label>
+                        <input type="text" class="p-badge" placeholder="Premium">
+                    </div>
+                    <div class="field">
+                        <label>Plan Name</label>
+                        <input type="text" class="p-name" placeholder="E-Commerce Store">
+                    </div>
+                    <div class="field">
+                        <label>Price Display</label>
+                        <input type="text" class="p-price" placeholder="₹5000+">
+                    </div>
+                    <div class="field">
+                        <label>Features (comma separated)</label>
+                        <textarea class="p-features" placeholder="Feature 1, Feature 2, Feature 3"></textarea>
+                    </div>
+                    <label class="checkbox-field">
+                        <input type="checkbox" class="p-featured"> Most Popular / Highlighted
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <div style="height: 100px;"></div>
+    </div>
+
+    <div class="save-bar" id="save-bar" style="display:none;">
+        <button class="btn btn-primary" id="saveBtn" onclick="saveAll()">
+            <i class="fas fa-save"></i> Save & Publish Updates
+        </button>
+    </div>
+
+    <div class="toast" id="toast">Successfully updated live site! 🚀</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://imuqwquuytcfuqbpaqoa.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxYnBhcW9hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NTQwNzcsImV4cCI6MjA5MTAzMDA3N30.J_E1pbC8nJKMsIMJE-IAnI_3lV47q6WX0HuSSWIhpd4';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        function login() {
+            const key = document.getElementById('master-key').value;
+            if (key === 'mumin69') {
+                localStorage.setItem('admin_auth', 'true');
+                document.getElementById('auth-gate').style.display = 'none';
+                document.getElementById('main-dashboard').style.display = 'block';
+                document.getElementById('save-bar').style.display = 'flex';
+                loadData();
+            } else {
+                alert('Invalid Master Key');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('admin_auth');
+            window.location.reload();
+        }
+
+        if (localStorage.getItem('admin_auth') === 'true') {
+            document.getElementById('auth-gate').style.display = 'none';
+            document.getElementById('main-dashboard').style.display = 'block';
+            document.getElementById('save-bar').style.display = 'flex';
+            loadData();
+        }
+
+        async function loadData() {
+            // 1. Load Contact Info
+            const { data: settings } = await supabase.from('site_settings').select('*');
+            if (settings) {
+                const phone = settings.find(s => s.key === 'primary_phone')?.value || '+91 84929 22783';
+                const email = settings.find(s => s.key === 'primary_email')?.value || 'bhatillahi21@gmail.com';
+                document.getElementById('site_phone').value = phone;
+                document.getElementById('site_email').value = email;
+            }
+
+            // 2. Load Pricing
+            const { data: pricing } = await supabase.from('pricing').select('*').order('id', { ascending: true });
+            if (pricing && pricing.length > 0) {
+                pricing.forEach((item, i) => {
+                    const card = document.querySelectorAll('.pricing-card')[i];
+                    if (card) {
+                        card.querySelector('.p-badge').value = item.badge;
+                        card.querySelector('.p-name').value = item.name;
+                        card.querySelector('.p-price').value = item.price;
+                        card.querySelector('.p-features').value = item.features;
+                        card.querySelector('.p-featured').checked = item.featured;
+                    }
+                });
+            }
+        }
+
+        async function saveAll() {
+            const btn = document.getElementById('saveBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            try {
+                // 1. Save Contact Info
+                const phone = document.getElementById('site_phone').value;
+                const email = document.getElementById('site_email').value;
+                await supabase.from('site_settings').upsert([
+                    { key: 'primary_phone', value: phone },
+                    { key: 'primary_email', value: email }
+                ], { onConflict: 'key' });
+
+                // 2. Save Pricing
+                const pricingCards = document.querySelectorAll('.pricing-card');
+                const pricingData = Array.from(pricingCards).map((card, i) => ({
+                    id: i + 1,
+                    badge: card.querySelector('.p-badge').value,
+                    name: card.querySelector('.p-name').value,
+                    price: card.querySelector('.p-price').value,
+                    features: card.querySelector('.p-features').value,
+                    featured: card.querySelector('.p-featured').checked,
+                    action_type: i === 2 ? "selectPackage('E-Commerce Store', '₹5000+ (Premium)')" : (i === 1 ? "selectPackage('Small Business / Shop', '₹3000 – ₹5000 (Professional)')" : "selectPackage('Small Business / Shop', '₹2500 – ₹3000 (Basic)')")
+                }));
+
+                await supabase.from('pricing').upsert(pricingData, { onConflict: 'id' });
+
+                showToast();
+            } catch (err) {
+                console.error(err);
+                alert('Error saving data. Please check console.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-save"></i> Save & Publish Updates';
+            }
+        }
+
+        function showToast() {
+            const t = document.getElementById('toast');
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
+        }
+    </script>
+</body>
+</html>
