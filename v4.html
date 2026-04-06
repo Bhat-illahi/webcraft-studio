@@ -111,6 +111,14 @@
                       <label>Icon Accent Color</label>
                       <input type="color" id="set-note-accent" value="#6C63FF" oninput="updatePreview()">
                   </div>
+                  <div class="form-group">
+                      <label>Prefix Text Color</label>
+                      <input type="color" id="set-note-prefix-color" value="#ffffff" oninput="updatePreview()">
+                  </div>
+                  <div class="form-group">
+                      <label>Message Text Color</label>
+                      <input type="color" id="set-note-message-color" value="#ffffff" oninput="updatePreview()">
+                  </div>
                   <div class="form-group" style="background:rgba(108,99,255,0.05); padding:15px; border-radius:15px; border:1px solid var(--admin-primary);">
                       <label style="color:var(--admin-primary)">BOX HEIGHT (Vertical Padding)</label>
                       <input type="range" id="set-note-padding" min="0" max="150" value="30" oninput="updatePreview()">
@@ -246,9 +254,14 @@
         const preview = document.getElementById('note-preview');
         const icon = document.getElementById('preview-icon');
         const accent = document.getElementById('set-note-accent')?.value || '#6C63FF';
+        const preColor = document.getElementById('set-note-prefix-color')?.value || '#ffffff';
+        const msgColor = document.getElementById('set-note-message-color')?.value || '#ffffff';
         
-        document.getElementById('preview-prefix').innerText = document.getElementById('set-note-prefix')?.value;
-        document.getElementById('preview-msg').innerText = document.getElementById('set-note')?.value;
+        const preEl = document.getElementById('preview-prefix');
+        const msgEl = document.getElementById('preview-msg');
+        
+        if (preEl) { preEl.innerText = document.getElementById('set-note-prefix')?.value; preEl.style.color = preColor; }
+        if (msgEl) { msgEl.innerText = document.getElementById('set-note')?.value; msgEl.style.color = msgColor; }
         if (icon) icon.style.color = accent;
         
         if (preview) {
@@ -258,16 +271,19 @@
           else preview.style.margin = "0 auto";
 
           if (isBox) {
-          preview.style.setProperty('background', hexToRgba(bg, 0.75), 'important');
-          preview.style.backdropFilter = `blur(${blur}px)`;
-          preview.style.webkitBackdropFilter = `blur(${blur}px)`;
+            preview.style.setProperty('background', hexToRgba(bg, 0.75), 'important');
+            preview.style.backdropFilter = `blur(${blur}px)`;
+            preview.style.webkitBackdropFilter = `blur(${blur}px)`;
             
             const icon = preview.querySelector('i');
             if (icon && accent) icon.style.setProperty('color', accent, 'important');
-          preview.style.padding = `${padding}px 40px`;
-          preview.style.borderRadius = radius + 'px';
-          preview.style.setProperty('border', '1px solid rgba(255,255,255,0.3)', 'important');
-        } else {
+            if (preEl && preColor) preEl.style.setProperty('color', preColor, 'important');
+            if (msgEl && msgColor) msgEl.style.setProperty('color', msgColor, 'important');
+            
+            preview.style.padding = `${padding}px 40px`;
+            preview.style.borderRadius = radius + 'px';
+            preview.style.setProperty('border', '1px solid rgba(255,255,255,0.3)', 'important');
+          } else {
             preview.style.background = 'none';
             preview.style.backdropFilter = 'none';
             preview.style.padding = '10px';
@@ -320,6 +336,8 @@
             { key: 'note_prefix', value: document.getElementById('set-note-prefix').value },
             { key: 'demo_note', value: document.getElementById('set-note').value },
             { key: 'note_accent', value: document.getElementById('set-note-accent').value },
+            { key: 'note_prefix_color', value: document.getElementById('set-note-prefix-color').value },
+            { key: 'note_message_color', value: document.getElementById('set-note-message-color').value },
             { key: 'note_bg', value: document.getElementById('set-note-bg').value },
             { key: 'note_blur', value: document.getElementById('set-note-blur').value },
             { key: 'note_padding', value: document.getElementById('set-note-padding').value },

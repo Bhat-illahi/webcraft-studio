@@ -863,7 +863,12 @@ async function loadSiteSettings() {
             if (s('note_padding')) banner.style.padding = `${s('note_padding')}px 25px`;
             
             const icon = banner.querySelector('i');
+            const preText = document.getElementById('notePrefixText');
+            const msgText = document.getElementById('noteMsgText');
+            
             if (icon && s('note_accent')) icon.style.setProperty('color', s('note_accent'), 'important');
+            if (preText && s('note_prefix_color')) preText.style.setProperty('color', s('note_prefix_color'), 'important');
+            if (msgText && s('note_message_color')) msgText.style.setProperty('color', s('note_message_color'), 'important');
             
             if (s('note_align')) {
                 if (s('note_align') === 'left') banner.style.margin = "0 auto 0 0";
