@@ -41,6 +41,10 @@ section {
   scroll-margin-top: 550px; /* Extreme desktop offset for hyper-spacious feel */
 }
 
+#order {
+  scroll-margin-top: 100px !important;
+}
+
 @media (max-width: 768px) {
   section {
     scroll-margin-top: 100px; /* Precise offset for mobile */
