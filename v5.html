@@ -292,9 +292,11 @@
                 activeEl.style[type] = val + 'px';
             }
             
-            // Tracking Change
-            if (!activeEl.id) activeEl.id = 'v5_' + Math.random().toString(36).substr(2, 9);
-            pendingChanges.set(activeEl.id, {
+            // TRACKING: Prioritize the Persistent ID (v5-...)
+            const trackingId = activeEl.id || ('v5_gen_' + Math.random().toString(36).substr(2, 6));
+            if (!activeEl.id) activeEl.id = trackingId;
+
+            pendingChanges.set(trackingId, {
                 color: activeEl.style.color,
                 fontSize: activeEl.style.fontSize,
                 padding: activeEl.style.padding,

@@ -872,24 +872,28 @@ async function loadSiteSettings() {
             
             // --- V5 VISUAL MASTER SYNC ENGINE ---
             // Applies granular styles (Color, Size, Height, Roundness) for individual elements
-            Object.keys(settingsData).forEach(key => {
-                if (key.startsWith('v5_')) {
-                    const elId = key.split('v5_')[1];
-                    const el = document.getElementById(elId);
-                    if (el) {
+            async function loadV5Visuals() {
+                const { data, error } = await _supabase.from('site_settings').select('*').filter('key', 'like', 'v5_%');
+                if (!error && data) {
+                    data.forEach(item => {
+                        const id = item.key.replace('v5_', '');
                         try {
-                            const config = JSON.parse(settingsData[key]);
-                            if (config.color) el.style.setProperty('color', config.color, 'important');
-                            if (config.fontSize) el.style.fontSize = config.fontSize;
-                            if (config.padding) el.style.padding = config.padding;
-                            if (config.borderRadius) el.style.borderRadius = config.borderRadius;
-                            if (config.width) el.style.width = config.width;
-                            if (config.text) el.innerText = config.text;
-                        } catch(e) { console.warn("V5 Pulse Error:", e); }
-                    }
+                            const styles = JSON.parse(item.value);
+                            const el = document.getElementById(id) || document.querySelector(`[id="${id}"]`);
+                            if (el) {
+                                if (styles.color) el.style.setProperty('color', styles.color, 'important');
+                                if (styles.fontSize) el.style.setProperty('font-size', styles.fontSize, 'important');
+                                if (styles.padding) el.style.setProperty('padding', styles.padding, 'important');
+                                if (styles.borderRadius) el.style.setProperty('border-radius', styles.borderRadius, 'important');
+                                if (styles.text) el.innerText = styles.text;
+                                if (styles.width) el.style.setProperty('width', styles.width, 'important');
+                            }
+                        } catch (e) { console.error("Mirror Load Error:", e); }
+                    });
                 }
-            });
-            
+            }
+            loadV5Visuals();
+
             if (s('note_align')) {
                 if (s('note_align') === 'left') banner.style.margin = "0 auto 0 0";
                 else if (s('note_align') === 'right') banner.style.margin = "0 0 0 auto";
