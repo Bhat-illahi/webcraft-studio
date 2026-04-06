@@ -169,9 +169,10 @@
                 <label>Box Style (Glassmorphism)</label>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                     <div><span style="font-size:0.6rem;">Background</span><input type="color" id="set-note-bg" value="#1a1a2e" oninput="updatePreview()"></div>
-                    <div><span style="font-size:0.6rem;">Glass Blur</span><input type="range" id="set-note-blur" min="0" max="25" value="10" oninput="updatePreview()"></div>
+                    <div><span style="font-size:0.6rem;">Box Blur</span><input type="range" id="set-note-blur" min="0" max="25" value="10" oninput="updatePreview()"></div>
+                    <div><span style="font-size:0.6rem;">Box Height</span><input type="range" id="set-note-padding" min="5" max="80" value="20" oninput="updatePreview()"></div>
                     <div><span style="font-size:0.6rem;">Width (px)</span><input type="range" id="set-note-width" min="200" max="1100" step="10" oninput="updatePreview()"></div>
-                    <div><span style="font-size:0.6rem;">Corners</span><input type="range" id="set-note-radius" min="0" max="50" step="1" oninput="updatePreview()"></div>
+                    <div><span style="font-size:0.6rem;">Corners</span><input type="range" id="set-note-radius" min="0" max="100" step="1" oninput="updatePreview()"></div>
                 </div>
                 <div style="display:flex; gap:10px; margin-top:15px;">
                     <button class="btn btn-outline sm" onclick="setAlign('left')">L</button>
@@ -293,6 +294,7 @@ async function loadContent() {
       if (s.key === 'note_align') document.getElementById('set-note-align').value = s.value;
       if (s.key === 'note_bg') document.getElementById('set-note-bg').value = s.value;
       if (s.key === 'note_blur') document.getElementById('set-note-blur').value = s.value;
+      if (s.key === 'note_padding') document.getElementById('set-note-padding').value = s.value;
       if (s.key === 'note_icon_size') document.getElementById('set-note-icon-size').value = s.value;
       if (s.key === 'note_prefix_size') document.getElementById('set-note-prefix-size').value = s.value;
       if (s.key === 'note_msg_size') document.getElementById('set-note-msg-size').value = s.value;
@@ -445,11 +447,12 @@ function updatePreview() {
   else { preview.style.margin = "0 auto"; preview.style.textAlign = "center"; }
 
   if (isBox) {
-    preview.style.background = hexToRgba(bg, 0.2); // Forced semi-transparency for Glass
+    const padding = document.getElementById('set-note-padding')?.value || 20;
+    preview.style.background = hexToRgba(bg, 0.35); // Matches the new cloud force level
     preview.style.backdropFilter = `blur(${blur}px)`;
     preview.style.webkitBackdropFilter = `blur(${blur}px)`;
     preview.style.border = '1px solid rgba(255,255,255,0.1)';
-    preview.style.padding = '20px';
+    preview.style.padding = `${padding}px 25px`;
   } else {
     preview.style.background = 'none';
     preview.style.backdropFilter = `none`;
@@ -489,6 +492,7 @@ async function saveNoteDesign() {
     { key: 'note_width', value: document.getElementById('set-note-width').value },
     { key: 'note_radius', value: document.getElementById('set-note-radius').value },
     { key: 'note_align', value: document.getElementById('set-note-align').value },
+    { key: 'note_padding', value: document.getElementById('set-note-padding').value },
     { key: 'note_box', value: document.getElementById('set-note-box').checked ? 'YES' : 'NO' }
   ];
 

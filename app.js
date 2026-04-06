@@ -838,13 +838,25 @@ async function loadSiteSettings() {
         if (banner) {
             const isVisible = s('note_box') === 'true' || s('note_box') === 'YES';
             banner.style.display = isVisible ? 'flex' : 'none';
-            if (s('note_bg')) banner.style.background = s('note_bg');
+            if (s('note_bg')) {
+                const hex = s('note_bg');
+                // Force 30% transparency if it's a solid hex color to ensure GLASS look
+                if (hex.startsWith('#')) {
+                    const r = parseInt(hex.slice(1, 3), 16);
+                    const g = parseInt(hex.slice(3, 5), 16);
+                    const b = parseInt(hex.slice(5, 7), 16);
+                    banner.style.background = `rgba(${r}, ${g}, ${b}, 0.35)`;
+                } else {
+                    banner.style.background = hex;
+                }
+            }
             if (s('note_blur')) {
                 banner.style.backdropFilter = `blur(${s('note_blur')}px)`;
                 banner.style.webkitBackdropFilter = `blur(${s('note_blur')}px)`;
             }
             if (s('note_width')) banner.style.maxWidth = s('note_width') + 'px';
             if (s('note_radius')) banner.style.borderRadius = s('note_radius') + 'px';
+            if (s('note_padding')) banner.style.padding = `${s('note_padding')}px 25px`;
             
             if (s('note_align')) {
                 if (s('note_align') === 'left') banner.style.margin = "0 auto 0 0";
