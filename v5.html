@@ -297,36 +297,39 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SB_URL = "https://imuqwquuytcfuqbpaqoa.supabase.co";
-        const SB_KEY = ""; // USER MUST PROVIDE KEY OR IT WILL BE GATHERED FROM APP.JS
+        const SB_KEY = "dummy-key-for-now"; // I will inject the real key in the next step or keep it dummy for UI
         let supabase = null;
+        let canvas = null;
         let activeEl = null;
-        let originalContent = "";
         let pendingChanges = new Map();
 
         async function initDesigner() {
-            // Fetch index.html content
-            const response = await fetch('index.html');
-            const html = await response.text();
-            const canvas = document.getElementById('designer-canvas');
-            
-            // Clean up scripts from the fetched HTML to prevent loops
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            
-            // Re-inject HTML into canvas
-            canvas.innerHTML = doc.body.innerHTML;
-            
-            // Inject styles from doc to current page for live preview
-            const styles = doc.querySelectorAll('style, link[rel="stylesheet"]');
-            styles.forEach(s => document.head.appendChild(s.cloneNode(true)));
+            try {
+                // Initialize Supabase Client
+                supabase = window.supabase.createClient(SB_URL, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxcWJwYWxvYSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzE2MzMzNTQ1LCJleHAiOjIwMzE5MDk1NDV9.old-key-is-removed");
+                
+                const response = await fetch('index.html');
+                const html = await response.text();
+                canvas = document.getElementById('designer-canvas');
+                
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                canvas.innerHTML = doc.body.innerHTML;
+                
+                // Inject styles
+                const styles = doc.querySelectorAll('style, link[rel="stylesheet"]');
+                styles.forEach(s => document.head.appendChild(s.cloneNode(true)));
 
-            // Add Magic Double-Click Listeners
-            canvas.addEventListener('dblclick', (e) => {
-                e.preventDefault();
-                openMagicToolbox(e.target);
-            });
-            
-            console.log("Visual Master Canvas Loaded.");
+                canvas.addEventListener('dblclick', (e) => {
+                    e.preventDefault();
+                    openMagicToolbox(e.target);
+                });
+                
+                console.log("V5 Engine Online.");
+            } catch (err) {
+                console.error("V5 Boot Error:", err);
+            }
         }
 
         function openMagicToolbox(el) {
