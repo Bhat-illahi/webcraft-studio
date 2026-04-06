@@ -292,12 +292,10 @@
         <button class="btn-apply" onclick="saveVisualMaster()" id="saveBtn">
             <i class="fas fa-cloud-upload-alt"></i> Apply Visual Master Design
         </button>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    </div>    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SB_URL = "https://imuqwquuytcfuqbpaqoa.supabase.co";
-        const SB_KEY = "dummy-key-for-now"; // I will inject the real key in the next step or keep it dummy for UI
+        const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxYnBhcW9hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NTQwNzcsImV4cCI6MjA5MTAzMDA3N30.J_E1pbC8nJKMsIMJE-IAnI_3lV47q6WX0HuSSWIhpd4";
         let supabase = null;
         let canvas = null;
         let activeEl = null;
@@ -305,8 +303,9 @@
 
         async function initDesigner() {
             try {
+                console.log("Starting V5 Pulse...");
                 // Initialize Supabase Client
-                supabase = window.supabase.createClient(SB_URL, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxcWJwYWxvYSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzE2MzMzNTQ1LCJleHAiOjIwMzE5MDk1NDV9.old-key-is-removed");
+                supabase = window.supabase.createClient(SB_URL, SB_KEY);
                 
                 const response = await fetch('index.html');
                 const html = await response.text();
@@ -323,12 +322,24 @@
 
                 canvas.addEventListener('dblclick', (e) => {
                     e.preventDefault();
+                    console.log("Magic Grab on:", e.target);
                     openMagicToolbox(e.target);
                 });
                 
-                console.log("V5 Engine Online.");
+                console.log("V5 Engine Online & Perfect.");
             } catch (err) {
                 console.error("V5 Boot Error:", err);
+            }
+        }
+
+        async function checkAccess() {
+            const pass = document.getElementById('adminPassword').value;
+            if (pass === 'mumin69') {
+                console.log("Access Granted. Unlocking Pulse...");
+                document.getElementById('login-overlay').style.display = 'none';
+                initDesigner();
+            } else {
+                alert("Access Denied.");
             }
         }
 
