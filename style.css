@@ -1644,7 +1644,7 @@ img {
     padding: 24px;
     gap: 12px;
     text-align: center;
-    border-radius: 24px;
+    border-radius: 32px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
     z-index: 1001;
   }
@@ -1666,9 +1666,9 @@ img {
   .nav-links li a {
     display: block;
     padding: 14px 20px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 100px; /* Perfectly round pill shape */
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .nav-toggle {
