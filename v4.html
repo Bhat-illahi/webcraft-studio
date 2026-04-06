@@ -110,6 +110,10 @@
                       <label>Glass Blur Strength</label>
                       <input type="range" id="set-note-blur" min="0" max="50" value="20" oninput="updatePreview()">
                   </div>
+                  <div class="form-group">
+                      <label>Box Width (Horizontal)</label>
+                      <input type="range" id="set-note-width" min="200" max="1150" value="800" oninput="updatePreview()">
+                  </div>
               </div>
 
               <div class="editor-card">
@@ -252,13 +256,14 @@
     async function loadServices() {
         const { data } = await _supabase.from('services').select('*').order('id');
         const container = document.getElementById('services-list');
+        if (!data) return;
         container.innerHTML = data.map(s => `
             <div class="item-row">
                 <div style="display:grid; grid-template-columns: 80px 1fr; gap:15px;">
-                    <input type="text" id="service-icon-${s.id}" value="${s.icon}" title="Icon Class">
-                    <input type="text" id="service-title-${s.id}" value="${s.title}" style="font-weight:700;">
+                    <input type="text" id="service-icon-${s.id}" value="${s.icon || 'fas fa-check'}" title="Icon Class">
+                    <input type="text" id="service-title-${s.id}" value="${s.title || 'Service Title'}" style="font-weight:700;">
                 </div>
-                <textarea id="service-desc-${s.id}" style="margin-top:10px;">${s.description}</textarea>
+                <textarea id="service-desc-${s.id}" style="margin-top:10px;">${s.description || ''}</textarea>
                 <button class="save-btn" onclick="saveService(${s.id})"><i class="fas fa-save"></i> Save Service #${s.id}</button>
             </div>
         `).join('');
