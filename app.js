@@ -912,8 +912,14 @@ async function loadSiteContent() {
                 const de = document.getElementById('dynamic_email');
                 if (de) de.innerText = raw;
                 // 3. Contact section - button
-                const del2 = document.getElementById('dynamic_email_link');
-                if (del2) del2.href = mailUrl;
+                const del1 = document.getElementById('dynamic_email_link');
+                if (del1) del1.href = mailUrl;
+            }
+
+            if (s.key === 'working_hours') {
+                const raw = s.value || 'Mon – Sat: 9 AM – 9 PM';
+                const el = document.getElementById('dynamic_hours');
+                if (el) el.innerText = raw;
             }
 
             // Legacy Design Pulse Loader (v5_...)

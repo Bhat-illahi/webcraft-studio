@@ -161,6 +161,12 @@
                     <input type="text" id="site_email" placeholder="bhatillahi21@gmail.com">
                 </div>
             </div>
+            <div class="card">
+                <div class="field">
+                    <label>Working Hours (Text)</label>
+                    <input type="text" id="site_hours" placeholder="Mon – Sat: 9 AM – 9 PM">
+                </div>
+            </div>
         </div>
     </section>
 
@@ -247,8 +253,10 @@
             if (settings) {
                 const phone = settings.find(s => s.key === 'primary_phone')?.value || '';
                 const email = settings.find(s => s.key === 'primary_email')?.value || '';
+                const hours = settings.find(s => s.key === 'working_hours')?.value || '';
                 document.getElementById('site_phone').value = phone;
                 document.getElementById('site_email').value = email;
+                document.getElementById('site_hours').value = hours;
             }
 
             // Load pricing
@@ -350,12 +358,14 @@
         try {
             const phone = document.getElementById('site_phone').value.trim();
             const email = document.getElementById('site_email').value.trim();
+            const hours = document.getElementById('site_hours').value.trim();
 
             // Save contact info (delete then insert)
-            await sb.from('site_settings').delete().in('key', ['primary_phone', 'primary_email']);
+            await sb.from('site_settings').delete().in('key', ['primary_phone', 'primary_email', 'working_hours']);
             const { error: ce } = await sb.from('site_settings').insert([
                 { key: 'primary_phone', value: phone },
-                { key: 'primary_email', value: email }
+                { key: 'primary_email', value: email },
+                { key: 'working_hours', value: hours }
             ]);
             if (ce) throw ce;
 
