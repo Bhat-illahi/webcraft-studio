@@ -152,19 +152,19 @@
     <div id="login-gate">
         <div class="login-card">
             <div style="display:flex; justify-content:center; align-items:center; gap:20px; margin-bottom: 30px;">
-                <i class="fas fa-magic fa-3x" style="color:var(--admin-primary)"></i>
-                <span style="font-size: 2.2rem; font-weight:800; font-family:'Space Grotesk';">IFRAME MASTER</span>
+                <i class="fas fa-user-shield fa-3x" style="color:var(--admin-primary)"></i>
+                <span style="font-size: 2rem; font-weight:800; font-family:'Space Grotesk';">WEBCRAFT STUDIO ADMIN</span>
             </div>
-            <p style="color:var(--admin-gray)">Unlock Your Site's Stabilized Pulse</p>
-            <input type="password" id="masterKey" placeholder="••••••" onkeydown="if(event.key==='Enter') executeAuth()">
-            <button class="btn-apply" onclick="executeAuth()" style="width:100%; padding: 18px;">Unlock Isolated Studio</button>
+            <p style="color:var(--admin-gray)">Control your website design in real-time</p>
+            <input type="password" id="masterKey" placeholder="Enter Password" onkeydown="if(event.key==='Enter') executeAuth()">
+            <button class="btn-apply" onclick="executeAuth()" style="width:100%; padding: 18px;">Login to Designer</button>
         </div>
     </div>
 
     <div class="admin-nav" id="admin-nav">
         <div class="logo">
-            <i class="fas fa-microchip" style="color:var(--admin-primary)"></i>
-            <span style="font-weight:800; font-family:'Space Grotesk'; font-size:1.4rem; color:#fff;">V5 Master Studio</span>
+            <i class="fas fa-paint-brush" style="color:var(--admin-primary)"></i>
+            <span style="font-weight:800; font-family:'Space Grotesk'; font-size:1.4rem; color:#fff;">Visual Master Designer</span>
         </div>
         <a href="https://chipper-klepon-836e8c.netlify.app/" target="_blank" class="btn-live">
             <i class="fas fa-external-link-alt"></i> View Live Site
@@ -177,19 +177,19 @@
 
         <div id="studio-toolbox">
             <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-                <b style="color:var(--admin-primary); text-transform:uppercase; font-size:0.8rem;">Visual Studio Tools</b>
+                <b style="color:var(--admin-primary); text-transform:uppercase; font-size:0.8rem;">Design Editor</b>
                 <i class="fas fa-times" onclick="closeToolbox()" style="cursor:pointer"></i>
             </div>
             <div style="margin-bottom:20px;">
-                <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:var(--admin-gray)">Element/Char Color</label>
+                <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:var(--admin-gray)">Change Color</label>
                 <input type="color" id="tool-color" oninput="applyPulse('color')" style="width:100%; height:40px; border:none; background:none; cursor:pointer;">
             </div>
             <div style="margin-bottom:20px;">
-                <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:var(--admin-gray)">Font Size (px)</label>
+                <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:var(--admin-gray)">Text Size (px)</label>
                 <input type="range" id="tool-size" min="10" max="150" oninput="applyPulse('fontSize')" style="width:100%; accent-color:var(--admin-primary)">
             </div>
             <div style="margin-bottom:20px;">
-                <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:var(--admin-gray)">Section Height (px)</label>
+                <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:var(--admin-gray)">Space / Height (px)</label>
                 <input type="range" id="tool-padding" min="0" max="400" oninput="applyPulse('padding')" style="width:100%; accent-color:var(--admin-primary)">
             </div>
             <div style="margin-bottom:20px;">
@@ -199,7 +199,7 @@
         </div>
 
         <div style="position:fixed; bottom:40px; left:50%; transform:translateX(-50%); z-index:2500;">
-             <button class="btn-apply" id="saveBtn" onclick="saveV5Mirror()">Apply All Visual Changes ✅</button>
+             <button class="btn-apply" id="saveBtn" onclick="saveV5Mirror()">Save & Update Live Site ✅</button>
         </div>
     </div>
 
