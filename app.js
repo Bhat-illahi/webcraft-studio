@@ -844,12 +844,12 @@ async function loadSiteSettings() {
             }
             if (s('note_bg')) {
                 const hex = s('note_bg');
-                // Force 45% transparency if it's a solid hex color to ensure GLASS look
                 if (hex.startsWith('#')) {
                     const r = parseInt(hex.slice(1, 3), 16);
                     const g = parseInt(hex.slice(3, 5), 16);
                     const b = parseInt(hex.slice(5, 7), 16);
-                    banner.style.setProperty('background', `rgba(${r}, ${g}, ${b}, 0.55)`, 'important'); 
+                    banner.style.setProperty('background', `rgba(${r}, ${g}, ${b}, 0.75)`, 'important'); 
+                    banner.style.setProperty('border', '1px solid rgba(255,255,255,0.2)', 'important');
                 } else {
                     banner.style.setProperty('background', hex, 'important');
                 }
