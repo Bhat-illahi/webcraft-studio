@@ -226,6 +226,7 @@
         const bg = document.getElementById('set-note-bg')?.value;
         const blur = document.getElementById('set-note-blur')?.value;
         const padding = document.getElementById('set-note-padding')?.value;
+        const width = document.getElementById('set-note-width')?.value;
         const radius = document.getElementById('set-note-radius')?.value;
         const isBox = document.getElementById('set-note-box')?.checked;
         const align = document.getElementById('set-note-align')?.value;
@@ -234,16 +235,23 @@
         document.getElementById('preview-prefix').innerText = document.getElementById('set-note-prefix')?.value;
         document.getElementById('preview-msg').innerText = document.getElementById('set-note')?.value;
         
-        if (isBox) {
-          preview.style.background = hexToRgba(bg, 0.45);
-          preview.style.backdropFilter = `blur(${blur}px)`;
-          preview.style.webkitBackdropFilter = `blur(${blur}px)`;
-          preview.style.padding = `${padding}px 40px`;
-          preview.style.borderRadius = radius + 'px';
-        } else {
-          preview.style.background = 'none';
-          preview.style.backdropFilter = 'none';
-          preview.style.padding = '10px';
+        if (preview) {
+          preview.style.maxWidth = width + 'px';
+          if (align === 'left') preview.style.margin = "0 auto 0 0";
+          else if (align === 'right') preview.style.margin = "0 0 0 auto";
+          else preview.style.margin = "0 auto";
+
+          if (isBox) {
+            preview.style.background = hexToRgba(bg, 0.45);
+            preview.style.backdropFilter = `blur(${blur}px)`;
+            preview.style.webkitBackdropFilter = `blur(${blur}px)`;
+            preview.style.padding = `${padding}px 40px`;
+            preview.style.borderRadius = radius + 'px';
+          } else {
+            preview.style.background = 'none';
+            preview.style.backdropFilter = 'none';
+            preview.style.padding = '10px';
+          }
         }
       } catch(e) {}
     }
@@ -294,6 +302,7 @@
             { key: 'note_bg', value: document.getElementById('set-note-bg').value },
             { key: 'note_blur', value: document.getElementById('set-note-blur').value },
             { key: 'note_padding', value: document.getElementById('set-note-padding').value },
+            { key: 'note_width', value: document.getElementById('set-note-width').value },
             { key: 'note_radius', value: document.getElementById('set-note-radius').value },
             { key: 'note_align', value: document.getElementById('set-note-align').value },
             { key: 'note_box', value: document.getElementById('set-note-box').checked ? 'YES' : 'NO' }
