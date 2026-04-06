@@ -43,20 +43,25 @@
             padding: 0 40px;
         }
 
-        .tab-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(108, 99, 255, 0.2);
-            color: var(--admin-gray);
-            padding: 10px 25px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: 0.3s;
-        }
-        .tab-btn.active {
-            background: var(--admin-primary);
+        .btn-live {
+            background: rgba(108, 99, 255, 0.1);
+            border: 1px solid rgba(108, 99, 255, 0.4);
             color: #fff;
+            padding: 10px 22px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        .btn-live:hover {
+            background: var(--admin-primary);
             box-shadow: 0 0 20px rgba(108, 99, 255, 0.4);
+            transform: translateY(-2px);
         }
 
         .panel { display: none; padding-top: 75px; width: 100%; height: 100vh; }
@@ -161,11 +166,9 @@
             <i class="fas fa-microchip" style="color:var(--admin-primary)"></i>
             <span style="font-weight:800; font-family:'Space Grotesk'; font-size:1.4rem; color:#fff;">V5 Master Studio</span>
         </div>
-        <div style="display:flex; gap:15px;">
-            <button class="tab-btn active" onclick="switchTab('visual')"><i class="fas fa-eye"></i> Full Site (WYSIWYG)</button>
-            <button class="tab-btn" onclick="switchTab('services')"><i class="fas fa-briefcase"></i> Services Cards</button>
-            <button class="tab-btn" onclick="switchTab('pricing')"><i class="fas fa-tags"></i> Pricing Plans</button>
-        </div>
+        <a href="https://chipper-klepon-836e8c.netlify.app/" target="_blank" class="btn-live">
+            <i class="fas fa-external-link-alt"></i> View Live Site
+        </a>
     </div>
 
     <!-- PANEL: VISUAL (IFRAME) -->
