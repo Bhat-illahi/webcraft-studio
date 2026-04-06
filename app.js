@@ -798,7 +798,8 @@ function renderPricing(data) {
     data.forEach((pkg, index) => {
         // Sync Hero Prices with the FIRST (Starter) plan
         if (index === 0) {
-            const starterPrice = pkg.price;
+            // Extract only the starting price if it's a range (e.g. ₹3000-5000 -> ₹3000)
+            const starterPrice = pkg.price.split('-')[0].trim();
             ['hero-starter-price', 'hero-price-badge', 'hero-stat-price'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.innerText = starterPrice;
