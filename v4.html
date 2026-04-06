@@ -173,16 +173,10 @@
         if (error) throw error;
         
         data.forEach(s => {
-          if (s.key === 'note_prefix') document.getElementById('set-note-prefix').value = s.value;
-          if (s.key === 'demo_note') document.getElementById('set-note').value = s.value;
-          if (s.key === 'note_accent') document.getElementById('set-note-accent').value = s.value;
-          if (s.key === 'note_bg') document.getElementById('set-note-bg').value = s.value;
-          if (s.key === 'note_blur') document.getElementById('set-note-blur').value = s.value;
-          if (s.key === 'note_padding') document.getElementById('set-note-padding').value = s.value;
-          if (s.key === 'note_width') document.getElementById('set-note-width').value = s.value;
-          if (s.key === 'note_radius') document.getElementById('set-note-radius').value = s.value;
-          if (s.key === 'note_align') document.getElementById('set-note-align').value = s.value;
-          if (s.key === 'note_box') document.getElementById('set-note-box').checked = (s.value === 'YES');
+          const el = document.getElementById('set-note-' + s.key.replace('note_', ''));
+          if (el) el.value = s.value;
+          if (s.key === 'demo_note' && document.getElementById('set-note')) document.getElementById('set-note').value = s.value;
+          if (s.key === 'note_box' && document.getElementById('set-note-box')) document.getElementById('set-note-box').checked = (s.value === 'YES');
         });
 
         document.querySelector('.status-dot').classList.add('online');
@@ -206,19 +200,24 @@
 
     function updatePreview() {
       try {
-        const bg = document.getElementById('set-note-bg').value;
-        const blur = document.getElementById('set-note-blur').value;
-        const padding = document.getElementById('set-note-padding').value;
-        const width = document.getElementById('set-note-width').value;
-        const accent = document.getElementById('set-note-accent').value;
-        const isBox = document.getElementById('set-note-box').checked;
-        const align = document.getElementById('set-note-align').value;
+        const bg = document.getElementById('set-note-bg')?.value || '#050510';
+        const blur = document.getElementById('set-note-blur')?.value || 20;
+        const padding = document.getElementById('set-note-padding')?.value || 30;
+        const width = document.getElementById('set-note-width')?.value || 800;
+        const accent = document.getElementById('set-note-accent')?.value || '#6C63FF';
+        const isBox = document.getElementById('set-note-box')?.checked;
+        const align = document.getElementById('set-note-align')?.value || 'center';
 
         const preview = document.getElementById('note-preview');
+        if (!preview) return;
         
-        document.getElementById('preview-prefix').innerText = document.getElementById('set-note-prefix').value;
-        document.getElementById('preview-msg').innerText = document.getElementById('set-note').value;
-        document.getElementById('preview-icon').style.color = accent;
+        const pre = document.getElementById('preview-prefix');
+        const msg = document.getElementById('preview-msg');
+        const icon = document.getElementById('preview-icon');
+        
+        if (pre) pre.innerText = document.getElementById('set-note-prefix')?.value || '';
+        if (msg) msg.innerText = document.getElementById('set-note')?.value || '';
+        if (icon) icon.style.color = accent;
         
         preview.style.maxWidth = width + 'px';
         if (align === 'left') preview.style.margin = "0 auto 0 0";
@@ -237,7 +236,7 @@
           preview.style.padding = '10px';
           preview.style.border = 'none';
         }
-      } catch(e) { console.error("Preview Crash:", e); }
+      } catch(e) { console.error("Preview Crash Shield Activated:", e); }
     }
 
     function hexToRgba(hex, alpha) {
