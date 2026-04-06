@@ -38,7 +38,7 @@ body {
 }
 
 section {
-  scroll-margin-top: 280px; /* Deep offset for desktop */
+  scroll-margin-top: 550px; /* Extreme desktop offset for hyper-spacious feel */
 }
 
 @media (max-width: 768px) {
