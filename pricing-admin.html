@@ -199,6 +199,9 @@
     </div>
 
     <div class="save-bar" id="save-bar" style="display:none;">
+        <a href="https://bhat-illahi.github.io/webcraft-studio/" target="_blank" class="btn" style="background:transparent;border:1px solid rgba(108,99,255,0.4);color:#9090b8;width:auto;margin-right:10px;">
+            <i class="fas fa-external-link-alt"></i> View Live Site
+        </a>
         <button class="btn btn-primary" id="saveBtn" onclick="saveAll()">
             <i class="fas fa-save"></i> Save & Publish Updates
         </button>
@@ -301,18 +304,21 @@
 
         async function saveAll() {
             const btn = document.getElementById('saveBtn');
-            if (!supabase) { alert("Database not connected. Please refresh."); return; }
-            
+            if (!supabase) { alert('Database not connected. Please refresh.'); return; }
+
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
 
             try {
                 const phone = document.getElementById('site_phone').value;
                 const email = document.getElementById('site_email').value;
-                await supabase.from('site_settings').upsert([
+
+                // Delete then insert (reliable, no upsert constraint needed)
+                await supabase.from('site_settings').delete().in('key', ['primary_phone', 'primary_email']);
+                await supabase.from('site_settings').insert([
                     { key: 'primary_phone', value: phone },
                     { key: 'primary_email', value: email }
-                ], { onConflict: 'key' });
+                ]);
 
                 const pricingCards = document.querySelectorAll('.pricing-card');
                 const pricingData = Array.from(pricingCards).map((card, i) => ({
@@ -322,14 +328,29 @@
                     price: card.querySelector('.p-price').value,
                     features: card.querySelector('.p-features').value,
                     featured: card.querySelector('.p-featured').checked,
-                    action_type: i === 2 ? "selectPackage('E-Commerce Store', '₹5000+ (Premium)')" : (i === 1 ? "selectPackage('Small Business / Shop', '₹3000 – ₹5000 (Professional)')" : "selectPackage('Small Business / Shop', '₹2500 – ₹3000 (Basic)')")
+                    action_type: i === 2 ? "selectPackage('E-Commerce Store', '5000+ (Premium)')" : (i === 1 ? "selectPackage('Small Business / Shop', '3000 - 5000 (Professional)')" : "selectPackage('Small Business / Shop', '2500 - 3000 (Basic)')")
                 }));
 
-                await supabase.from('pricing').upsert(pricingData, { onConflict: 'id' });
+                await supabase.from('pricing').delete().in('id', [1, 2, 3]);
+                await supabase.from('pricing').insert(pricingData);
+
+                // Show published state
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Published!';
+                btn.style.background = '#00c853';
+                btn.style.boxShadow = '0 10px 20px rgba(0,200,83,0.3)';
                 showToast();
+
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-save"></i> Save & Publish Updates';
+                    btn.style.background = '';
+                    btn.style.boxShadow = '';
+                }, 3000);
+
             } catch (err) {
-                alert('Error saving: ' + err.message);
-            } finally {
+                console.error(err);
+                alert('Error saving: ' + (err.message || JSON.stringify(err)));
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-save"></i> Save & Publish Updates';
             }
@@ -340,7 +361,6 @@
             t.style.display = 'block';
             setTimeout(() => t.style.display = 'none', 3000);
         }
-    </script>
     </script>
 </body>
 </html>
