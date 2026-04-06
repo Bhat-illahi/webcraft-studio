@@ -281,9 +281,18 @@ async function loadContent() {
     // 2. Fetch Settings (Safe fetch - don't crash if table missing yet)
     let settingsData = [];
     try {
-      const { data: set } = await _supabase.from('site_settings').select('*');
-      if (set) settingsData = set;
-    } catch(e) {}
+      const { data: set, error } = await _supabase.from('site_settings').select('*');
+      if (set) {
+          settingsData = set;
+          dot.classList.add('online');
+          span.innerText = "Cloud Sync Perfect";
+      } else {
+          throw error;
+      }
+    } catch(e) {
+        console.error("Fetch Error:", e);
+        span.innerText = "Cloud Warning (Using Sync Engine)";
+    }
 
     settingsData.forEach(s => {
       if (s.key === 'primary_phone') document.getElementById('set-phone').value = s.value;
@@ -498,7 +507,13 @@ async function saveNoteDesign() {
     { key: 'note_box', value: document.getElementById('set-note-box').checked ? 'YES' : 'NO' }
   ];
 
+  const timer = setTimeout(() => {
+    btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Slow Cloud - Retrying...';
+    btn.disabled = false;
+  }, 6000);
+
   const { error } = await _supabase.from('site_settings').upsert(updates, { onConflict: 'key' });
+  clearTimeout(timer);
 
   if (!error) {
     btn.innerHTML = '<i class="fas fa-check"></i> DESIGN STUDIO LIVE!';
