@@ -42,7 +42,7 @@ section {
 }
 
 #order {
-  scroll-margin-top: 100px !important;
+  scroll-margin-top: 85px !important; /* Perfect fit for mobile view */
 }
 
 @media (max-width: 768px) {
@@ -50,7 +50,7 @@ section {
     scroll-margin-top: 80px; /* Standard mobile offset */
   }
   #order {
-    scroll-margin-top: 100px !important; /* Specific offset for order link to ensure it's below the fold of the previous section */
+    scroll-margin-top: 85px !important; /* Match specifically to the p tag's position */
   }
 }
 
