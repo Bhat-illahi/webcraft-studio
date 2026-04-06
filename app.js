@@ -930,6 +930,7 @@ async function loadSiteContent() {
             // Legacy Design Pulse Loader (v5_...)
             if (s.key.startsWith('v5_')) {
                 const id = s.key.replace('v5_', '');
+                if (id === 'v5-note-box') return; // PROTECT the new glassy design from being overwritten
                 try {
                     const styles = JSON.parse(s.value);
                     const el = document.getElementById(id);
