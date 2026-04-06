@@ -21,10 +21,19 @@
   .editor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
   .editor-card { background: var(--admin-surface); border: 1px solid var(--admin-border); border-radius: 20px; padding: 30px; transition: 0.3s; }
   
-  .form-group { margin-bottom: 20px; }
-  .form-group label { display: block; font-size: 0.7rem; color: #888; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
-  .form-group input, .form-group textarea { width: 100%; background: #050510; border: 1px solid #333; color: #fff; padding: 14px; border-radius: 12px; font-size: 0.95rem; transition: 0.3s; }
-  .form-group input:focus { border-color: var(--admin-primary); outline: none; box-shadow: 0 0 10px rgba(108,99,255,0.2); }
+  .form-group input, .form-group textarea, input[type="text"], input[type="password"], textarea { 
+    width: 100%; 
+    background: #050510 !important; 
+    border: 1px solid #333 !important; 
+    color: #fff !important; 
+    padding: 12px; 
+    border-radius: 10px; 
+    font-size: 0.95rem; 
+    transition: 0.3s; 
+    font-family: inherit;
+  }
+  
+  input:focus, textarea:focus { border-color: var(--admin-primary) !important; outline: none; box-shadow: 0 0 15px rgba(108,99,255,0.2); }
   
   .tab-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--admin-border); color: #888; padding: 12px 25px; border-radius: 12px; cursor: pointer; font-weight: 700; transition: 0.3s; font-size: 0.9rem; }
   .tab-btn.active { background: var(--admin-primary); color: #fff; border-color: var(--admin-primary); box-shadow: 0 5px 15px rgba(108,99,255,0.3); }
