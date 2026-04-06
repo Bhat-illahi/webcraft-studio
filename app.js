@@ -746,43 +746,39 @@ function initWorkingHours() {
   }
 }
 
-// Initial Run
-initWorkingHours();
-
 // ===== SUPABASE CLOUD CMS SYSTEM =====
 
 const SUPABASE_URL = 'https://imuqwquuytcfuqbpaqoa.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxYnBhcW9hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NTQwNzcsImV4cCI6MjA5MTAzMDA3N30.J_E1pbC8nJKMsIMJE-IAnI_3lV47q6WX0HuSSWIhpd4';
 
-// Only initialize if Supabase library is loaded
-let supabaseClient = null;
+// Initialize Supabase Client
+let _supabase = null;
 if (typeof supabase !== 'undefined') {
-  supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 }
 
 const DEFAULT_SERVICES = [
-  { icon: '✂️', clr: '#6C63FF', title: 'Salon & Spa Websites', desc_text: 'Beautiful booking-enabled websites for salons, spas, and beauty studios.', link: 'gallery-salon.html' },
-  { icon: '💈', clr: '#FF6584', title: 'Barber Shop Sites', desc_text: 'Masculine, modern designs for barber shops with gallery and online booking.', link: 'gallery-barber.html' },
-  { icon: '💍', clr: '#FFD43B', title: 'Jewellery Websites', desc_text: 'Luxurious, product-showcasing websites for goldsmith and jewellery businesses.', link: 'gallery-jewelry.html' },
-  { icon: '🏪', clr: '#51CF66', title: 'Small Business Sites', desc_text: 'Professional landing pages for local shops, clinics, and restaurants.', link: 'gallery-business.html' },
-  { icon: '🛒', clr: '#339AF0', title: 'E-Commerce Stores', desc_text: 'Online stores with product listings, cart, and payment integration.', link: 'gallery-ecommerce.html' },
-  { icon: '📱', clr: '#F06595', title: 'Portfolio Websites', desc_text: 'Showcase your work beautifully with a personal or professional portfolio.', link: 'gallery-portfolio.html' }
+    { icon: '✂️', clr: '#6C63FF', title: 'Salon & Spa Websites', desc_text: 'Beautiful booking-enabled websites for salons, spas, and beauty studios.', link: 'gallery-salon.html' },
+    { icon: '💈', clr: '#FF6584', title: 'Barber Shop Sites', desc_text: 'Masculine, modern designs for barber shops with gallery and online booking.', link: 'gallery-barber.html' },
+    { icon: '💍', clr: '#FFD43B', title: 'Jewellery Websites', desc_text: 'Luxurious, product-showcasing websites for goldsmith and jewellery businesses.', link: 'gallery-jewelry.html' },
+    { icon: '🏪', clr: '#51CF66', title: 'Small Business Sites', desc_text: 'Professional landing pages for local shops, clinics, and restaurants.', link: 'gallery-business.html' },
+    { icon: '🛒', clr: '#339AF0', title: 'E-Commerce Stores', desc_text: 'Online stores with product listings, cart, and payment integration.', link: 'gallery-ecommerce.html' },
+    { icon: '📱', clr: '#F06595', title: 'Portfolio Websites', desc_text: 'Showcase your work beautifully with a personal or professional portfolio.', link: 'gallery-portfolio.html' }
 ];
 
 const DEFAULT_PRICING = [
-  { badge: 'Starter', price: '₹2500 – ₹3000', name: 'Basic Page', features: '1-Page Site,Mobile Friendly,Contact Form,Basic SEO', featured: false, action_type: "selectPackage('Small Business / Shop', '₹2500 – ₹3000 (Basic)')" },
-  { badge: 'Professional', price: '₹3000 – ₹5000', name: 'Business Website', features: 'Multi-Page Site,Modern Animations,Photo Gallery,WhatsApp Integration,SEO Optimized', featured: true, action_type: "selectPackage('Small Business / Shop', '₹3000 – ₹5000 (Professional)')" },
-  { badge: 'Premium', price: '₹5000+', name: 'E-Commerce', features: 'Online Store,Payment Gateway,Product Management,Admin Panel,Advanced SEO,Priority Support', featured: false, action_type: "selectPackage('E-Commerce Store', '₹5000+ (Premium)')" }
+    { badge: 'Starter', price: '₹2500 – ₹3000', name: 'Basic Page', features: '1-Page Site,Mobile Friendly,Contact Form,Basic SEO', featured: false, action_type: "selectPackage('Small Business / Shop', '₹2500 – ₹3000 (Basic)')" },
+    { badge: 'Professional', price: '₹3000 – ₹5000', name: 'Business Website', features: 'Multi-Page Site,Modern Animations,Photo Gallery,WhatsApp Integration,SEO Optimized', featured: true, action_type: "selectPackage('Small Business / Shop', '₹3000 – ₹5000 (Professional)')" },
+    { badge: 'Premium', price: '₹5000+', name: 'E-Commerce', features: 'Online Store,Payment Gateway,Product Management,Admin Panel,Advanced SEO,Priority Support', featured: false, action_type: "selectPackage('E-Commerce Store', '₹5000+ (Premium)')" }
 ];
 
 function renderServices(data) {
-  const grid = document.getElementById('servicesGridDynamic');
-  if (!grid) return;
-  grid.innerHTML = '';
-  
-  data.forEach((item, index) => {
-    const delay = index * 100;
-    const card = `
+    const grid = document.getElementById('servicesGridDynamic');
+    if (!grid) return;
+    grid.innerHTML = '';
+    data.forEach((item, index) => {
+        const delay = index * 100;
+        grid.innerHTML += `
       <a href="${item.link}" class="service-item-link">
         <div class="service-card" data-aos="fade-up" data-delay="${delay}">
           <div class="service-icon" style="--clr:${item.clr || '#6C63FF'}">${item.icon}</div>
@@ -790,201 +786,138 @@ function renderServices(data) {
           <p>${item.desc_text}</p>
           <span class="btn btn-sm btn-primary">View Demos &rarr;</span>
         </div>
-    <div id="cmsStatusIndicator" style="position:fixed; bottom:10px; left:10px; font-size:10px; color:rgba(255,255,255,0.2); z-index:9999; display:flex; align-items:center; gap:5px; pointer-events:none; opacity:0.5;">
-      <div id="cmsDot" style="width:6px; height:6px; border-radius:50%; background:#666;"></div>
-      <span id="cmsText">Connecting CMS...</span>
-    </div>
-  </footer>
+      </a>
     `;
-    grid.innerHTML += card;
-  });
-  
-  if (typeof observer !== 'undefined') {
-    document.querySelectorAll('#servicesGridDynamic [data-aos]').forEach(el => observer.observe(el));
-  }
+    });
 }
 
 function renderPricing(data) {
-  const grid = document.getElementById('pricingGridDynamic');
-  if (!grid) return;
-  grid.innerHTML = '';
-
-  data.forEach(item => {
-    const featuresList = (item.features || "").split(",").map(f => `<li><i class="fas fa-check"></i> ${f.trim()}</li>`).join("");
-    const isFeatured = item.featured === true || item.featured === 'true' || item.featured === 'YES';
-    const featuredClass = isFeatured ? 'featured' : '';
-    const popularTag = isFeatured ? '<div class="popular-tag">Most Popular</div>' : '';
-    
-    const card = `
-      <div class="pricing-card ${featuredClass}">
-        ${popularTag}
-        <div class="pricing-badge">${item.badge}</div>
-        <div class="pricing-price">${item.price}</div>
-        <div class="pricing-name">${item.name}</div>
+    const grid = document.getElementById('pricingGridDynamic');
+    if (!grid) return;
+    grid.innerHTML = '';
+    data.forEach((pkg, index) => {
+        const delay = index * 150;
+        grid.innerHTML += `
+      <div class="pricing-card ${pkg.featured ? 'featured' : ''}" data-aos="fade-up" data-delay="${delay}">
+        ${pkg.featured ? '<div class="popular-tag">Most Popular</div>' : ''}
+        <div class="pricing-badge">${pkg.badge}</div>
+        <div class="pricing-price">${pkg.price}</div>
+        <div class="pricing-name">${pkg.name}</div>
         <ul class="pricing-features">
-          ${featuresList}
+          ${pkg.features.split(',').map(f => `<li><i class="fas fa-check"></i> ${f.trim()}</li>`).join('')}
         </ul>
-        <a href="#order" class="btn ${featuredClass ? 'btn-primary' : 'btn-outline'}" onclick="${item.action_type || ''}">Order Now</a>
+        <button class="btn btn-block ${pkg.featured ? 'btn-primary' : 'btn-outline'}" onclick="${pkg.action_type}">
+          Choose ${pkg.badge} Plan
+        </button>
       </div>
     `;
-    grid.innerHTML += card;
-  });
+    });
+}
+
+async function loadSiteSettings() {
+    if (!_supabase) return;
+    const { data, error } = await _supabase.from('site_settings').select('*');
+    if (error) throw error;
+    if (data) {
+        // Apply Contact Settings
+        data.forEach(s => {
+            if (s.key === 'primary_phone') {
+                const els = document.querySelectorAll('#dynamic_phone');
+                els.forEach(el => el.innerText = s.value);
+            }
+            if (s.key === 'primary_email') {
+                const els = document.querySelectorAll('#dynamic_email');
+                els.forEach(el => el.innerText = s.value);
+            }
+        });
+
+        // Apply Design Studio Settings (The Point-and-Click Engine)
+        const s = (key) => data.find(obj => obj.key === key)?.value;
+
+        const banner = document.querySelector('.demo-note');
+        if (banner) {
+            const isVisible = s('note_box') === 'true' || s('note_box') === 'YES';
+            banner.style.display = isVisible ? 'flex' : 'none';
+            if (s('note_bg')) banner.style.background = s('note_bg');
+            if (s('note_blur')) {
+                banner.style.backdropFilter = `blur(${s('note_blur')}px)`;
+                banner.style.webkitBackdropFilter = `blur(${s('note_blur')}px)`;
+            }
+            if (s('note_width')) banner.style.maxWidth = s('note_width') + 'px';
+            if (s('note_radius')) banner.style.borderRadius = s('note_radius') + 'px';
+            
+            if (s('note_align')) {
+                if (s('note_align') === 'left') banner.style.margin = "0 auto 0 0";
+                else if (s('note_align') === 'right') banner.style.margin = "0 0 0 auto";
+                else banner.style.margin = "0 auto";
+            }
+
+            const prefixEl = document.getElementById('notePrefixText');
+            if (prefixEl) {
+                if (s('note_prefix')) prefixEl.innerText = s('note_prefix');
+                if (s('note_prefix_color')) prefixEl.style.color = s('note_prefix_color');
+                if (s('note_prefix_size')) prefixEl.style.fontSize = s('note_prefix_size') + 'px';
+            }
+
+            const msgEl = document.getElementById('noteMsgText');
+            if (msgEl) {
+                if (s('demo_note')) msgEl.innerText = s('demo_note');
+                if (s('note_color')) msgEl.style.color = s('note_color');
+                if (s('note_msg_size')) msgEl.style.fontSize = s('note_msg_size') + 'px';
+            }
+
+            const iconEl = banner.querySelector('.note-icon');
+            if (iconEl && s('note_icon_size')) iconEl.style.fontSize = s('note_icon_size') + 'px';
+        }
+    }
+}
+
+async function loadServicesSync() {
+    const { data, error } = await _supabase.from('services').select('*').order('id', { ascending: true });
+    if (error || !data || data.length === 0) renderServices(DEFAULT_SERVICES);
+    else renderServices(data);
+}
+
+async function loadPricingSync() {
+    const { data, error } = await _supabase.from('pricing').select('*').order('id', { ascending: true });
+    if (error || !data || data.length === 0) renderPricing(DEFAULT_PRICING);
+    else renderPricing(data);
 }
 
 async function initCMS() {
-  const cmsDot = document.getElementById('cmsDot');
-  const cmsText = document.getElementById('cmsText');
-
-  // Wait for library if it's missing (helps on slow connections)
-  if (typeof supabase === 'undefined') {
-    console.warn("Supabase SDK not ready, retrying in 1s...");
-    setTimeout(initCMS, 1000);
-    return;
-  }
-
-  if (!supabaseClient) {
-    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  }
-
-  console.log("🚀 Initializing CMS Sync...");
-
-  // Independent Loading Blocks for Max Robustness
-  const loaders = [
-    async () => {
-      const { data } = await supabaseClient.from('services').select('*').order('id', { ascending: true });
-      if (data && data.length > 0) renderServices(data);
-      else renderServices(DEFAULT_SERVICES);
-    },
-    async () => {
-      const { data } = await supabaseClient.from('pricing').select('*').order('id', { ascending: true });
-      if (data && data.length > 0) renderPricing(data);
-      else renderPricing(DEFAULT_PRICING);
-    },
-    async () => {
-      const { data } = await supabaseClient.from('site_settings').select('*');
-      if (data) {
-        data.forEach(s => {
-          if (s.key === 'primary_phone') {
-            const el = document.getElementById('dynamic_phone');
-            const link = document.getElementById('dynamic_whatsapp_link');
-            if (el) el.innerText = s.value;
-            if (link) link.href = `https://wa.me/${s.value.replace(/\D/g,'')}`;
-          }
-          if (s.key === 'primary_email') {
-            const el = document.getElementById('dynamic_email');
-            const link = document.getElementById('dynamic_email_link');
-            if (el) el.innerText = s.value;
-            if (link) link.href = `mailto:${s.value}`;
-          }
-          if (s.key === 'working_hours') {
-            const el = document.getElementById('dynamic_hours');
-            if (el) el.innerText = s.value;
-            
-            try {
-              const matches = s.value.replace(/to/gi, '-').match(/(\d+)\s*(AM|PM)/gi);
-              if (matches && matches.length >= 2) {
-                const parseH = (str) => {
-                  let h = parseInt(str);
-                  if (str.toUpperCase().includes('PM') && h !== 12) h += 12;
-                  if (str.toUpperCase().includes('AM') && h === 12) h = 0;
-                  return h;
-                };
-                window.WC_BUSINESS_HOURS.start = parseH(matches[0]);
-                window.WC_BUSINESS_HOURS.end = parseH(matches[1]);
-                if (s.value.toLowerCase().includes('sun')) window.WC_BUSINESS_HOURS.closed = [];
-              }
-            } catch(e) {}
-          }
-          let currentPrefix = "Important Note:";
-          let currentMsg = "";
-          let prefixColor = "#FF6B6B";
-          let msgColor = "#ffffff";
-          let boxBg = "rgba(255,255,255,0.03)";
-          let glassBlur = "10";
-          let iconSize = "20";
-          let prefixSize = "18";
-          let msgSize = "16";
-
-          data.forEach(s => {
-            if (s.key === 'note_prefix') currentPrefix = s.value;
-            if (s.key === 'note_prefix_color') prefixColor = s.value;
-            if (s.key === 'note_prefix_size') prefixSize = s.value;
-            if (s.key === 'demo_note') currentMsg = s.value;
-            if (s.key === 'note_color') msgColor = s.value;
-            if (s.key === 'note_msg_size') msgSize = s.value;
-            if (s.key === 'note_accent') prefixColor = s.value; // Fallback
-            if (s.key === 'note_icon_size') iconSize = s.value;
-            if (s.key === 'note_bg') boxBg = s.value;
-            if (s.key === 'note_blur') glassBlur = s.value;
-            
-            if (s.key === 'note_width') {
-              const box = document.querySelector('.demo-note');
-              if (box) box.style.maxWidth = s.value + 'px';
-            }
-            if (s.key === 'note_radius') {
-              const box = document.querySelector('.demo-note');
-              if (box) box.style.borderRadius = s.value + 'px';
-            }
-            if (s.key === 'note_align') {
-              const box = document.querySelector('.demo-note');
-              if (box) {
-                if (s.value === 'left') { box.style.margin = "0 auto 0 0"; box.style.textAlign = "left"; }
-                else if (s.value === 'right') { box.style.margin = "0 0 0 auto"; box.style.textAlign = "right"; }
-                else { box.style.margin = "0 auto"; box.style.textAlign = "center"; }
-              }
-            }
-            if (s.key === 'note_box') {
-              const box = document.querySelector('.demo-note');
-              if (box) {
-                if (s.value === 'YES') {
-                  const r = parseInt(boxBg.slice(1, 3), 16);
-                  const g = parseInt(boxBg.slice(3, 5), 16);
-                  const b = parseInt(boxBg.slice(5, 7), 16);
-                  box.style.background = `rgba(${r}, ${g}, ${b}, 0.2)`; 
-                  box.style.backdropFilter = `blur(${glassBlur}px)`;
-                  box.style.webkitBackdropFilter = `blur(${glassBlur}px)`;
-                  box.style.border = '1px solid rgba(255,255,255,0.1)';
-                  box.style.padding = '20px';
-                } else {
-                  box.style.background = 'none';
-                  box.style.backdropFilter = 'none';
-                  box.style.webkitBackdropFilter = 'none';
-                  box.style.border = 'none';
-                  box.style.padding = '0';
-                }
-              }
-            }
-          });
-
-          const noteP = document.getElementById('dynamic_demo_note');
-          const icon = document.querySelector('.demo-note i');
-          if (noteP) {
-            noteP.innerHTML = `<b style="color:${prefixColor}; font-size:${prefixSize}px">${currentPrefix}</b> <span style="color:${msgColor}; font-size:${msgSize}px">${currentMsg}</span>`;
-          }
-          if (icon) {
-            icon.style.color = prefixColor;
-            icon.style.fontSize = iconSize + 'px';
-          }
-        });
-        if (typeof initWorkingHours === 'function') initWorkingHours();
-      }
+    if (!_supabase) {
+        renderServices(DEFAULT_SERVICES);
+        renderPricing(DEFAULT_PRICING);
+        return;
     }
-  ];
 
-  // Run all loaders in parallel
-  await Promise.all(loaders.map(l => l().catch(e => console.error("Loader failed", e))));
+    const dot = document.getElementById('cmsDot');
+    const text = document.getElementById('cmsText');
 
-  // Success Indicator
-  if (cmsDot) {
-    cmsDot.style.background = '#51CF66';
-    cmsDot.style.boxShadow = '0 0 5px #51CF66';
-    cmsText.innerText = "CMS Connected & Live";
-  }
+    try {
+        if (dot) dot.style.background = '#f1c40f'; // Syncing
+        
+        await Promise.all([
+            loadSiteSettings(),
+            loadServicesSync(),
+            loadPricingSync()
+        ]);
+
+        if (dot) {
+            dot.style.background = '#2ecc71'; // Connected
+            dot.style.boxShadow = '0 0 8px #2ecc71';
+        }
+        if (text) text.innerText = 'Cloud Sync Active';
+    } catch (err) {
+        console.error("CMS Sync Failed:", err);
+        if (dot) dot.style.background = '#e74c3c'; // Error
+        if (text) text.innerText = 'Sync Offline';
+    }
 }
 
-// Start CMS Initialization
+// ===== LAUNCH =====
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initCMS);
+    document.addEventListener('DOMContentLoaded', initCMS);
 } else {
-  initCMS();
+    initCMS();
 }
