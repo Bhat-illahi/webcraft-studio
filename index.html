@@ -565,6 +565,187 @@
   <!-- Supabase Cloud Database SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js?v=4.0"></script>
-</body>
 
+  <!-- V5.1 UNIFIED MASTER DESIGNER -->
+  <style>
+    :root { 
+        --v5-primary: #6C63FF; 
+        --v5-dark: #0c0c1e;
+        --v5-gray: #a0a0c0;
+    }
+    #v5-login-gate {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10000;
+        display: none; align-items: center; justify-content: center; backdrop-filter: blur(20px);
+    }
+    .v5-login-card {
+        background: var(--v5-dark); padding: 50px; border-radius: 30px;
+        border: 1px solid var(--v5-primary); width: 400px; text-align: center;
+        box-shadow: 0 20px 80px rgba(108, 99, 255, 0.3);
+    }
+    .v5-login-card input {
+        width: 100%; padding: 15px; border-radius: 12px; background: #000;
+        border: 2px solid var(--v5-primary); color: #fff; margin: 20px 0;
+        text-align: center; font-size: 1.4rem; font-family: 'Space Grotesk';
+    }
+    #v5-toolbox {
+        position: fixed; top: 100px; right: 30px; width: 340px;
+        background: rgba(12, 12, 30, 0.95); backdrop-filter: blur(25px);
+        padding: 25px; border-radius: 24px; border: 1px solid var(--v5-primary);
+        z-index: 9999; display: none; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    }
+    .v5-btn {
+        background: var(--v5-primary); color: #fff; border: none; padding: 12px 25px;
+        border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s;
+    }
+    .v5-btn-outline {
+        background: rgba(255,255,255,0.05); border: 1px solid var(--v5-primary);
+        color: #fff; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-size: 0.8rem;
+    }
+    .v5-btn-outline.active { background: var(--v5-primary); }
+    .v5-row { margin-bottom: 20px; }
+    .v5-row label { display: block; margin-bottom: 8px; font-size: 0.8rem; color: var(--v5-gray); }
+    .v5-target-active { outline: 3px dashed var(--v5-primary) !important; outline-offset: 4px !important; }
+  </style>
+
+  <div id="v5-login-gate">
+      <div class="v5-login-card">
+          <i class="fas fa-user-shield fa-3x" style="color:var(--v5-primary); margin-bottom:20px;"></i>
+          <h2 style="color:#fff; font-family:'Space Grotesk'">WEBCRAFT MASTER</h2>
+          <p style="color:var(--v5-gray)">Unlock Unified Design Power</p>
+          <input type="password" id="v5Key" placeholder="Enter Key" onkeydown="if(event.key==='Enter') v5Auth()">
+          <button class="v5-btn" onclick="v5Auth()" style="width:100%">Login to Designer</button>
+      </div>
+  </div>
+
+  <div id="v5-toolbox">
+      <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+          <b style="color:var(--v5-primary); text-transform:uppercase; font-size:0.8rem;">Design Editor</b>
+          <i class="fas fa-times" onclick="closeV5()" style="cursor:pointer"></i>
+      </div>
+      <div class="v5-row">
+          <label>Target Mode</label>
+          <div style="display:flex; gap:10px;">
+              <button class="v5-btn-outline active" id="v5-mode-text" onclick="setV5Mode('color')">Text</button>
+              <button class="v5-btn-outline" id="v5-mode-bg" onclick="setV5Mode('backgroundColor')">Box/BG</button>
+              <button class="v5-btn-outline" onclick="v5SelectParent()"><i class="fas fa-level-up-alt"></i> Parent</button>
+          </div>
+      </div>
+      <div class="v5-row">
+          <label>Choose Color</label>
+          <input type="color" id="v5-color" oninput="v5Pulse('color')" style="width:100%; height:42px; border:none; background:none; cursor:pointer;">
+      </div>
+      <div class="v5-row">
+          <label>Text Size (px)</label>
+          <input type="range" id="v5-size" min="10" max="150" oninput="v5Pulse('fontSize')" style="width:100%; accent-color:var(--v5-primary)">
+      </div>
+      <div class="v5-row">
+          <label>Space / Height (px)</label>
+          <input type="range" id="v5-padding" min="0" max="400" oninput="v5Pulse('padding')" style="width:100%; accent-color:var(--v5-primary)">
+      </div>
+      <div class="v5-row">
+          <label>Corner Rounding (px)</label>
+          <input type="range" id="v5-radius" min="0" max="150" oninput="v5Pulse('borderRadius')" style="width:100%; accent-color:var(--v5-primary)">
+      </div>
+      <button class="v5-btn" id="v5-apply" style="width:100%" onclick="v5Confirm()">Apply Changes ✍️</button>
+      
+      <div style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
+          <button class="v5-btn" id="v5-save" style="width:100%; background:linear-gradient(135deg, #6C63FF, #4e36f5)" onclick="v5Save()">Save & Update Site ✅</button>
+      </div>
+  </div>
+
+  <script>
+      let v5ActiveEl = null;
+      let v5Mode = 'color';
+      let v5Pending = new Map();
+
+      // Check for Admin Mode
+      if (window.location.search.includes('admin=true')) {
+          document.getElementById('v5-login-gate').style.display = 'flex';
+      }
+
+      function v5Auth() {
+          if (document.getElementById('v5Key').value === 'mumin69') {
+              document.getElementById('v5-login-gate').style.display = 'none';
+              localStorage.setItem('v5_active', 'true');
+              initV5Designer();
+          } else { alert("Access Denied."); }
+      }
+
+      function initV5Designer() {
+          document.body.addEventListener('dblclick', (e) => {
+              if (localStorage.getItem('v5_active') !== 'true') return;
+              e.preventDefault();
+              v5Target(e.target);
+          });
+      }
+
+      function v5Target(el) {
+          document.querySelectorAll('.v5-target-active').forEach(n => n.classList.remove('v5-target-active'));
+          v5ActiveEl = el;
+          v5ActiveEl.classList.add('v5-target-active');
+          document.getElementById('v5-toolbox').style.display = 'block';
+          
+          if (!v5ActiveEl.id) v5ActiveEl.id = 'v5_dyn_' + Math.random().toString(36).substr(2, 6);
+      }
+
+      function setV5Mode(m) {
+          v5Mode = m;
+          document.querySelectorAll('#v5-mode-text, #v5-mode-bg').forEach(b => b.classList.remove('active'));
+          document.getElementById(m === 'color' ? 'v5-mode-text' : 'v5-mode-bg').classList.add('active');
+      }
+
+      function v5SelectParent() {
+          if (v5ActiveEl && v5ActiveEl.parentElement) v5Target(v5ActiveEl.parentElement);
+      }
+
+      function v5Pulse(type) {
+          if (!v5ActiveEl) return;
+          const val = document.getElementById('v5-' + (type==='borderRadius'?'radius':type)).value;
+          const prop = (type === 'color') ? v5Mode : type;
+          v5ActiveEl.style.setProperty(prop, (type !== 'color' ? val + 'px' : val), 'important');
+      }
+
+      function v5Confirm() {
+          if (!v5ActiveEl) return;
+          const id = v5ActiveEl.id;
+          v5Pending.set(id, {
+              color: v5ActiveEl.style.color,
+              background: v5ActiveEl.style.backgroundColor,
+              fontSize: v5ActiveEl.style.fontSize,
+              padding: v5ActiveEl.style.padding,
+              borderRadius: v5ActiveEl.style.borderRadius,
+              text: v5ActiveEl.innerText
+          });
+          
+          const btn = document.getElementById('v5-apply');
+          btn.style.background = "#00c853";
+          btn.innerText = "Applied ✅";
+          setTimeout(() => { btn.style.background = ""; btn.innerText = "Apply Changes ✍️"; }, 1000);
+      }
+
+      async function v5Save() {
+          const btn = document.getElementById('v5-save');
+          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mirroring Full Site...';
+          
+          try {
+              for (let [id, val] of v5Pending) {
+                  // Using global _supabase from app.js
+                  await _supabase.from('site_settings').upsert({
+                      key: `v5_${id}`,
+                      value: JSON.stringify(val)
+                  }, { onConflict: 'key' });
+              }
+              btn.style.background = "#00c853";
+              btn.innerHTML = '<i class="fas fa-check-circle"></i> Site Mirror Active!';
+              setTimeout(() => { btn.style.background = ""; btn.innerHTML = 'Save & Update Site ✅'; }, 3000);
+          } catch (err) { btn.innerText = "Sync Error!"; console.error(err); }
+      }
+
+      function closeV5() {
+          document.getElementById('v5-toolbox').style.display = 'none';
+          document.querySelectorAll('.v5-target-active').forEach(n => n.classList.remove('v5-target-active'));
+      }
+  </script>
+
+</body>
 </html>
