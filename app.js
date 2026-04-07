@@ -1,4 +1,104 @@
-// NAVBAR DELETED PER REQUEST
+// ===== ULTIMATE NAVIGATION LOGIC (V11.0 FRESH RECONSTRUCTION) =====
+const navElement = document.getElementById('main-nav');
+const navToggleBtn = document.getElementById('nav-mobile-toggle');
+const navList = document.getElementById('nav-items-list');
+
+// 1. Scroll State (Floating Island Effect)
+window.addEventListener('scroll', () => {
+    if (navElement) {
+        navElement.classList.toggle('scrolled-nav', window.scrollY > 50);
+    }
+}, { passive: true });
+
+// 2. Precise Jump-to-Section Function
+function navigateToSection(id) {
+    const section = document.getElementById(id);
+    if (!section) return;
+
+    // FORCE visibility animations immediately so layout is final
+    section.classList.add('active');
+    section.querySelectorAll('.reveal, .reveal-up').forEach(el => el.classList.add('active'));
+
+    // Wait a tiny bit for animations/rendering to settle
+    setTimeout(() => {
+        const hHeight = navElement ? navElement.offsetHeight : 80;
+        const isFloating = navElement && navElement.classList.contains('scrolled-nav');
+        
+        // Offset: if floating, add the 15px top gap + height + 20px buffer
+        const totalOffset = (isFloating ? 15 : 0) + hHeight + 20;
+        
+        const scrollTarget = section.getBoundingClientRect().top + window.scrollY - totalOffset;
+        window.scrollTo({ top: Math.max(0, scrollTarget), behavior: 'smooth' });
+        
+        // Update URL hash without jumping
+        history.pushState(null, null, '#' + id);
+    }, 20);
+}
+
+// 3. Global Interceptor for ALL hash links
+document.addEventListener('click', (e) => {
+    const anchor = e.target.closest('a');
+    if (!anchor) return;
+    
+    const href = anchor.getAttribute('href');
+    if (href && href.startsWith('#')) {
+        const targetId = href.substring(1);
+        
+        // Close mobile menu if it was open
+        if (navList) navList.classList.remove('nav-mobile-open');
+
+        if (targetId === 'home') {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            history.pushState(null, null, ' ');
+        } else if (document.getElementById(targetId)) {
+            e.preventDefault();
+            navigateToSection(targetId);
+        }
+    }
+});
+
+// 4. Mobile Menu Toggler
+if (navToggleBtn && navList) {
+    navToggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        navList.classList.toggle('nav-mobile-open');
+    });
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+        if (!navToggleBtn.contains(e.target) && !navList.contains(e.target)) {
+            navList.classList.remove('nav-mobile-open');
+        }
+    });
+}
+
+// 5. Active Link Highlighting
+const siteSections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-items-list a');
+
+function syncActiveNav() {
+    const scrollY = window.scrollY + 150;
+    let currentId = 'home';
+
+    siteSections.forEach(sec => {
+        if (scrollY >= sec.offsetTop) {
+            currentId = sec.getAttribute('id');
+        }
+    });
+
+    navLinks.forEach(link => {
+        link.classList.remove('nav-active');
+        if (link.getAttribute('href') === '#' + currentId) {
+            link.classList.add('nav-active');
+        }
+    });
+}
+
+window.addEventListener('scroll', syncActiveNav, { passive: true });
+syncActiveNav();
+
+// REMAINDER OF APP LOGIC CONTINUES...
 
 // 4. Active Link Highlight
 const sectionsToTrack = document.querySelectorAll('section[id]');
