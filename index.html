@@ -11,7 +11,7 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="style.css?v=4.0" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
@@ -34,27 +34,8 @@
 
 
 
-  <!-- Navbar -->
-  <nav class="navbar" id="navbar">
-    <div class="nav-container">
-      <a href="#home" class="nav-logo">
-        <span class="logo-icon">⚡</span>
-        <span>WebCraft <em>Studio</em></span>
-      </a>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
-        <i class="fas fa-bars"></i>
-      </button>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#portfolio">Our Work</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#testimonials">Reviews</a></li>
-        <li><a href="#pricing">Pricing</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li><a href="#order" class="nav-cta">Start Project</a></li>
-      </ul>
-    </div>
-  </nav>
+  <!-- NAVBAR DELETED PER REQUEST -->
+
 
   <!-- Hero Section -->
   <section class="hero reveal" id="home">
@@ -66,7 +47,7 @@
         just <span id="hero-starter-price">₹2500</span>. <strong>(25% Advance Payment to Start)</strong></p>
       <div class="hero-price-tag">Starting at <strong id="hero-price-badge">₹2500</strong> only</div>
       <div class="hero-actions">
-        <a href="#order" class="btn btn-primary"><i class="fas fa-rocket"></i> Get Your Website</a>
+        <a href="#order-section" class="btn btn-primary"><i class="fas fa-rocket"></i> Get Your Website</a>
         <a href="#portfolio" class="btn btn-outline"><i class="fas fa-eye"></i> See Our Work</a>
       </div>
       <div class="hero-stats">
@@ -323,12 +304,12 @@
   </section>
 
   <!-- Order Section -->
-  <section class="order">
+  <section class="order" id="order-section">
     <div class="container">
       <div class="section-header">
         <span class="section-tag">Place Your Order</span>
         <h2>Get Your <span class="gradient-text">Website Today</span></h2>
-        <p id="order">Fill in the form below and we'll contact you within 24 hours</p>
+        <p>Fill in the form below and we'll contact you within 24 hours</p>
       </div>
       <div class="order-wrapper">
         <div class="order-form-box">
@@ -461,7 +442,7 @@
           <a href="#services">Services</a>
           <a href="#testimonials">Reviews</a>
           <a href="#pricing">Pricing</a>
-          <a href="#order">Start Project</a>
+          <a href="#order-section">Start Project</a>
         </div>
         <div class="footer-links">
           <strong>Contact</strong>
@@ -532,7 +513,7 @@
 
   <!-- Supabase Cloud Database SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js?v=4.0"></script>
+  <script src="app.js"></script>
 
 
 </body>

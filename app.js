@@ -1,25 +1,32 @@
-// ===== NAVBAR SCROLL =====
-const navbar = document.getElementById('navbar');
-window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 50);
-    
-    // Back to Top button visibility
-  const btt = document.getElementById('backToTop');
-  if (window.scrollY > 500) { btt.classList.add('active'); }
-  else { btt.classList.remove('active'); }
-});
+// NAVBAR DELETED PER REQUEST
 
-document.getElementById('backToTop').addEventListener('click', () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
+// 4. Active Link Highlight
+const sectionsToTrack = document.querySelectorAll('section[id]');
+const navItemsToTrack = document.querySelectorAll('.menu-list a');
 
-// ===== MOBILE NAV TOGGLE =====
-document.getElementById('navToggle').addEventListener('click', () => {
-  document.getElementById('navLinks').classList.toggle('open');
-});
-document.querySelectorAll('.nav-links a').forEach(link => {
-  link.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
-});
+function highlightNav() {
+  const scrollPos = window.scrollY + 140;
+  let currentId = 'home';
+
+  sectionsToTrack.forEach(section => {
+    if (scrollPos >= section.offsetTop) {
+      currentId = section.getAttribute('id');
+    }
+  });
+
+  navItemsToTrack.forEach(item => {
+    item.classList.remove('active');
+    const href = item.getAttribute('href');
+    if (href === '#' + currentId || (currentId === 'home' && href === '#home')) {
+      item.classList.add('active');
+    }
+  });
+}
+
+window.addEventListener('scroll', highlightNav, { passive: true });
+highlightNav();
+
+
 
 // ===== SESSION ID FOR REVIEWS =====
 let userSessionId = localStorage.getItem('wc_session_id');
@@ -1038,13 +1045,21 @@ function updateWorkingStatus() {
 
 // ===== SMART ANCHOR JUMP (MOBILE FIX) =====
 window.addEventListener('load', () => {
-    if (window.location.hash) {
+    const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('WebCraft-Studio/');
+    
+    // If refreshing or landing on index page without a hash, force top
+    if (isIndex && (!window.location.hash || window.location.hash === '#home' || window.location.hash === '')) {
+        window.scrollTo(0, 0);
+    } else if (window.location.hash) {
+        const h = window.location.hash === '#order' ? '#order-section' : window.location.hash;
         setTimeout(() => {
-            const target = document.querySelector(window.location.hash);
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }, 500); // Wait for dynamic content (Supabase) to settle
+            try {
+                const target = document.querySelector(h);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            } catch(e) {}
+        }, 500);
     }
 });
 
