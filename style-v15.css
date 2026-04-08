@@ -1012,6 +1012,11 @@ img {
   display: flex;
   align-items: flex-end;
   padding: 24px;
+  pointer-events: none; /* Allows click to pass through to the link parent */
+}
+
+.portfolio-info {
+    pointer-events: none;
 }
 
 .portfolio-item:hover .portfolio-overlay {
