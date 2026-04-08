@@ -32,10 +32,10 @@
   .work-grid { display:grid; grid-template-columns:1fr 1fr; gap:30px; }
   .work-item { position:relative; border-radius:20px; overflow:hidden; aspect-ratio:16/10; cursor:pointer; }
   .work-item .work-bg { width:100%; height:100%; transition:0.5s; }
-  .w1 .work-bg { background:linear-gradient(135deg,#667eea,#764ba2); }
-  .w2 .work-bg { background:linear-gradient(135deg,#f093fb,#f5576c); }
-  .w3 .work-bg { background:linear-gradient(135deg,#4facfe,#00f2fe); }
-  .w4 .work-bg { background:linear-gradient(135deg,#43e97b,#38f9d7); }
+  .w1 .work-bg { background:url('tech_brand_identity_mockup_1775638356231.png') center/cover; }
+  .w2 .work-bg { background:url('health_app_ui_mockup_1775638397071.png') center/cover; }
+  .w3 .work-bg { background:url('resort_website_mockup_1775638432393.png') center/cover; }
+  .w4 .work-bg { background:url('finance_dashboard_mockup_1775638470929.png') center/cover; }
   .work-item:hover .work-bg { transform:scale(1.05); }
   .work-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.6); display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0; transition:0.3s; }
   .work-item:hover .work-overlay { opacity:1; }
@@ -89,10 +89,34 @@
 <section class="work">
   <h2 class="section-title">Selected <span>Work</span></h2>
   <div class="work-grid">
-    <div class="work-item w1"><div class="work-bg"></div><div class="work-overlay"><h3>Brand Identity</h3><p>SkyLine Technologies</p></div></div>
-    <div class="work-item w2"><div class="work-bg"></div><div class="work-overlay"><h3>Mobile App UI</h3><p>FitTrack Health App</p></div></div>
-    <div class="work-item w3"><div class="work-bg"></div><div class="work-overlay"><h3>Web Design</h3><p>Ocean Breeze Resort</p></div></div>
-    <div class="work-item w4"><div class="work-bg"></div><div class="work-overlay"><h3>Dashboard</h3><p>FinVault Analytics</p></div></div>
+      <div class="work-item w1">
+        <div class="work-bg"></div>
+        <div class="work-overlay">
+          <h3>SkyLine Branding</h3>
+          <p>Identity & Design</p>
+        </div>
+      </div>
+      <div class="work-item w2">
+        <div class="work-bg"></div>
+        <div class="work-overlay">
+          <h3>FitTrack App</h3>
+          <p>UI/UX & Mobile</p>
+        </div>
+      </div>
+      <div class="work-item w3">
+        <div class="work-bg"></div>
+        <div class="work-overlay">
+          <h3>Ocean Breeze</h3>
+          <p>Luxury Web Design</p>
+        </div>
+      </div>
+      <div class="work-item w4">
+        <div class="work-bg"></div>
+        <div class="work-overlay">
+          <h3>FinVault Pro</h3>
+          <p>Analytics Dashboard</p>
+        </div>
+      </div>
   </div>
 </section>
 
