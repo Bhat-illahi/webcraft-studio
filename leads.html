@@ -14,6 +14,8 @@
       --border: rgba(255, 255, 255, 0.1);
       --success: #22c55e;
       --danger: #ef4444;
+      --warning: #f59e0b;
+      --muted: #64748b;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
@@ -35,7 +37,6 @@
       text-align: center;
       width: 90%;
       max-width: 400px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
       margin-top: 10vh;
     }
 
@@ -50,28 +51,13 @@
       text-align: center;
     }
 
-    .btn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 12px 30px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.3s;
-    }
-
-    #leads-panel {
-      display: none;
-      width: 100%;
-      max-width: 1200px;
-    }
+    #leads-panel { display: none; width: 100%; max-width: 1200px; }
 
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 40px;
+      margin-bottom: 25px;
       background: var(--surface);
       padding: 20px;
       border-radius: 15px;
@@ -93,24 +79,31 @@
       position: relative;
     }
 
-    .lead-card.contacted {
-      opacity: 0.6;
-      border-color: var(--success);
-    }
+    /* Status Styles */
+    .lead-card.interested { border-color: var(--success); box-shadow: 0 0 15px rgba(34, 197, 94, 0.2); }
+    .lead-card.not-interested { border-color: var(--danger); opacity: 0.7; }
+    .lead-card.ignored { border-color: var(--muted); opacity: 0.4; }
+    .lead-card.pitched { border-color: var(--primary); }
 
-    .lead-card.contacted h3 {
-      text-decoration: line-through;
-      color: var(--success);
+    .status-pill {
+      font-size: 0.65rem;
+      padding: 4px 10px;
+      border-radius: 50px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-left: 10px;
     }
+    .status-new { background: rgba(108, 99, 255, 0.1); color: var(--primary); }
+    .status-pitched { background: rgba(108, 99, 255, 0.2); color: #fff; }
+    .status-interested { background: var(--success); color: #fff; }
+    .status-not_interested { background: var(--danger); color: #fff; }
+    .status-ignored { background: var(--muted); color: #fff; }
 
-    .lead-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-    }
+    .lead-actions { display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
 
     .wa-btn {
       flex: 1;
+      min-width: 120px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -120,147 +113,137 @@
       text-decoration: none;
       padding: 10px;
       border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 0.8rem;
+      font-weight: 700;
     }
 
     .action-icon {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
       border: 1px solid var(--border);
       transition: 0.2s;
+      font-size: 0.9rem;
     }
 
-    .tick-btn { color: var(--success); background: rgba(34, 197, 94, 0.1); }
-    .del-btn { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+    .int-btn { color: var(--success); background: rgba(34, 197, 94, 0.1); }
+    .not-int-btn { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+    .ign-btn { color: var(--muted); background: rgba(100, 116, 139, 0.1); }
+    .del-btn { color: #fff; background: rgba(255, 255, 255, 0.1); margin-left: auto; }
 
-    .action-icon:hover { transform: scale(1.1); }
+    .action-icon:hover { transform: translateY(-3px); filter: brightness(1.2); }
+    .action-icon.active { border-width: 2px; box-shadow: 0 0 10px currentColor; }
 
-    .add-btn {
-      background: var(--primary);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 10px;
-      cursor: pointer;
-      border: none;
-    }
+    .add-btn { background: var(--primary); color: white; padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; }
   </style>
 </head>
 <body>
 
   <div id="auth-gate">
-    <i class="fas fa-lock" style="font-size: 40px; color: var(--primary); margin-bottom: 20px;"></i>
-    <h2>Owner Access</h2>
-    <input type="password" id="pass" placeholder="Enter Secret Key">
-    <button class="btn" onclick="checkPass()">Unlock Data</button>
+    <i class="fas fa-user-tie" style="font-size: 40px; color: var(--primary); margin-bottom: 20px;"></i>
+    <h2 style="margin-bottom:10px;">Owner Access</h2>
+    <input type="password" id="pass" placeholder="Secret Key">
+    <button class="add-btn" style="width:100%" onclick="checkPass()">Unlock</button>
   </div>
 
   <div id="leads-panel">
     <div class="header">
       <div>
-        <h1><i class="fas fa-chart-line"></i> Kashmir Leads</h1>
-        <p style="opacity:0.6; font-size: 0.8rem;">Click the checkmark when you've sent the message.</p>
+        <h1><i class="fas fa-bolt"></i> Kashmir Lead Tracker</h1>
+        <p style="opacity:0.5; font-size: 0.75rem;">Manage status: Interested, Not Interested, or Ignored.</p>
       </div>
-      <button class="add-btn" onclick="addNewLead()"><i class="fas fa-plus"></i> Add New</button>
+      <button class="add-btn" onclick="addNewLead()"><i class="fas fa-plus"></i> Add Lead</button>
     </div>
     <div class="leads-grid" id="leadsGrid"></div>
   </div>
 
   <script>
-    const INITIAL_LEADS = [
-      { id: 1, name: "Fox The Luxury Salon", city: "Srinagar", phone: "9541116661", niche: "Luxury Salon", status: "new" },
-      { id: 2, name: "ibaadat the jewellers", city: "Srinagar", phone: "9070057777", niche: "Boutique Jeweler", status: "new" },
-      { id: 3, name: "Food Routes", city: "Srinagar", phone: "9906780707", niche: "Multi-cuisine Restaurant", status: "new" },
-      { id: 4, name: "Gold Souk", city: "Srinagar", phone: "01942486494", niche: "Jewellery Store", status: "new" },
-      { id: 5, name: "BLACK UNISEX SALON", city: "Sopore", phone: "7780871292", niche: "High-end Salon", status: "new" },
-      { id: 6, name: "Zeavar Mahal", city: "Anantnag", phone: "9797051684", niche: "Jewellery Store", status: "new" }
-    ];
-
     function checkPass() {
       if (document.getElementById('pass').value === '0000') {
         document.getElementById('auth-gate').style.display = 'none';
         document.getElementById('leads-panel').style.display = 'block';
         initLeads();
-      } else { alert("Wrong Key"); }
+      } else { alert("Access Denied"); }
     }
 
     function initLeads() {
-      if (!localStorage.getItem('webcraft_leads_v2')) {
-        localStorage.setItem('webcraft_leads_v2', JSON.stringify(INITIAL_LEADS));
+      if (!localStorage.getItem('webcraft_leads_v3')) {
+        const INITIAL = [
+          { id: 1, name: "Fox The Luxury Salon", city: "Srinagar", phone: "9541116661", niche: "Luxury Salon", status: "new" },
+          { id: 2, name: "ibaadat the jewellers", city: "Srinagar", phone: "9070057777", niche: "Boutique Jeweler", status: "new" },
+          { id: 3, name: "Food Routes", city: "Srinagar", phone: "9906780707", niche: "Restaurant", status: "new" },
+          { id: 4, name: "Gold Souk", city: "Srinagar", phone: "01942486494", niche: "Jewellery", status: "new" },
+          { id: 5, name: "BLACK UNISEX SALON", city: "Sopore", phone: "7780871292", niche: "Salon", status: "new" },
+          { id: 6, name: "Zeavar Mahal", city: "Anantnag", phone: "9797051684", niche: "Jewellery", status: "new" }
+        ];
+        localStorage.setItem('webcraft_leads_v3', JSON.stringify(INITIAL));
       }
       renderLeads();
     }
 
     function renderLeads() {
-      const leads = JSON.parse(localStorage.getItem('webcraft_leads_v2') || '[]');
+      const leads = JSON.parse(localStorage.getItem('webcraft_leads_v3') || '[]');
       const grid = document.getElementById('leadsGrid');
       
       grid.innerHTML = leads.map(l => `
-        <div class="lead-card ${l.status === 'contacted' ? 'contacted' : ''}">
-          <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-            <span style="font-size:0.7rem; color:var(--primary); font-weight:800;">${l.city.toUpperCase()}</span>
-            ${l.status === 'contacted' ? '<i class="fas fa-check-circle" style="color:var(--success)"></i>' : ''}
+        <div class="lead-card ${l.status.replace('_', '-')}">
+          <div style="display:flex; align-items:center; margin-bottom:10px;">
+            <span style="font-size:0.65rem; color:var(--primary); font-weight:900; letter-spacing:1px;">${l.city.toUpperCase()}</span>
+            <span class="status-pill status-${l.status}">${l.status.replace('_', ' ')}</span>
           </div>
-          <h3>${l.name}</h3>
-          <p style="font-size:0.8rem; opacity:0.6; margin: 5px 0 15px;">Target: ${l.niche}</p>
+          <h3 style="font-size:1.1rem;">${l.name}</h3>
+          <p style="font-size:0.8rem; opacity:0.5; margin: 4px 0 15px;">Target: ${l.niche}</p>
           
           <div class="lead-actions">
-            <a href="https://wa.me/${l.phone.replace(/\D/g, '')}?text=${encodeURIComponent("Hi " + l.name + "! I'm from WebCraft Studio. I saw your business in " + l.city + " and would love to build a premium website for you. Interested?")}" 
-               target="_blank" class="wa-btn" onclick="markContacted(${l.id})">
-              <i class="fab fa-whatsapp"></i> Pitch
+            <a href="https://wa.me/${l.phone.replace(/\D/g, '')}?text=${encodeURIComponent("Hi " + l.name + "! I saw your shop in " + l.city + " and noticed you don't have a professional website. We can build one for ₹3000. Want a free demo?")}" 
+               target="_blank" class="wa-btn" onclick="updateStatus(${l.id}, 'pitched')">
+              <i class="fab fa-whatsapp"></i> Send Pitch
             </a>
-            <div class="action-icon tick-btn" onclick="toggleStatus(${l.id})" title="Mark as contacted">
-              <i class="fas fa-check"></i>
+            <div class="action-icon int-btn ${l.status==='interested'?'active':''}" onclick="updateStatus(${l.id}, 'interested')" title="Interested">
+              <i class="fas fa-thumbs-up"></i>
             </div>
-            <div class="action-icon del-btn" onclick="deleteLead(${l.id})" title="Delete lead">
-              <i class="fas fa-trash"></i>
+            <div class="action-icon not-int-btn ${l.status==='not_interested'?'active':''}" onclick="updateStatus(${l.id}, 'not_interested')" title="Not Interested">
+              <i class="fas fa-thumbs-down"></i>
+            </div>
+            <div class="action-icon ign-btn ${l.status==='ignored'?'active':''}" onclick="updateStatus(${l.id}, 'ignored')" title="Ignored">
+              <i class="fas fa-eye-slash"></i>
+            </div>
+            <div class="action-icon del-btn" onclick="deleteLead(${l.id})" title="Delete">
+              <i class="fas fa-trash-alt"></i>
             </div>
           </div>
         </div>
       `).join('');
     }
 
-    function toggleStatus(id) {
-      let leads = JSON.parse(localStorage.getItem('webcraft_leads_v2'));
-      leads = leads.map(l => l.id === id ? {...l, status: l.status === 'contacted' ? 'new' : 'contacted'} : l);
-      localStorage.setItem('webcraft_leads_v2', JSON.stringify(leads));
+    function updateStatus(id, newStatus) {
+      let leads = JSON.parse(localStorage.getItem('webcraft_leads_v3'));
+      leads = leads.map(l => l.id === id ? {...l, status: newStatus} : l);
+      localStorage.setItem('webcraft_leads_v3', JSON.stringify(leads));
       renderLeads();
     }
 
-    function markContacted(id) {
-      // Small delay to allow WA to open
-      setTimeout(() => {
-        let leads = JSON.parse(localStorage.getItem('webcraft_leads_v2'));
-        leads = leads.map(l => l.id === id ? {...l, status: 'contacted'} : l);
-        localStorage.setItem('webcraft_leads_v2', JSON.stringify(leads));
-        renderLeads();
-      }, 1000);
-    }
-
     function deleteLead(id) {
-      if (!confirm("Delete this lead permanently?")) return;
-      let leads = JSON.parse(localStorage.getItem('webcraft_leads_v2'));
+      if (!confirm("Delete lead?")) return;
+      let leads = JSON.parse(localStorage.getItem('webcraft_leads_v3'));
       leads = leads.filter(l => l.id !== id);
-      localStorage.setItem('webcraft_leads_v2', JSON.stringify(leads));
+      localStorage.setItem('webcraft_leads_v3', JSON.stringify(leads));
       renderLeads();
     }
 
     function addNewLead() {
-      const name = prompt("Business Name:");
+      const name = prompt("Name:");
       const city = prompt("City:");
       const phone = prompt("Phone:");
       const niche = prompt("Niche:");
-
       if (name && phone) {
-        let leads = JSON.parse(localStorage.getItem('webcraft_leads_v2') || '[]');
-        const newId = Date.now();
-        leads.unshift({ id: newId, name, city, phone, niche, status: 'new' });
-        localStorage.setItem('webcraft_leads_v2', JSON.stringify(leads));
+        let leads = JSON.parse(localStorage.getItem('webcraft_leads_v3') || '[]');
+        leads.unshift({ id: Date.now(), name, city, phone, niche, status: 'new' });
+        localStorage.setItem('webcraft_leads_v3', JSON.stringify(leads));
         renderLeads();
       }
     }
