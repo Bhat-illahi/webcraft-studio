@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leads Access | WebCraft Studio</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6C63FF;
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --text: #f8fafc;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #auth-gate {
+      background: var(--surface);
+      padding: 40px;
+      border-radius: 24px;
+      border: 1px solid var(--primary);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 20px 0;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: #fff;
+      text-align: center;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .btn:hover { transform: scale(1.05); }
+
+    #leads-panel {
+      display: none;
+      width: 95%;
+      max-width: 1200px;
+      padding: 40px 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .leads-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .lead-card {
+      background: var(--surface);
+      padding: 25px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      transition: 0.3s;
+      position: relative;
+    }
+
+    .lead-card:hover { 
+      border-color: var(--primary);
+      transform: translateY(-5px);
+    }
+
+    .lead-status {
+      font-size: 0.7rem;
+      padding: 4px 12px;
+      border-radius: 50px;
+      background: rgba(108, 99, 255, 0.1);
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .wa-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #25D366;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 15px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .add-btn {
+      background: var(--primary);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="auth-gate">
+    <i class="fas fa-lock" style="font-size: 40px; color: var(--primary); margin-bottom: 20px;"></i>
+    <h2>Owner Access</h2>
+    <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 10px;">Leads & Acquisition Dashboard</p>
+    <input type="password" id="pass" placeholder="Enter Secret Key">
+    <button class="btn" onclick="checkPass()">Unlock Data</button>
+  </div>
+
+  <div id="leads-panel">
+    <div class="header">
+      <h1><i class="fas fa-chart-line"></i> Global Leads</h1>
+      <button class="add-btn" onclick="addNewLead()"><i class="fas fa-plus"></i> Add Manually</button>
+    </div>
+    <div class="leads-grid" id="leadsGrid"></div>
+  </div>
+
+  <script>
+    const G_LEADS = [
+      { name: "KUTS & KOLOR", city: "Mumbai", phone: "9167860528", niche: "Luxury Salon" },
+      { name: "Silverline Jewellery", city: "Delhi", phone: "01124643018", niche: "Jeweler" },
+      { name: "BELGEE JEWELLERS", city: "Delhi", phone: "01146706591", niche: "Jeweler" },
+      { name: "Atul Jewellers", city: "Delhi", phone: "9313114247", niche: "Jeweler" },
+      { name: "KINGSMEN BARBERSHOP", city: "Bangalore", phone: "8025201155", niche: "Barber" }
+    ];
+
+    function checkPass() {
+      const p = document.getElementById('pass').value;
+      if (p === '0000') { // Defaulting to 0000 as per common pattern in previous sessions
+        document.getElementById('auth-gate').style.display = 'none';
+        document.getElementById('leads-panel').style.display = 'block';
+        document.body.style.display = 'block'; // Ensure it fills
+        renderLeads();
+      } else {
+        alert("Incorrect Access Key");
+      }
+    }
+
+    function renderLeads() {
+      const grid = document.getElementById('leadsGrid');
+      const customLeads = JSON.parse(localStorage.getItem('webcraft_leads') || '[]');
+      const allLeads = [...G_LEADS, ...customLeads];
+
+      grid.innerHTML = allLeads.map(l => `
+        <div class="lead-card">
+          <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+            <span class="lead-status">${l.city}</span>
+            <i class="fas fa-ellipsis-v" style="opacity:0.3;"></i>
+          </div>
+          <h3 style="margin-bottom:5px;">${l.name}</h3>
+          <p style="font-size:0.8rem; opacity:0.6; margin-bottom:15px;">Target: ${l.niche}</p>
+          
+          <a href="https://wa.me/${l.phone.replace(/\D/g, '')}?text=${encodeURIComponent("Hi " + l.name + "! I saw your shop on Google and noticed you don't have a professional website yet. We build custom sites for " + l.niche + " shops starting at ₹2500. Would you like to see a demo?")}" 
+             target="_blank" class="wa-btn">
+            <i class="fab fa-whatsapp"></i> Send Sales Pitch
+          </a>
+        </div>
+      `).join('');
+    }
+
+    function addNewLead() {
+      const name = prompt("Business Name:");
+      const city = prompt("City:");
+      const phone = prompt("Phone (Include country code):");
+      const niche = prompt("Niche:");
+
+      if (name && phone) {
+        const leads = JSON.parse(localStorage.getItem('webcraft_leads') || '[]');
+        leads.unshift({ name, city, phone, niche });
+        localStorage.setItem('webcraft_leads', JSON.stringify(leads));
+        renderLeads();
+      }
+    }
+  </script>
+</body>
+</html>
