@@ -431,18 +431,22 @@ document.querySelectorAll('.portfolio-item-link').forEach(link => {
   link.addEventListener('click', (e) => {
     // Only intercept if screen is large enough or specific meta key not pressed
     if (window.innerWidth > 768) {
-      e.preventDefault();
       const item = link.querySelector('.portfolio-item');
       const img = item.querySelector('img');
-      const title = item.querySelector('h3').innerText;
       const url = link.getAttribute('href');
+      
+      // If no image exists (it's a mockup), let the link open normally!
+      if (!img) return;
+
+      e.preventDefault();
+      const title = item.querySelector('h3').innerText;
       
       lightboxImg.src = img.src;
       lightboxTitle.innerText = title;
       lightboxVisit.href = url;
       
       lightboxOverlay.classList.add('active');
-      document.body.style.overflow = 'hidden'; // Prevent scroll
+      document.body.style.overflow = 'hidden'; 
     }
   });
 });
