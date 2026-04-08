@@ -140,6 +140,10 @@
     .action-icon.active { border-width: 2px; box-shadow: 0 0 10px currentColor; }
 
     .add-btn { background: var(--primary); color: white; padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; }
+
+    #cloud-status { font-size: 0.7rem; color: var(--muted); display: flex; align-items: center; gap: 5px; margin-top: 5px; }
+    .syncing-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warning); animation: pulse 1s infinite; }
+    @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
   </style>
 </head>
 <body>
@@ -154,43 +158,90 @@
   <div id="leads-panel">
     <div class="header">
       <div>
-        <h1><i class="fas fa-bolt"></i> Kashmir Lead Tracker</h1>
-        <p style="opacity:0.5; font-size: 0.75rem;">Manage status: Interested, Not Interested, or Ignored.</p>
+        <h1><i class="fas fa-cloud"></i> Cloud Lead Tracker</h1>
+        <div id="cloud-status"><i class="fas fa-check-circle" style="color:var(--success)"></i> Cloud Synchronized</div>
       </div>
       <button class="add-btn" onclick="addNewLead()"><i class="fas fa-plus"></i> Add Lead</button>
     </div>
     <div class="leads-grid" id="leadsGrid"></div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    const SB_URL  = 'https://imuqwquuytcfuqbpaqoa.supabase.co';
+    const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxYnBhcW9hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NTQwNzcsImV4cCI6MjA5MTAzMDA3N30.J_E1pbC8nJKMsIMJE-IAnI_3lV47q6WX0HuSSWIhpd4';
+    let sb = null;
+    let leadsData = [];
+
     function checkPass() {
       if (document.getElementById('pass').value === '0000') {
         document.getElementById('auth-gate').style.display = 'none';
         document.getElementById('leads-panel').style.display = 'block';
-        initLeads();
+        initSupabase();
       } else { alert("Access Denied"); }
     }
 
-    function initLeads() {
-      if (!localStorage.getItem('webcraft_leads_v3')) {
-        const INITIAL = [
-          { id: 1, name: "Fox The Luxury Salon", city: "Srinagar", phone: "9541116661", niche: "Luxury Salon", status: "new" },
-          { id: 2, name: "ibaadat the jewellers", city: "Srinagar", phone: "9070057777", niche: "Boutique Jeweler", status: "new" },
-          { id: 3, name: "Food Routes", city: "Srinagar", phone: "9906780707", niche: "Restaurant", status: "new" },
-          { id: 4, name: "Gold Souk", city: "Srinagar", phone: "01942486494", niche: "Jewellery", status: "new" },
-          { id: 5, name: "BLACK UNISEX SALON", city: "Sopore", phone: "7780871292", niche: "Salon", status: "new" },
-          { id: 6, name: "Zeavar Mahal", city: "Anantnag", phone: "9797051684", niche: "Jewellery", status: "new" }
-        ];
-        localStorage.setItem('webcraft_leads_v3', JSON.stringify(INITIAL));
+    function initSupabase() {
+      try {
+        sb = window.supabase.createClient(SB_URL, SB_KEY);
+        loadLeadsFromCloud();
+      } catch(e) { console.error("Cloud init failed", e); }
+    }
+
+    async function loadLeadsFromCloud() {
+      setSyncStatus('Syncing...', 'warning');
+      try {
+        const { data, error } = await sb.from('site_settings').select('value').eq('key', 'crm_leads_data').single();
+        if (data && data.value) {
+          leadsData = JSON.parse(data.value);
+        } else {
+          // Fallback to initial batch if cloud is empty
+          leadsData = [
+            { id: 1, name: "Fox The Luxury Salon", city: "Srinagar", phone: "9541116661", niche: "Luxury Salon", status: "new" },
+            { id: 2, name: "ibaadat the jewellers", city: "Srinagar", phone: "9070057777", niche: "Boutique Jeweler", status: "new" },
+            { id: 3, name: "Food Routes", city: "Srinagar", phone: "9906780707", niche: "Restaurant", status: "new" },
+            { id: 4, name: "Gold Souk", city: "Srinagar", phone: "01942486494", niche: "Jewellery", status: "new" },
+            { id: 5, name: "BLACK UNISEX SALON", city: "Sopore", phone: "7780871292", niche: "Salon", status: "new" },
+            { id: 6, name: "Zeavar Mahal", city: "Anantnag", phone: "9797051684", niche: "Jewellery", status: "new" }
+          ];
+          syncToCloud();
+        }
+        renderLeads();
+        setSyncStatus('Cloud Synchronized', 'success');
+      } catch(e) {
+        console.error("Cloud load error", e);
+        setSyncStatus('Cloud Error (Using Local)', 'danger');
       }
-      renderLeads();
+    }
+
+    async function syncToCloud() {
+      setSyncStatus('Updating Cloud...', 'warning');
+      try {
+        const { error } = await sb.from('site_settings').upsert({ 
+          key: 'crm_leads_data', 
+          value: JSON.stringify(leadsData) 
+        });
+        if (error) throw error;
+        setSyncStatus('Cloud Synchronized', 'success');
+      } catch(e) {
+        setSyncStatus('Cloud Update Failed', 'danger');
+        console.error("Cloud sync error", e);
+      }
+    }
+
+    function setSyncStatus(msg, type) {
+      const status = document.getElementById('cloud-status');
+      let icon = '<i class="fas fa-check-circle"></i>';
+      let color = 'var(--success)';
+      if (type === 'warning') { icon = '<div class="syncing-dot"></div>'; color = 'var(--warning)'; }
+      if (type === 'danger') { icon = '<i class="fas fa-exclamation-triangle"></i>'; color = 'var(--danger)'; }
+      status.innerHTML = `${icon} ${msg}`;
+      status.style.color = color;
     }
 
     function renderLeads() {
-      const leads = JSON.parse(localStorage.getItem('webcraft_leads_v3') || '[]');
       const grid = document.getElementById('leadsGrid');
-      
-      grid.innerHTML = leads.map(l => `
+      grid.innerHTML = leadsData.map(l => `
         <div class="lead-card ${l.status.replace('_', '-')}">
           <div style="display:flex; align-items:center; margin-bottom:10px;">
             <span style="font-size:0.65rem; color:var(--primary); font-weight:900; letter-spacing:1px;">${l.city.toUpperCase()}</span>
@@ -200,7 +251,7 @@
           <p style="font-size:0.8rem; opacity:0.5; margin: 4px 0 15px;">Target: ${l.niche}</p>
           
           <div class="lead-actions">
-            <a href="https://wa.me/${l.phone.replace(/\D/g, '')}?text=${encodeURIComponent("Hi " + l.name + "! I saw your shop in " + l.city + " and noticed you don't have a professional website. We can build one for ₹3000. Want a free demo?")}" 
+            <a href="https://wa.me/${l.phone.replace(/\D/g, '')}?text=${encodeURIComponent("Hi " + l.name + "! I saw your shop in " + l.city + " and would love to build a premium website for you.")}" 
                target="_blank" class="wa-btn" onclick="updateStatus(${l.id}, 'pitched')">
               <i class="fab fa-whatsapp"></i> Send Pitch
             </a>
@@ -225,18 +276,16 @@
     }
 
     function updateStatus(id, newStatus) {
-      let leads = JSON.parse(localStorage.getItem('webcraft_leads_v3'));
-      leads = leads.map(l => l.id === id ? {...l, status: newStatus} : l);
-      localStorage.setItem('webcraft_leads_v3', JSON.stringify(leads));
+      leadsData = leadsData.map(l => l.id === id ? {...l, status: newStatus} : l);
       renderLeads();
+      syncToCloud();
     }
 
     function deleteLead(id) {
       if (!confirm("Delete lead?")) return;
-      let leads = JSON.parse(localStorage.getItem('webcraft_leads_v3'));
-      leads = leads.filter(l => l.id !== id);
-      localStorage.setItem('webcraft_leads_v3', JSON.stringify(leads));
+      leadsData = leadsData.filter(l => l.id !== id);
       renderLeads();
+      syncToCloud();
     }
 
     function addNewLead() {
@@ -245,10 +294,9 @@
       const phone = prompt("Phone:");
       const niche = prompt("Niche:");
       if (name && phone) {
-        let leads = JSON.parse(localStorage.getItem('webcraft_leads_v3') || '[]');
-        leads.unshift({ id: Date.now(), name, city, phone, niche, status: 'new' });
-        localStorage.setItem('webcraft_leads_v3', JSON.stringify(leads));
+        leadsData.unshift({ id: Date.now(), name, city, phone, niche, status: 'new' });
         renderLeads();
+        syncToCloud();
       }
     }
   </script>
