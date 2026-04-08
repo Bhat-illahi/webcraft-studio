@@ -328,15 +328,15 @@ img {
 .brand-logo {
   height: 52px !important;
   width: 52px !important;
-  background: #000000 !important;
-  border-radius: 50% !important;
+  background: transparent !important;
+  border-radius: 0 !important;
   padding: 0 !important;
-  object-fit: cover;
+  object-fit: contain;
+  mix-blend-mode: screen;
   transition: all 0.4s ease;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6) !important;
   display: block !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  overflow: hidden !important;
+  border: none !important;
+  overflow: visible !important;
 }
 
 .brand-logo.footer-logo {
