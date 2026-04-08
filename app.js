@@ -98,6 +98,39 @@ function syncActiveNav() {
 window.addEventListener('scroll', syncActiveNav, { passive: true });
 syncActiveNav();
 
+/* 10. REAL-TIME LOGO TRANSPARENCY ENGINE (V1.1) */
+function processLogoTransparency() {
+    const logos = document.querySelectorAll('.brand-logo');
+    logos.forEach(img => {
+        if (img.dataset.processed) return;
+        if (!img.complete) {
+            img.onload = () => processLogoTransparency();
+            return;
+        }
+        try {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            ctx.drawImage(img, 0, 0);
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imgData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i], g = data[i+1], b = data[i+2];
+                if (r < 30 && g < 30 && b < 30) data[i+3] = 0;
+            }
+            ctx.putImageData(imgData, 0, 0);
+            img.src = canvas.toDataURL();
+            img.dataset.processed = "true";
+            img.style.mixBlendMode = "normal";
+            img.style.filter = "none";
+        } catch (e) { console.warn("Transparency engine limited by CORS or cross-origin headers."); }
+    });
+}
+window.addEventListener('load', processLogoTransparency);
+processLogoTransparency();
+
+
 // REMAINDER OF APP LOGIC CONTINUES...
 
 // 4. Active Link Highlight
