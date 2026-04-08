@@ -201,8 +201,8 @@ function createParticles() {
   const particles = [];
   const colors = ['#6C63FF', '#FF6B6B', '#FFD43B', '#51CF66', '#a78bfa'];
   
-  // Performance Density: 100 on mobile for smoothness, 300 on desktop for WOW
-  const particleCount = window.innerWidth < 768 ? 100 : 300;
+  // Performance Density: 80 on mobile, 150 on desktop
+  const particleCount = window.innerWidth < 768 ? 80 : 150;
   for (let i = 0; i < particleCount; i++) {
     particles.push({
       x: Math.random() * width,
