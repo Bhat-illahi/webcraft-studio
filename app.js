@@ -102,7 +102,7 @@ syncActiveNav();
 function processLogoTransparency() {
     const logos = document.querySelectorAll('.brand-logo');
     logos.forEach(img => {
-        if (img.dataset.processed) return;
+        if (img.dataset.processed === "true") return;
         if (!img.complete) {
             img.onload = () => processLogoTransparency();
             return;
@@ -120,6 +120,9 @@ function processLogoTransparency() {
                 if (r < 30 && g < 30 && b < 30) data[i+3] = 0;
             }
             ctx.putImageData(imgData, 0, 0);
+            
+            // CRITICAL: Disable onload before setting src to prevent infinite loop
+            img.onload = null; 
             img.src = canvas.toDataURL();
             img.dataset.processed = "true";
             img.style.mixBlendMode = "normal";
