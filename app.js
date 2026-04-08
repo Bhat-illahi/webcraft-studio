@@ -325,6 +325,23 @@ document.addEventListener('mousemove', (e) => {
   }
 });
 
+// Image Load Detection for Skeleton Loaders
+function handleImgLoad() {
+    document.querySelectorAll('.portfolio-item img').forEach(img => {
+        if (img.complete) {
+            img.classList.add('loaded');
+            img.parentElement.classList.add('img-loaded');
+        } else {
+            img.onload = () => {
+                img.classList.add('loaded');
+                img.parentElement.classList.add('img-loaded');
+            };
+        }
+    });
+}
+window.addEventListener('load', handleImgLoad);
+handleImgLoad(); 
+
 // Expand cursor on interactive elements
 const interactables = document.querySelectorAll('a, button, .service-card, .portfolio-item, .star');
 interactables.forEach(el => {
