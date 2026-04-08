@@ -62,6 +62,8 @@
       padding: 20px;
       border-radius: 15px;
       border: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
     .leads-grid {
@@ -139,7 +141,9 @@
     .action-icon:hover { transform: translateY(-3px); filter: brightness(1.2); }
     .action-icon.active { border-width: 2px; box-shadow: 0 0 10px currentColor; }
 
-    .add-btn { background: var(--primary); color: white; padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; }
+    .btn-group { display: flex; gap: 10px; }
+    .add-btn { background: var(--primary); color: white; padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+    .import-btn { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border); padding: 10px 15px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; }
 
     #cloud-status { font-size: 0.7rem; color: var(--muted); display: flex; align-items: center; gap: 5px; margin-top: 5px; }
     .syncing-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warning); animation: pulse 1s infinite; }
@@ -149,19 +153,22 @@
 <body>
 
   <div id="auth-gate">
-    <i class="fas fa-user-tie" style="font-size: 40px; color: var(--primary); margin-bottom: 20px;"></i>
-    <h2 style="margin-bottom:10px;">Owner Access</h2>
-    <input type="password" id="pass" placeholder="Secret Key">
-    <button class="add-btn" style="width:100%" onclick="checkPass()">Unlock</button>
+    <i class="fas fa-fingerprint" style="font-size: 40px; color: var(--primary); margin-bottom: 20px;"></i>
+    <h2 style="margin-bottom:10px;">Security Check</h2>
+    <input type="password" id="pass" placeholder="Enter Secret Key">
+    <button class="add-btn" style="width:100%" onclick="checkPass()">Unlock Data</button>
   </div>
 
   <div id="leads-panel">
     <div class="header">
       <div>
-        <h1><i class="fas fa-cloud"></i> Cloud Lead Tracker</h1>
-        <div id="cloud-status"><i class="fas fa-check-circle" style="color:var(--success)"></i> Cloud Synchronized</div>
+        <h1><i class="fas fa-server"></i> Cloud Lead CRM</h1>
+        <div id="cloud-status"><i class="fas fa-check-circle" style="color:var(--success)"></i> System Ready</div>
       </div>
-      <button class="add-btn" onclick="addNewLead()"><i class="fas fa-plus"></i> Add Lead</button>
+      <div class="btn-group">
+        <button class="import-btn" onclick="importLatestBatch()"><i class="fas fa-sync"></i> Pull Research</button>
+        <button class="add-btn" onclick="addNewLead()"><i class="fas fa-plus"></i> Manual Add</button>
+      </div>
     </div>
     <div class="leads-grid" id="leadsGrid"></div>
   </div>
@@ -172,6 +179,19 @@
     const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxYnBhcW9hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NTQwNzcsImV4cCI6MjA5MTAzMDA3N30.J_E1pbC8nJKMsIMJE-IAnI_3lV47q6WX0HuSSWIhpd4';
     let sb = null;
     let leadsData = [];
+
+    // RESEARCH BATCH (Latest discovered by AI)
+    const RESEARCH_BATCH = [
+      { id: Date.now()+1, name: "Iron Paradise Fitness", city: "Srinagar", phone: "7006517556", niche: "Gym & Fitness", status: "new" },
+      { id: Date.now()+2, name: "The Black Vintage", city: "Srinagar", phone: "7006916112", niche: "Trendy Cafe", status: "new" },
+      { id: Date.now()+3, name: "My Home Stories", city: "Srinagar", phone: "9149473198", niche: "Furniture Store", status: "new" },
+      { id: Date.now()+4, name: "Alpha Aesthetics Gym", city: "Srinagar", phone: "9622937777", niche: "Gym & Spa", status: "new" },
+      { id: Date.now()+5, name: "The Backyard Grill", city: "Srinagar", phone: "8686860508", niche: "Grill & Cafe", status: "new" },
+      { id: Date.now()+6, name: "Nowpora Hardware", city: "Sopore", phone: "9149516126", niche: "Hardware Store", status: "new" },
+      { id: Date.now()+7, name: "Royal Enterprises", city: "Sopore", phone: "9419032707", niche: "Furniture", status: "new" },
+      { id: Date.now()+8, name: "Mir & Sons", city: "Baramulla", phone: "07947138672", niche: "Furniture", status: "new" },
+      { id: Date.now()+9, name: "Old Town Café", city: "Anantnag", phone: "7780872030", niche: "Cafe", status: "new" }
+    ];
 
     function checkPass() {
       if (document.getElementById('pass').value === '0000') {
@@ -189,48 +209,69 @@
     }
 
     async function loadLeadsFromCloud() {
-      setSyncStatus('Syncing...', 'warning');
+      setSyncStatus('Connecting to Cloud...', 'warning');
       try {
         const { data, error } = await sb.from('site_settings').select('value').eq('key', 'crm_leads_data').single();
+        
+        let cloudLeads = [];
         if (data && data.value) {
-          leadsData = JSON.parse(data.value);
-        } else {
-          // Fallback to initial batch if cloud is empty
-          leadsData = [
-            { id: 1, name: "Fox The Luxury Salon", city: "Srinagar", phone: "9541116661", niche: "Luxury Salon", status: "new" },
-            { id: 2, name: "ibaadat the jewellers", city: "Srinagar", phone: "9070057777", niche: "Boutique Jeweler", status: "new" },
-            { id: 3, name: "Iron Paradise Fitness", city: "Srinagar", phone: "7006517556", niche: "Gym & Fitness", status: "new" },
-            { id: 4, name: "The Black Vintage", city: "Srinagar", phone: "7006916112", niche: "Trendy Cafe", status: "new" },
-            { id: 5, name: "My Home Stories", city: "Srinagar", phone: "9149473198", niche: "Furniture Store", status: "new" },
-            { id: 6, name: "Alpha Aesthetics Gym", city: "Srinagar", phone: "9622937777", niche: "Gym & Spa", status: "new" },
-            { id: 7, name: "The Backyard Grill", city: "Srinagar", phone: "8686860508", niche: "Grill & Cafe", status: "new" },
-            { id: 8, name: "Nowpora Hardware", city: "Sopore", phone: "9149516126", niche: "Hardware Store", status: "new" },
-            { id: 9, name: "Royal Enterprises", city: "Sopore", phone: "9419032707", niche: "Furniture", status: "new" },
-            { id: 10, name: "Old Town Café", city: "Anantnag", phone: "7780872030", niche: "Cafe", status: "new" }
-          ];
-          syncToCloud();
+          cloudLeads = JSON.parse(data.value);
         }
+
+        // MIGRATION: If cloud is empty, check localStorage
+        if (cloudLeads.length === 0) {
+          const local = localStorage.getItem('webcraft_leads_v2') || localStorage.getItem('webcraft_leads_v3');
+          if (local) {
+            cloudLeads = JSON.parse(local);
+            setSyncStatus('Migrating Local State...', 'warning');
+          }
+        }
+
+        if (cloudLeads.length === 0) {
+          // Absolute fallback
+          leadsData = RESEARCH_BATCH;
+        } else {
+          leadsData = cloudLeads;
+        }
+
         renderLeads();
+        syncToCloud(); // Save back to ensure migration is committed
         setSyncStatus('Cloud Synchronized', 'success');
       } catch(e) {
         console.error("Cloud load error", e);
-        setSyncStatus('Cloud Error (Using Local)', 'danger');
+        setSyncStatus('Loading Local Backup...', 'warning');
+        const local = localStorage.getItem('webcraft_leads_v2') || localStorage.getItem('webcraft_leads_v3');
+        if (local) leadsData = JSON.parse(local);
+        renderLeads();
       }
     }
 
     async function syncToCloud() {
-      setSyncStatus('Updating Cloud...', 'warning');
+      setSyncStatus('Syncing...', 'warning');
       try {
-        const { error } = await sb.from('site_settings').upsert({ 
+        await sb.from('site_settings').upsert({ 
           key: 'crm_leads_data', 
           value: JSON.stringify(leadsData) 
         });
-        if (error) throw error;
         setSyncStatus('Cloud Synchronized', 'success');
       } catch(e) {
-        setSyncStatus('Cloud Update Failed', 'danger');
-        console.error("Cloud sync error", e);
+        setSyncStatus('Cloud Offset (Local Only)', 'danger');
       }
+    }
+
+    function importLatestBatch() {
+      const existingNames = leadsData.map(l => l.name.toLowerCase());
+      const newLeads = RESEARCH_BATCH.filter(l => !existingNames.includes(l.name.toLowerCase()));
+      
+      if (newLeads.length === 0) {
+        alert("You already have the latest research batch!");
+        return;
+      }
+
+      leadsData = [...newLeads, ...leadsData];
+      renderLeads();
+      syncToCloud();
+      alert(`Imported ${newLeads.length} new high-intent leads from Kashmir!`);
     }
 
     function setSyncStatus(msg, type) {
@@ -255,7 +296,7 @@
           <p style="font-size:0.8rem; opacity:0.5; margin: 4px 0 15px;">Target: ${l.niche}</p>
           
           <div class="lead-actions">
-            <a href="https://wa.me/${l.phone.replace(/\D/g, '')}?text=${encodeURIComponent("Hi " + l.name + "! I saw your shop in " + l.city + " and would love to build a premium website for you.")}" 
+            <a href="https://wa.me/${l.phone.replace(/\D/g, '')}?text=${encodeURIComponent("Hi " + l.name + "! I'm from WebCraft Studio. I saw your shop in " + l.city + " and would love to build a premium website for you.")}" 
                target="_blank" class="wa-btn" onclick="updateStatus(${l.id}, 'pitched')">
               <i class="fab fa-whatsapp"></i> Send Pitch
             </a>
