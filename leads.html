@@ -12,6 +12,8 @@
       --surface: #1e293b;
       --text: #f8fafc;
       --border: rgba(255, 255, 255, 0.1);
+      --success: #22c55e;
+      --danger: #ef4444;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
@@ -21,9 +23,8 @@
       color: var(--text);
       display: flex;
       justify-content: center;
-      align-items: center;
       min-height: 100vh;
-      overflow-x: hidden;
+      padding: 20px;
     }
 
     #auth-gate {
@@ -35,6 +36,7 @@
       width: 90%;
       max-width: 400px;
       box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      margin-top: 10vh;
     }
 
     input {
@@ -59,13 +61,10 @@
       transition: 0.3s;
     }
 
-    .btn:hover { transform: scale(1.05); }
-
     #leads-panel {
       display: none;
-      width: 95%;
+      width: 100%;
       max-width: 1200px;
-      padding: 40px 20px;
     }
 
     .header {
@@ -73,11 +72,15 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 40px;
+      background: var(--surface);
+      padding: 20px;
+      border-radius: 15px;
+      border: 1px solid var(--border);
     }
 
     .leads-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 20px;
     }
 
@@ -90,34 +93,53 @@
       position: relative;
     }
 
-    .lead-card:hover { 
-      border-color: var(--primary);
-      transform: translateY(-5px);
+    .lead-card.contacted {
+      opacity: 0.6;
+      border-color: var(--success);
     }
 
-    .lead-status {
-      font-size: 0.7rem;
-      padding: 4px 12px;
-      border-radius: 50px;
-      background: rgba(108, 99, 255, 0.1);
-      color: var(--primary);
-      font-weight: bold;
+    .lead-card.contacted h3 {
+      text-decoration: line-through;
+      color: var(--success);
+    }
+
+    .lead-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
     }
 
     .wa-btn {
+      flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       background: #25D366;
       color: #fff;
       text-decoration: none;
       padding: 10px;
       border-radius: 10px;
-      margin-top: 15px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 600;
     }
+
+    .action-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      transition: 0.2s;
+    }
+
+    .tick-btn { color: var(--success); background: rgba(34, 197, 94, 0.1); }
+    .del-btn { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+
+    .action-icon:hover { transform: scale(1.1); }
 
     .add-btn {
       background: var(--primary);
@@ -134,75 +156,111 @@
   <div id="auth-gate">
     <i class="fas fa-lock" style="font-size: 40px; color: var(--primary); margin-bottom: 20px;"></i>
     <h2>Owner Access</h2>
-    <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 10px;">Leads & Acquisition Dashboard</p>
     <input type="password" id="pass" placeholder="Enter Secret Key">
     <button class="btn" onclick="checkPass()">Unlock Data</button>
   </div>
 
   <div id="leads-panel">
     <div class="header">
-      <h1><i class="fas fa-chart-line"></i> Global Leads</h1>
-      <button class="add-btn" onclick="addNewLead()"><i class="fas fa-plus"></i> Add Manually</button>
+      <div>
+        <h1><i class="fas fa-chart-line"></i> Kashmir Leads</h1>
+        <p style="opacity:0.6; font-size: 0.8rem;">Click the checkmark when you've sent the message.</p>
+      </div>
+      <button class="add-btn" onclick="addNewLead()"><i class="fas fa-plus"></i> Add New</button>
     </div>
     <div class="leads-grid" id="leadsGrid"></div>
   </div>
 
   <script>
-    const G_LEADS = [
-      { name: "Fox The Luxury Salon", city: "Srinagar", phone: "9541116661", niche: "Luxury Salon" },
-      { name: "ibaadat the jewellers", city: "Srinagar", phone: "9070057777", niche: "Boutique Jeweler" },
-      { name: "Food Routes", city: "Srinagar", phone: "9906780707", niche: "Multi-cuisine Restaurant" },
-      { name: "Gold Souk", city: "Srinagar", phone: "01942486494", niche: "Jewellery Store" },
-      { name: "BLACK UNISEX SALON", city: "Sopore", phone: "7780871292", niche: "High-end Salon" },
-      { name: "Zeavar Mahal", city: "Anantnag", phone: "9797051684", niche: "Jewellery Store" },
-      { name: "KUTS & KOLOR", city: "Mumbai", phone: "9167860528", niche: "Luxury Salon" },
-      { name: "Silverline Jewellery", city: "Delhi", phone: "01124643018", niche: "Jeweler" }
+    const INITIAL_LEADS = [
+      { id: 1, name: "Fox The Luxury Salon", city: "Srinagar", phone: "9541116661", niche: "Luxury Salon", status: "new" },
+      { id: 2, name: "ibaadat the jewellers", city: "Srinagar", phone: "9070057777", niche: "Boutique Jeweler", status: "new" },
+      { id: 3, name: "Food Routes", city: "Srinagar", phone: "9906780707", niche: "Multi-cuisine Restaurant", status: "new" },
+      { id: 4, name: "Gold Souk", city: "Srinagar", phone: "01942486494", niche: "Jewellery Store", status: "new" },
+      { id: 5, name: "BLACK UNISEX SALON", city: "Sopore", phone: "7780871292", niche: "High-end Salon", status: "new" },
+      { id: 6, name: "Zeavar Mahal", city: "Anantnag", phone: "9797051684", niche: "Jewellery Store", status: "new" }
     ];
 
     function checkPass() {
-      const p = document.getElementById('pass').value;
-      if (p === '0000') { // Defaulting to 0000 as per common pattern in previous sessions
+      if (document.getElementById('pass').value === '0000') {
         document.getElementById('auth-gate').style.display = 'none';
         document.getElementById('leads-panel').style.display = 'block';
-        document.body.style.display = 'block'; // Ensure it fills
-        renderLeads();
-      } else {
-        alert("Incorrect Access Key");
+        initLeads();
+      } else { alert("Wrong Key"); }
+    }
+
+    function initLeads() {
+      if (!localStorage.getItem('webcraft_leads_v2')) {
+        localStorage.setItem('webcraft_leads_v2', JSON.stringify(INITIAL_LEADS));
       }
+      renderLeads();
     }
 
     function renderLeads() {
+      const leads = JSON.parse(localStorage.getItem('webcraft_leads_v2') || '[]');
       const grid = document.getElementById('leadsGrid');
-      const customLeads = JSON.parse(localStorage.getItem('webcraft_leads') || '[]');
-      const allLeads = [...G_LEADS, ...customLeads];
-
-      grid.innerHTML = allLeads.map(l => `
-        <div class="lead-card">
-          <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-            <span class="lead-status">${l.city}</span>
-            <i class="fas fa-ellipsis-v" style="opacity:0.3;"></i>
+      
+      grid.innerHTML = leads.map(l => `
+        <div class="lead-card ${l.status === 'contacted' ? 'contacted' : ''}">
+          <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <span style="font-size:0.7rem; color:var(--primary); font-weight:800;">${l.city.toUpperCase()}</span>
+            ${l.status === 'contacted' ? '<i class="fas fa-check-circle" style="color:var(--success)"></i>' : ''}
           </div>
-          <h3 style="margin-bottom:5px;">${l.name}</h3>
-          <p style="font-size:0.8rem; opacity:0.6; margin-bottom:15px;">Target: ${l.niche}</p>
+          <h3>${l.name}</h3>
+          <p style="font-size:0.8rem; opacity:0.6; margin: 5px 0 15px;">Target: ${l.niche}</p>
           
-          <a href="https://wa.me/${l.phone.replace(/\D/g, '')}?text=${encodeURIComponent("Hi " + l.name + "! I saw your shop on Google and noticed you don't have a professional website yet. We build custom sites for " + l.niche + " shops starting at ₹2500. Would you like to see a demo?")}" 
-             target="_blank" class="wa-btn">
-            <i class="fab fa-whatsapp"></i> Send Sales Pitch
-          </a>
+          <div class="lead-actions">
+            <a href="https://wa.me/${l.phone.replace(/\D/g, '')}?text=${encodeURIComponent("Hi " + l.name + "! I'm from WebCraft Studio. I saw your business in " + l.city + " and would love to build a premium website for you. Interested?")}" 
+               target="_blank" class="wa-btn" onclick="markContacted(${l.id})">
+              <i class="fab fa-whatsapp"></i> Pitch
+            </a>
+            <div class="action-icon tick-btn" onclick="toggleStatus(${l.id})" title="Mark as contacted">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="action-icon del-btn" onclick="deleteLead(${l.id})" title="Delete lead">
+              <i class="fas fa-trash"></i>
+            </div>
+          </div>
         </div>
       `).join('');
+    }
+
+    function toggleStatus(id) {
+      let leads = JSON.parse(localStorage.getItem('webcraft_leads_v2'));
+      leads = leads.map(l => l.id === id ? {...l, status: l.status === 'contacted' ? 'new' : 'contacted'} : l);
+      localStorage.setItem('webcraft_leads_v2', JSON.stringify(leads));
+      renderLeads();
+    }
+
+    function markContacted(id) {
+      // Small delay to allow WA to open
+      setTimeout(() => {
+        let leads = JSON.parse(localStorage.getItem('webcraft_leads_v2'));
+        leads = leads.map(l => l.id === id ? {...l, status: 'contacted'} : l);
+        localStorage.setItem('webcraft_leads_v2', JSON.stringify(leads));
+        renderLeads();
+      }, 1000);
+    }
+
+    function deleteLead(id) {
+      if (!confirm("Delete this lead permanently?")) return;
+      let leads = JSON.parse(localStorage.getItem('webcraft_leads_v2'));
+      leads = leads.filter(l => l.id !== id);
+      localStorage.setItem('webcraft_leads_v2', JSON.stringify(leads));
+      renderLeads();
     }
 
     function addNewLead() {
       const name = prompt("Business Name:");
       const city = prompt("City:");
-      const phone = prompt("Phone (Include country code):");
+      const phone = prompt("Phone:");
       const niche = prompt("Niche:");
 
       if (name && phone) {
-        const leads = JSON.parse(localStorage.getItem('webcraft_leads') || '[]');
-        leads.unshift({ name, city, phone, niche });
-        localStorage.setItem('webcraft_leads', JSON.stringify(leads));
+        let leads = JSON.parse(localStorage.getItem('webcraft_leads_v2') || '[]');
+        const newId = Date.now();
+        leads.unshift({ id: newId, name, city, phone, niche, status: 'new' });
+        localStorage.setItem('webcraft_leads_v2', JSON.stringify(leads));
         renderLeads();
       }
     }
