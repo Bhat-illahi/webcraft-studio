@@ -131,6 +131,7 @@
     }
 
     .int-btn { color: var(--success); background: rgba(34, 197, 94, 0.1); }
+    .pitched-btn { color: var(--primary); background: rgba(108, 99, 255, 0.1); }
     .not-int-btn { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
     .ign-btn { color: var(--muted); background: rgba(100, 116, 139, 0.1); }
     .del-btn { color: #fff; background: rgba(255, 255, 255, 0.1); margin-left: auto; }
@@ -203,6 +204,9 @@
                target="_blank" class="wa-btn" onclick="updateStatus(${l.id}, 'pitched')">
               <i class="fab fa-whatsapp"></i> Send Pitch
             </a>
+            <div class="action-icon pitched-btn ${l.status==='pitched'?'active':''}" onclick="updateStatus(${l.id}, 'pitched')" title="Message Sent">
+              <i class="fas fa-paper-plane"></i>
+            </div>
             <div class="action-icon int-btn ${l.status==='interested'?'active':''}" onclick="updateStatus(${l.id}, 'interested')" title="Interested">
               <i class="fas fa-thumbs-up"></i>
             </div>
