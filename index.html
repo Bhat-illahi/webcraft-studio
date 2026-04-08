@@ -11,10 +11,12 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style-v15.css" />
+  <link rel="icon" type="image/svg+xml" href="webcraft_logo.svg" />
 </head>
 
 <body>
+  <div style="display:none !important;" id="antigravity-debug">LOGO_UPDATE_V3</div>
 
   <!-- Custom Glowing Cursor -->
   <div id="cursor-blob"></div>
@@ -38,7 +40,16 @@
   <nav class="main-nav" id="main-nav">
     <div class="nav-wrapper">
       <a href="#home" class="nav-branding">
-        <img src="webcraft_logo.png" alt="WebCraft Logo" class="brand-logo" />
+        <div class="brand-logo">
+          <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%; display: block;">
+            <rect width="500" height="500" fill="black" />
+            <path d="M100 135 C100 135 210 135 220 135 C230 135 235 145 233 155 L190 350 L110 310 L100 135 Z" fill="#FF8D5C" />
+            <path d="M150 330 L235 365 L215 415 L195 395 L165 425 L150 330 Z" fill="#FFE066" />
+            <path d="M210 390 C220 280 290 120 335 145 C380 170 340 350 335 385" fill="none" stroke="#A29BFE" stroke-width="85" stroke-linecap="round" />
+            <path d="M400 200 L320 400" fill="none" stroke="#00D2D3" stroke-width="110" stroke-linecap="round" />
+            <circle cx="430" cy="110" r="55" fill="#FF78B9" />
+          </svg>
+        </div>
         <span class="logo-text">WebCraft <em>Studio</em></span>
       </a>
       <button class="nav-mobile-toggle" id="nav-mobile-toggle" aria-label="Toggle navigation">
@@ -451,7 +462,16 @@
     <div class="container">
       <div class="footer-top">
         <div class="footer-brand">
-          <span class="logo-icon">⚡</span>
+          <div class="brand-logo footer-logo">
+            <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%; display: block;">
+              <rect width="500" height="500" fill="black" />
+              <path d="M100 135 C100 135 210 135 220 135 C230 135 235 145 233 155 L190 350 L110 310 L100 135 Z" fill="#FF8D5C" />
+              <path d="M150 330 L235 365 L215 415 L195 395 L165 425 L150 330 Z" fill="#FFE066" />
+              <path d="M210 390 C220 280 290 120 335 145 C380 170 340 350 335 385" fill="none" stroke="#A29BFE" stroke-width="85" stroke-linecap="round" />
+              <path d="M400 200 L320 400" fill="none" stroke="#00D2D3" stroke-width="110" stroke-linecap="round" />
+              <circle cx="430" cy="110" r="55" fill="#FF78B9" />
+            </svg>
+          </div>
           <span>WebCraft Studio</span>
           <p>Professional websites for every business. Affordable. Fast. Beautiful.</p>
         </div>

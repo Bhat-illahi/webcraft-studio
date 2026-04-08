@@ -131,7 +131,10 @@
 <!-- MAIN DASHBOARD -->
 <div id="main-dashboard">
     <div class="topbar">
-        <div class="logo">⚡ WebCraft <em>Admin</em></div>
+        <div class="logo" style="display:flex; align-items:center; gap:10px;">
+            <img src="webcraft_logo.svg" alt="Logo" style="height:32px; width:32px; background:#fff; border-radius:50%; padding:4px;" />
+            WebCraft <em>Admin</em>
+        </div>
         <div class="topbar-actions">
             <a href="https://bhat-illahi.github.io/webcraft-studio/" target="_blank" class="btn btn-outline">
                 <i class="fas fa-external-link-alt"></i> View Live Site
@@ -390,7 +393,7 @@
 
             // SUCCESS UI
             btn.innerHTML = '<i class="fas fa-check-circle"></i> Published!';
-            btn.style.cssText += 'background:#00c853;box-shadow:0 8px 20px rgba(0,200,83,0.4);';
+            btn.style-v15.cssText += 'background:#00c853;box-shadow:0 8px 20px rgba(0,200,83,0.4);';
             showNotify('✅ Changes published to live website!', 'success');
 
             setTimeout(() => {
