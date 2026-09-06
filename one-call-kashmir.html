@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Primary Meta Tags -->
-    <title>One Call Kashmir | Kashmir Tour Packages & Taxi Service (+91 8492922783)</title>
-    <meta name="title" content="One Call Kashmir | Kashmir Tour Packages & Taxi Service (+91 8492922783)">
-    <meta name="description" content="One Call Kashmir - Best Tour Packages, Taxi Service, Houseboats & Hotels in Kashmir. Book Gulmarg, Pahalgam, Sonamarg & Srinagar tours today. Call +91 8492922783.">
-    <meta name="keywords" content="One Call Kashmir, Kashmir Tour Packages, Sopore Travel Agency, Srinagar Taxi Service, Gulmarg Gondola Package, Pahalgam Tour, Houseboat Dal Lake, Best Kashmir Tour Operator, 8492922783">
+    <title>One Call Kashmir | Best Kashmir Tour Packages & Taxi Service (+91 8492922783)</title>
+    <meta name="title" content="One Call Kashmir | Best Kashmir Tour Packages & Taxi Service (+91 8492922783)">
+    <meta name="description" content="One Call Kashmir - Best Tour Packages, Taxi Service, Houseboats & Hotels in Kashmir. Amberpora, Sopore. Call +91 8492922783.">
+    <meta name="keywords" content="One Call Kashmir, Kashmir Tour Packages, Sopore Travel Agency, Amberpora Sopore, Srinagar Taxi Service, Gulmarg Gondola Package, Pahalgam Tour, Houseboat Dal Lake, Best Kashmir Tour Operator, 8492922783">
     <meta name="author" content="One Call Kashmir">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://bhat-illahi.github.io/webcraft-studio/one-call-kashmir.html">
@@ -33,7 +33,7 @@
       "priceRange": "₹₹",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Krankshivan Colony, Nigeen bagh, Krankshivan colony",
+        "streetAddress": "Tarzoo - Sopore Rd, Amberpora",
         "addressLocality": "Sopore",
         "addressRegion": "Jammu and Kashmir",
         "postalCode": "193201",
@@ -41,8 +41,8 @@
       },
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": 34.2989,
-        "longitude": 74.4715
+        "latitude": 34.2882,
+        "longitude": 74.4756
       },
       "openingHoursSpecification": {
         "@type": "OpeningHoursSpecification",
@@ -104,7 +104,7 @@
             overflow-x: hidden;
         }
 
-        /* 1. Top Cyan Utility Bar */
+        /* 1. Top Cyan Utility Bar (Zero Email) */
         .top-utility-bar {
             background-color: var(--primary-cyan);
             color: white;
@@ -122,7 +122,7 @@
             align-items: center;
         }
 
-        .top-utility-info a {
+        .top-utility-info a, .top-utility-info span {
             color: white;
             text-decoration: none;
             display: flex;
@@ -157,7 +157,7 @@
             padding: 4px 14px;
             border-radius: 4px;
             text-decoration: none;
-            font-weight: 700;
+            font-weight: 800;
             font-size: 0.8rem;
             text-transform: uppercase;
         }
@@ -252,6 +252,11 @@
             justify-content: center;
             font-size: 1.3rem;
             text-decoration: none;
+            transition: transform 0.2s;
+        }
+
+        .wa-header-icon:hover {
+            transform: scale(1.1);
         }
 
         .call-now-box {
@@ -288,7 +293,7 @@
             text-decoration: none;
         }
 
-        /* 3. Hero Section with Real HD Kashmir Background */
+        /* 3. Hero Section */
         .hero-banner {
             position: relative;
             background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=1600&q=80');
@@ -651,47 +656,86 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Floating Circle Action Buttons */
-        .fixed-call-btn {
+        /* Enhanced Pulsing Floating Action Buttons */
+        .floating-container-left {
             position: fixed;
-            bottom: 24px;
-            left: 24px;
-            width: 56px;
-            height: 56px;
-            background-color: var(--primary-green);
-            color: white;
-            border-radius: 50%;
+            bottom: 28px;
+            left: 28px;
+            z-index: 9999;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-            text-decoration: none;
-            z-index: 999;
-            transition: transform 0.2s;
+            gap: 12px;
         }
 
-        .fixed-wa-btn {
+        .floating-container-right {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
-            width: 56px;
-            height: 56px;
-            background-color: var(--primary-green);
-            color: white;
+            bottom: 28px;
+            right: 28px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .floating-action-btn {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: white;
             font-size: 1.6rem;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
             text-decoration: none;
-            z-index: 999;
-            transition: transform 0.2s;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            position: relative;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .fixed-call-btn:hover, .fixed-wa-btn:hover {
-            transform: scale(1.1);
+        .floating-action-btn:hover {
+            transform: scale(1.15);
+        }
+
+        .floating-call {
+            background: linear-gradient(135deg, #02b0df, #0284c7);
+        }
+
+        .floating-wa {
+            background: linear-gradient(135deg, #25d366, #128c7e);
+        }
+
+        .pulse-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            animation: pulseGlow 2s infinite;
+            z-index: -1;
+        }
+
+        .pulse-ring-call {
+            border: 3px solid #02b0df;
+        }
+
+        .pulse-ring-wa {
+            border: 3px solid #25d366;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.6); opacity: 0; }
+        }
+
+        .floating-label {
+            background: rgba(15, 23, 42, 0.9);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         /* Footer */
@@ -760,24 +804,36 @@
                 gap: 8px;
                 text-align: center;
             }
+            .floating-label {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Fixed Floating Action Buttons -->
-    <a href="tel:+918492922783" class="fixed-call-btn" title="Call Us Now">
-        <i class="fa-solid fa-phone"></i>
-    </a>
-    <a href="https://wa.me/918492922783?text=Hi%20One%20Call%20Kashmir,%20I%20want%20to%20book%20a%20Kashmir%20tour%20package." class="fixed-wa-btn" target="_blank" title="WhatsApp Chat">
-        <i class="fa-brands fa-whatsapp"></i>
-    </a>
+    <!-- Enhanced Floating Action Buttons -->
+    <div class="floating-container-left">
+        <a href="tel:+918492922783" class="floating-action-btn floating-call" title="Call Us 8492922783">
+            <div class="pulse-ring pulse-ring-call"></div>
+            <i class="fa-solid fa-phone"></i>
+        </a>
+        <span class="floating-label">Call: 8492922783</span>
+    </div>
 
-    <!-- 1. Top Cyan Utility Bar -->
+    <div class="floating-container-right">
+        <span class="floating-label">Instant WhatsApp</span>
+        <a href="https://wa.me/918492922783?text=Hi%20One%20Call%20Kashmir,%20I%20want%20to%20book%20a%20Kashmir%20tour%20package." class="floating-action-btn floating-wa" target="_blank" title="WhatsApp Chat">
+            <div class="pulse-ring pulse-ring-wa"></div>
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <!-- 1. Top Cyan Utility Bar (Zero Email) -->
     <div class="top-utility-bar">
         <div class="top-utility-info">
             <a href="tel:+918492922783"><i class="fa-solid fa-phone"></i> +91-8492922783</a>
-            <a href="mailto:info@onecallkashmir.com"><i class="fa-solid fa-envelope"></i> info@onecallkashmir.com</a>
+            <span><i class="fa-solid fa-location-dot"></i> Tarzoo - Sopore Rd, Amberpora, Sopore, J&K 193201</span>
         </div>
         <div class="top-utility-right">
             <div class="top-social-icons">
@@ -848,10 +904,9 @@
             <!-- Right Hero Form -->
             <div class="hero-form-card" id="contact">
                 <h3>Plan Your Kashmir Trip Today!</h3>
-                <form onsubmit="event.preventDefault(); window.open('https://wa.me/918492922783?text=Name:%20'+document.getElementById('name').value+'%0AEmail:%20'+document.getElementById('email').value+'%0ANumber:%20'+document.getElementById('number').value+'%0APackage:%20'+document.getElementById('pkgSelect').value, '_blank');">
+                <form onsubmit="event.preventDefault(); window.open('https://wa.me/918492922783?text=Name:%20'+document.getElementById('name').value+'%0APhone:%20'+document.getElementById('number').value+'%0APackage:%20'+document.getElementById('pkgSelect').value, '_blank');">
                     <input type="text" id="name" class="form-input-field" placeholder="Enter Your Name" required>
-                    <input type="email" id="email" class="form-input-field" placeholder="Enter Your Email" required>
-                    <input type="tel" id="number" class="form-input-field" placeholder="Enter Your Number" required>
+                    <input type="tel" id="number" class="form-input-field" placeholder="Enter Your Phone Number" required>
                     <select id="pkgSelect" class="form-input-field" required>
                         <option value="">Select Packages &gt;&gt;</option>
                         <option value="Kashmir Tour Package (Rs 10,999)">Kashmir Tour Package</option>
@@ -873,13 +928,13 @@
         <p>Our Kashmir Tour Package offers comfort, safety, and seamless travel arrangements. Create lifelong memories with expert-guided sightseeing and stays.</p>
     </div>
 
-    <!-- 4. Signature 6 Package Cards Grid with HD Kashmir Destination Photos -->
+    <!-- 4. Signature 6 Package Cards Grid -->
     <section class="packages-grid-section">
         
-        <!-- Card 1: Kashmir Tour Package -->
+        <!-- Card 1 -->
         <div class="package-item-card">
             <div class="package-card-yellow-bar">KASHMIR TOUR PACKAGE</div>
-            <img src="https://images.unsplash.com/photo-1566837945700-30057527ade0?auto=format&fit=crop&w=800&q=80" alt="Dal Lake Shikara Kashmir" class="package-card-photo">
+            <img src="https://images.unsplash.com/photo-1566837945700-30057527ade0?auto=format&fit=crop&w=800&q=80" alt="Dal Lake Kashmir" class="package-card-photo">
             
             <div class="package-icons-row">
                 <div class="icon-item"><i class="fa-solid fa-hotel"></i> Hotels</div>
@@ -909,7 +964,7 @@
             </div>
         </div>
 
-        <!-- Card 2: Tulip Festival Package -->
+        <!-- Card 2 -->
         <div class="package-item-card">
             <div class="package-card-yellow-bar">KASHMIR TULIP FESTIVAL PACKAGE</div>
             <img src="https://images.unsplash.com/photo-1520763185298-1b434c919102?auto=format&fit=crop&w=800&q=80" alt="Tulip Garden Kashmir" class="package-card-photo">
@@ -942,10 +997,10 @@
             </div>
         </div>
 
-        <!-- Card 3: Leh Family Package -->
+        <!-- Card 3 -->
         <div class="package-item-card">
             <div class="package-card-yellow-bar">LEH FAMILY TOUR PACKAGE</div>
-            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="Leh Ladakh Mountains" class="package-card-photo">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="Leh Ladakh" class="package-card-photo">
             
             <div class="package-icons-row">
                 <div class="icon-item"><i class="fa-solid fa-hotel"></i> Hotels</div>
@@ -975,10 +1030,10 @@
             </div>
         </div>
 
-        <!-- Card 4: Honeymoon Package -->
+        <!-- Card 4 -->
         <div class="package-item-card">
             <div class="package-card-yellow-bar">KASHMIR HONEYMOON PACKAGE</div>
-            <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=800&q=80" alt="Pahalgam Scenic Valley Kashmir" class="package-card-photo">
+            <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=800&q=80" alt="Pahalgam Valley" class="package-card-photo">
             
             <div class="package-icons-row">
                 <div class="icon-item"><i class="fa-solid fa-hotel"></i> Hotels</div>
@@ -1008,10 +1063,10 @@
             </div>
         </div>
 
-        <!-- Card 5: Jammu & Kashmir Trip Package -->
+        <!-- Card 5 -->
         <div class="package-item-card">
             <div class="package-card-yellow-bar">JAMMU & KASHMIR TRIP PACKAGE</div>
-            <img src="https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=800&q=80" alt="Gulmarg Snow Mountains Kashmir" class="package-card-photo">
+            <img src="https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=800&q=80" alt="Gulmarg Snow Kashmir" class="package-card-photo">
             
             <div class="package-icons-row">
                 <div class="icon-item"><i class="fa-solid fa-hotel"></i> Hotels</div>
@@ -1041,10 +1096,10 @@
             </div>
         </div>
 
-        <!-- Card 6: Winter Snow Package -->
+        <!-- Card 6 -->
         <div class="package-item-card">
             <div class="package-card-yellow-bar">KASHMIR WINTER TOUR PACKAGE</div>
-            <img src="https://images.unsplash.com/photo-1548777123-e216912df7d8?auto=format&fit=crop&w=800&q=80" alt="Kashmir Winter Snow Skiing Gulmarg" class="package-card-photo">
+            <img src="https://images.unsplash.com/photo-1548777123-e216912df7d8?auto=format&fit=crop&w=800&q=80" alt="Winter Snow Skiing" class="package-card-photo">
             
             <div class="package-icons-row">
                 <div class="icon-item"><i class="fa-solid fa-hotel"></i> Hotels</div>
@@ -1076,7 +1131,7 @@
 
     </section>
 
-    <!-- 5. Google Knowledge Panel Section -->
+    <!-- 5. Google Knowledge Panel Section (Updated Address) -->
     <section class="gmb-section" id="about">
         <div class="gmb-container">
             <div class="gmb-left">
@@ -1097,7 +1152,7 @@
                 </div>
                 <div style="color: #cbd5e1; font-size: 0.9rem; margin-bottom: 16px;">
                     <i class="fa-solid fa-location-dot" style="color: var(--primary-cyan); margin-right: 8px;"></i>
-                    Krankshivan Colony, Nigeen bagh, Sopore, J&K 193201
+                    Tarzoo - Sopore Rd, Amberpora, Sopore, Jammu and Kashmir 193201
                 </div>
                 <div style="color: #cbd5e1; font-size: 0.9rem; margin-bottom: 20px;">
                     <i class="fa-solid fa-phone" style="color: var(--primary-cyan); margin-right: 8px;"></i>
@@ -1110,7 +1165,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Footer (Zero Email & Official Address) -->
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
@@ -1127,11 +1182,11 @@
                 </ul>
             </div>
             <div class="footer-col">
-                <h4>Contact Support</h4>
+                <h4>Contact & Location</h4>
                 <ul>
                     <li><i class="fa-solid fa-phone"></i> +91-8492922783</li>
-                    <li><i class="fa-solid fa-envelope"></i> info@onecallkashmir.com</li>
-                    <li><i class="fa-solid fa-location-dot"></i> Krankshivan Colony, Sopore 193201</li>
+                    <li><i class="fa-solid fa-location-dot"></i> Tarzoo - Sopore Rd, Amberpora, Sopore, Jammu and Kashmir 193201</li>
+                    <li><i class="fa-solid fa-clock"></i> Open 24 Hours</li>
                 </ul>
             </div>
         </div>
