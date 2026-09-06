@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Successful – WebCraft Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style-v15.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: var(--bg);
+      text-align: center;
+      padding: 20px;
+    }
+    .success-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 50px 40px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      animation: slideUp 0.5s ease;
+    }
+    .check-icon {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: rgba(77, 171, 247, 0.15);
+      border: 4px solid #4dabf7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 30px;
+      animation: scaleIn 0.5s ease 0.2s both;
+    }
+    .check-icon i {
+      font-size: 2.5rem;
+      color: #4dabf7;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+    p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+    .order-box {
+      background: rgba(108, 99, 255, 0.1);
+      border: 1px solid rgba(108, 99, 255, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .order-box p {
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    #orderIdDisplay {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: 1px;
+    }
+    @keyframes scaleIn {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="success-container">
+    <div style="display: flex; justify-content: center; margin-bottom: 25px;">
+        <img src="webcraft_logo.jpg" alt="Logo" class="brand-logo" style="height: 60px; width: 60px;" />
+    </div>
+    <div class="check-icon">
+      <i class="fas fa-check"></i>
+    </div>
+    <h1>Thank You! 🎉</h1>
+    <p>Your order has been successfully placed. We will contact you within <strong style="color:var(--text);">24 hours</strong> to discuss the project and the <strong style="color:var(--primary);">25% advance payment</strong>.</p>
+    
+    <div class="order-box">
+      <p style="margin-bottom:5px;">Your Order ID</p>
+      <div id="orderIdDisplay">Loading...</div>
+      <p style="margin-top:8px; margin-bottom:0; font-size:0.75rem;">Save this for reference</p>
+    </div>
+
+    <a href="index.html" class="btn btn-primary full-width" id="homeBtn"><i class="fas fa-home"></i> Back to Home</a>
+  </div>
+
+  <script>
+    // Get Order ID from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('id');
+    
+    if (orderId) {
+      document.getElementById('orderIdDisplay').textContent = orderId;
+    } else {
+      document.getElementById('orderIdDisplay').textContent = "WC-PENDING";
+    }
+
+    // Mark that user has ordered (used to show permanent "Give Review" button)
+    localStorage.setItem('wc_ordered', 'true');
+
+    // Update "Back to Home" link to trigger the review pop-up
+    const homeBtn = document.getElementById('homeBtn');
+    if (homeBtn) homeBtn.href = 'index.html?showReview=true';
+  </script>
+</body>
+</html>

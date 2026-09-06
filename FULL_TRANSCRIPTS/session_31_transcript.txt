@@ -1,0 +1,23 @@
+# Session 31: Full Transcript - Optimization & Core Stability
+
+**Timestamp**: 2026-05-15 12:48:32 - 19:09:17
+
+[User]: Requested an app for automatic call recording on Realme X7 5G, noting the "Silence" issue in previous attempts.
+[AI]: Explained Android 12 restrictions. Suggested ODialer as the official solution for Realme devices.
+[User]: Expressed frustration about the Proximity Sensor issue. Confirmed "Right Dialer" is used specifically to bypass the sensor.
+[AI]: Suggested a "Hybrid" strategy: ODialer for recording + MacroDroid for sensor bypass.
+[User]: Corrected AI: MacroDroid failed in previous sessions (Session 26). Demanded AI read past transcripts more carefully.
+[AI]: Apologized. Read Full Transcript of Session 26. Acknowledged that MacroDroid failed and "Sensors Off" tile is missing.
+[User]: Demanded a "Core Stability Protocol" be added to the project history to prevent risky system modifications.
+[AI]: Implemented the protocol in PROJECT_HISTORY.md.
+[User]: Requested a full battery audit ("Upar se neeche tak").
+[AI]: Performed deep audit via ADB. Identified Facebook, Instagram, Phone Manager, and Play Services as top drainers.
+[User]: Authorized disabling of Realme Music, Google Home, and Google Meet. Kept Google Drive.
+[AI]: Applied optimizations: 60Hz lock, Wi-Fi scan off, Haptics off, Social media lockdown, and app disabling.
+[User]: Inquired about Oplus Atlas and Digital Wellbeing.
+[AI]: Advised against disabling Atlas due to bootloop risks (per Protocol).
+[User]: Verified icon caching behavior after uninstalling a custom icon pack.
+[User]: Ordered "Upload Conversation" for session finalization.
+
+---
+**Status**: Session 31 synchronized and archived.

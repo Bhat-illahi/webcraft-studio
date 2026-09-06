@@ -1,0 +1,12 @@
+Session 18 Full Transcript - May 3, 2026
+
+USER: [Audio] I forgot my Google passwords. Help me find them.
+AI: Provided instructions for Google Password Manager, Chrome Settings, and Android Settings in Hindi/English.
+USER: [Audio] I'm ready for root. Do the Google backup first.
+AI: Triggered Google Cloud backup via ADB (bmgr). Media (DCIM/WhatsApp) scan showed ~6.5GB.
+USER: [Audio] Backed up everything. Let's start rooting.
+AI: Installed UsbDk and setup MTK Client (Python 3.11). Guided user to BROM mode.
+USER: [Audio] Phone reboots to recovery after connecting.
+AI: Diagnosed USBError (Other error). Determined that a PC restart is necessary for UsbDk to fully register.
+USER: [Audio] Upload the conversation before I restart.
+AI: Syncing session logs, transcripts, and history to GitHub.

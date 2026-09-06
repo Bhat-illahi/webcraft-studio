@@ -1,0 +1,36 @@
+# Session 6 Transcript
+**Date:** April 22, 2026
+
+**[11:52 AM] User (Audio):** "Bhai maine tumhe abhi abhi jo voice note bheja hai usme bolte hain ki yeh storage saaf karne ke liye tumhe admin mein kya karna hoga kuch prompt lagana hoga... jisko... (audio overlaps with English reel audio: 'storage isn't hidden from you... what? my C drive is completely full... hidden files, old updates, cache, stuff you didn't even know existed... so it's taking space but I can't access any of it? exactly, that's why it looks full. so how do I actually clean it then? there's a mode windows doesn't show you. wait seriously? open command prompt as admin, run the advanced cleanup command. why are there so many more options now? that's the full cleanup mode. this is clearing tens of gigabytes of hidden junk. so I almost paid for something useless?')"
+
+**[11:54 AM] AI:** (Provided detailed instructions in Devanagari Hindi on how to open Command Prompt as Administrator and run `cleanmgr /sageset:1`, `cleanmgr /sagerun:1`, and `DISM.exe /Online /Cleanup-Image /StartComponentCleanup` to clear the hidden storage).
+
+**[11:56 AM] User (Audio):** "Bhai maine tumhe bola tha mujhe Hindi samajh nahi aati hai, I want you to read PROJECT_HISTORY.md aur ye... matlab, tum kya karoge uske baad saari past conversations ko analyze karoge jismein koi past conversation agar upload na hui ho toh usko bhi upload kar doge."
+
+**[11:58 AM] AI:** (Reads PROJECT_HISTORY.md, acknowledges the language constraint, verifies past logs, and executes batch metadata update for Session 6).
+
+**[01:30 PM] User:** (Requested update to `MouseMaster_reference.ahk` to sync the new volume control logic.)
+**[01:35 PM] AI:** (Updated the reference file and pushed changes.)
+**[02:47 PM] User (Audio):** Asked for the PowerShell command to clear cache.
+**[02:48 PM] AI:** Provided the `del "$env:TEMP\*"` PowerShell command.
+**[02:50 PM - 03:08 PM] User & AI:** User successfully ran the cache and `DISM` commands. AI explained Storage Sense and helped user navigate Settings when they incorrectly pasted the path in File Explorer.
+**[03:15 PM] User (Audio & Image):** Asked what Python is and if it can be deleted.
+**[03:16 PM] AI:** Explained Python is a programming language, recommended keeping it.
+**[03:19 PM] User (Audio & Image):** Pointed out `.gemini` folder taking 6.33 GB and asked to delete unwanted cache.
+**[03:20 PM - 03:34 PM] AI & User:** AI investigated, found 5 GB of old browser recordings and cache, and deleted it using PowerShell. Confirmed the deletion to the user.
+**[03:38 PM] User (Audio & Image):** Asked about Windows SDK (2.26 GB).
+**[03:39 PM] AI:** Explained it is critical for C programming/compiling and advised keeping it.
+**[03:40 PM] User (Audio):** "Achha to ye saari conversation na tum ab upload kar do aur Git pe bhi push kar dena, theek hai na."
+
+**[04:01 PM] User (Audio):** Asked for a trusted, non-OneDrive cloud storage solution that maps directly to File Explorer to keep local space 100% free.
+**[04:05 PM] AI:** Recommended Google Drive for Desktop (Stream files mode) or pCloud. User selected Google Drive. AI provided setup instructions.
+**[04:21 PM] User (Audio):** Asked how to move the entire Downloads, Music, and Videos system folders to the Google Drive.
+**[04:22 PM] AI:** Provided instructions to use the Properties > Location tab to move the system folders.
+**[04:26 PM] User (Audio):** Asked how to hide old files/folders in the Google Drive to keep the UI clean.
+**[04:30 PM] AI:** Instructed user to create an "Archive" folder and check the "Hidden" attribute.
+**[05:05 PM] User (Audio & Image):** Encountered "Location is not available" boot error for Desktop.
+**[05:10 PM] AI:** Explained the boot error occurs because Google Drive virtual drive mounts with a delay. Advised reverting the Desktop folder to the local C: drive to fix the error.
+**[05:18 PM] User (Message):** Pointed out missing icons for VS Code and Antigravity desktop shortcuts. AI provided steps to fix shortcut icons.
+**[05:44 PM] User (Audio):** Complained that the "Screenshots" custom folder icon didn't change despite following the steps.
+**[05:46 PM] AI:** Explained that Google Drive strips the 'Read-only' attribute. Provided PowerShell command (`attrib +r`) to enforce the attribute and fix the icon.
+**[05:50 PM] User (Audio):** Queried why local C: drive space didn't immediately increase after moving downloads, and requested the location of the local C: drive downloads path for local storage. Instructed AI to upload the conversation and Git push.

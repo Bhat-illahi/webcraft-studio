@@ -1,0 +1,44 @@
+User: [Audio] Can you suggest an app to cut off my WhatsApp calls after a certain time, like 1 hour? MacroDroid was suggested by another AI.
+AI: Explained why standard call timers fail for WhatsApp (VoIP). Recommended MacroDroid (Automatic) or Auto Clicker (Manual). Provided setup steps for MacroDroid.
+User: [Audio] But if I'm on a 6-hour call, the screen will be off and locked. Will MacroDroid still work?
+AI: Explained that UI Interaction fails on locked screens. Recommended "Notification Interaction" or "Kill App" via ADB Hack as better alternatives.
+User: [Audio] I think we should use Method 2 (ADB Hack). I have a Realme X7. How do I set it up?
+AI: Provided specific steps for Realme UI (Wireless Debugging, Disable Permission Monitoring).
+User: [Audio] What do I do with "Disable Permission Monitoring"? ON or OFF?
+AI: Confirmed it should be ON to allow ADB commands.
+User: [Audio] It says "Connect to Wi-Fi" for Wireless Debugging, but I'm on Mobile Data.
+AI: Provided the "Hotspot Hack" (turning on Hotspot to trick the system).
+User: [Audio] It's not working. Even with Hotspot, it asks for Wi-Fi.
+AI: Recommended the USB cable method since the user has a PC.
+User: [Audio] I don't see "USB Debugging (Security Settings)" in my list.
+AI: Advised checking the bottom of the list for "Disable Permission Monitoring" and trying the command anyway.
+User: [Audio] USB debugging is on, permission monitoring is on. Can you run the command for me?
+AI: Ran `adb shell pm grant com.arlosoft.macrodroid android.permission.WRITE_SECURE_SETTINGS`. Command successful.
+User: [Audio] Tell me step-by-step what to do in MacroDroid now.
+AI: Provided the Trigger (Notification) and Action (Wait + Kill App) steps.
+User: [Audio] In Text Content, should I write "Ongoing voice call"?
+AI: Confirmed "Contains" + "Ongoing voice call" is correct.
+User: [Audio] What about "Ignore ongoing notifications" and other settings?
+AI: Advised keeping "Ignore ongoing" UNCHECKED so it sees the call.
+User: [Audio] Give me the steps for Actions and Constraints.
+AI: Provided "Wait Before Next Action" and "Kill Background App" steps.
+User: [Audio] I can't find "Wait Before Next Action". I only see "Wait Until Trigger".
+AI: Advised using the search bar to find "Wait Before Next Action".
+User: [Audio] It only has minutes and seconds, no hours. How do I set 7 hours?
+AI: Explained the math (7 hours = 420 minutes).
+User: [Audio] In Applications, there is no "Kill Background App". I see "Kill Application".
+AI: Confirmed "Kill Application" is the right one, and advised selecting "Non-Root (with ADB Hack)".
+User: [Audio] I saved it as non-root, but it didn't show any ADB hack option.
+AI: Advised using "Shell Script" action as a more direct alternative.
+User: [Audio] It still only shows "Kill Application" and "Kill Background Process".
+AI: Reiterated the "Shell Script" method: `am force-stop com.whatsapp`.
+User: [Audio] I sent screenshots of settings. No "Permissions" or "ADB" menu there.
+AI: Confirmed it's fine since the command was already run via PC. Suggested testing with 10 seconds.
+User: [Audio] Configured Shell Script with "Non-rooted". Should I use "Helper app"?
+AI: Suggested testing as is, then using helper app if it fails.
+User: [Image] Showed SecurityException when testing.
+AI: Attempted to grant `FORCE_STOP_PACKAGES` via ADB.
+User: [Audio] My phone is not connected to PC anymore. Is there an option for tonight?
+AI: Provided the "Emergency Screen-Wake" method using UI Interaction.
+User: upload the conversation
+AI: Documenting session 12 and syncing to GitHub.

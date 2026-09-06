@@ -1,0 +1,9 @@
+# Session 13 Transcript
+**Date:** April 28, 2026
+
+**[04:37 PM] User (Audio):** Reported that their OnePlus Bullets Wireless Z microphone is not working for WhatsApp voice messages on the realme X7, but works fine for normal calls.
+**[04:38 PM] AI:** Identified this as a common Bluetooth routing issue. Provided steps to check Bluetooth profiles (Phone/Media) and WhatsApp permissions.
+**[04:42 PM] User (Audio):** Reported that the "Disable Bluetooth A2DP hardware offload" option is missing in their Developer Options.
+**[04:43 PM] AI:** Confirmed that Realme UI sometimes hides this option. Suggested switching the Bluetooth Audio Codec to **SBC** and toggling the **Gabeldorsche** experimental stack.
+**[04:44 PM] AI:** Explained that high-quality codecs (LDAC/LHDC) can sometimes hog bandwidth and disable the microphone channel in certain apps.
+**[04:45 PM] AI:** Provided a final sequence: Toggle Gabeldorsche -> Restart Phone -> Test WhatsApp.

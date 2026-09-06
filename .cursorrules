@@ -1,0 +1,29 @@
+# WebCraft Studio - Project Intelligence Map
+
+## Project Overview
+- **Name**: WebCraft Studio
+- **Purpose**: Premium Web Design Agency & Lead CRM for local Indian businesses (Focus: Srinagar, Sopore, Ludhiana).
+- **Core Strategy**: High-ticket niche targeting (Jewelry, Electronics, Manufacturing, Boutique fashion).
+- **Tech Stack**: Vanilla HTML/JS, Supabase (Database), Vercel/GitHub Pages (Hosting).
+
+## CRM Business Logic
+- **Access PIN**: 582619 (Master Unlock)
+- **Data Source**: `leads.html` (Local `RESEARCH_BATCH` + Supabase `crm_leads_data`).
+- **Workflow**: "Smart Bulk Pitch"
+  1. Open WhatsApp `wa.me` link in new tab.
+  2. Wait for user return (Focus detection).
+  3. Show "Mark Sent & Next" button to proceed.
+
+## Lead Niches
+- **Jewelry**: Shah Jewellers, Ibaadat.
+- **Electronics**: Khan Electronics, SAF Printings.
+- **Hardware**: Jk hardware & ply, irshad hardware store.
+- **Industrial**: Ludhiana Steel, Textile Mills.
+
+## Development Rules
+- **Design Aesthetic**: Premium Glassmorphism, dark mode (`#0f172a`), vibrant purple accents (`#6C63FF`).
+- **Lead Storage**: Always update `RESEARCH_BATCH` for new local scans and ensure sync to Supabase.
+- **Immediate Sync**: AFTER EVERY CODE CHANGE (even a single comma), perform a `git push` to GitHub and confirm it.
+- **Total Awareness & Infinite History**: AFTER EVERY SESSION, update `PROJECT_HISTORY.md` and generate a RAW transcript in `FULL_TRANSCRIPTS/session_X_transcript.txt` and a summary log in `CONVERSATIONS/session_X_log.md`.
+- **Full Fidelity Analysis**: When starting a session, the AI must read all raw transcripts to understand exact details, not just summaries.
+- **Communication**: Professional, "WebCraft Studio Team" branding in all pitches.

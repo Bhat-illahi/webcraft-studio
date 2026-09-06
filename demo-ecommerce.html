@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TrendCart – Fashion & Lifestyle Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+  :root { --primary: #ff6b6b; --dark: #1a1a2e; --light: #f8f9fa; --accent: #ffd93d; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Poppins',sans-serif; background:var(--light); color:#333; }
+  .demo-header { background:var(--dark); padding:10px 0; text-align:center; font-size:0.8rem; color:#fff; border-bottom:2px solid var(--primary); }
+  .demo-header a { color:var(--primary); text-decoration:underline; font-weight:600; }
+
+  .navbar { display:flex; align-items:center; justify-content:space-between; padding:20px 6%; background:#fff; box-shadow:0 2px 20px rgba(0,0,0,0.06); position:sticky; top:0; z-index:100; }
+  .logo { font-size:1.6rem; font-weight:800; color:var(--dark); }
+  .logo span { color:var(--primary); }
+  .nav-icons { display:flex; gap:20px; font-size:1.2rem; color:var(--dark); }
+  .nav-icons i { cursor:pointer; transition:0.3s; }
+  .nav-icons i:hover { color:var(--primary); }
+  .cart-badge { position:relative; }
+  .cart-badge::after { content:'3'; position:absolute; top:-8px; right:-8px; background:var(--primary); color:#fff; font-size:0.6rem; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+
+  .hero-banner { background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding:80px 6%; display:flex; align-items:center; justify-content:space-between; color:#fff; min-height:400px; }
+  .hero-text h1 { font-size:3.5rem; font-weight:800; line-height:1.1; margin-bottom:15px; }
+  .hero-text p { font-size:1.1rem; opacity:0.9; margin-bottom:30px; max-width:500px; }
+  .hero-tag { display:inline-block; background:var(--accent); color:#333; padding:10px 24px; border-radius:50px; font-weight:700; font-size:0.9rem; }
+
+  .categories { padding:60px 6%; text-align:center; }
+  .categories h2 { font-size:2rem; margin-bottom:40px; }
+  .cat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+  .cat-item { background:#fff; border-radius:16px; padding:30px; box-shadow:0 4px 20px rgba(0,0,0,0.05); transition:0.3s; cursor:pointer; }
+  .cat-item:hover { transform:translateY(-8px); box-shadow:0 12px 30px rgba(0,0,0,0.1); }
+  .cat-item i { font-size:2.5rem; color:var(--primary); margin-bottom:15px; }
+  .cat-item h3 { font-size:1rem; }
+
+  .products { padding:60px 6%; background:#fff; }
+  .products h2 { font-size:2rem; margin-bottom:40px; text-align:center; }
+  .product-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
+  .product-card { border-radius:16px; overflow:hidden; background:var(--light); transition:0.3s; }
+  .product-card:hover { transform:translateY(-6px); box-shadow:0 15px 40px rgba(0,0,0,0.1); }
+  .product-img { height:220px; display:flex; align-items:center; justify-content:center; font-size:4rem; color:#ddd; }
+  .product-img.p1 { background:linear-gradient(135deg,#ffecd2,#fcb69f); color:#e17055; }
+  .product-img.p2 { background:linear-gradient(135deg,#a1c4fd,#c2e9fb); color:#0984e3; }
+  .product-img.p3 { background:linear-gradient(135deg,#fbc2eb,#a6c1ee); color:#6c5ce7; }
+  .product-img.p4 { background:linear-gradient(135deg,#d4fc79,#96e6a1); color:#00b894; }
+  .product-info { padding:20px; }
+  .product-info h3 { font-size:1rem; margin-bottom:6px; }
+  .product-info .price { color:var(--primary); font-weight:700; font-size:1.1rem; }
+  .product-info .old-price { color:#999; text-decoration:line-through; font-size:0.85rem; margin-left:8px; }
+  .product-info .rating { color:var(--accent); font-size:0.8rem; margin-top:6px; }
+  .add-btn { width:100%; padding:12px; background:var(--dark); color:#fff; border:none; border-radius:0 0 16px 16px; font-weight:600; cursor:pointer; transition:0.3s; }
+  .add-btn:hover { background:var(--primary); }
+
+  .sale-banner { background:var(--primary); color:#fff; text-align:center; padding:50px 20px; }
+  .sale-banner h2 { font-size:2.5rem; font-weight:800; }
+  .sale-banner p { opacity:0.9; margin:10px 0 25px; }
+  .sale-btn { background:#fff; color:var(--primary); padding:14px 36px; border-radius:50px; font-weight:700; text-decoration:none; display:inline-block; }
+
+  .footer { background:var(--dark); color:#fff; padding:50px 6%; text-align:center; }
+  .footer p { opacity:0.6; font-size:0.9rem; }
+  .footer a { color:var(--primary); }
+
+  @media(max-width:768px) { .cat-grid,.product-grid { grid-template-columns:1fr 1fr; } .hero-text h1 { font-size:2.2rem; } }
+  @media(max-width:480px) { .cat-grid,.product-grid { grid-template-columns:1fr; } }
+</style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js?v=5.0"></script>
+</head>
+<body>
+
+<div class="demo-header" style="display:flex; align-items:center; justify-content:center; gap:12px; padding:12px 0;">
+  <img src="webcraft_logo.jpg" alt="Logo" style="height:24px; width:24px; background:#000; border-radius:50%; padding:0; border:1px solid rgba(255,255,255,0.1);" />
+  <span>🛒 CUSTOMER PREVIEW: Provided by <a href="index.html">WebCraft Studio</a></span>
+</div>
+
+<nav class="navbar">
+  <div class="logo">Trend<span>Cart</span></div>
+  <div class="nav-icons">
+    <i class="fas fa-search"></i>
+    <i class="fas fa-heart"></i>
+    <i class="fas fa-shopping-bag cart-badge"></i>
+    <i class="fas fa-user"></i>
+  </div>
+</nav>
+
+<section class="hero-banner">
+  <div class="hero-text">
+    <h1>Summer Sale<br/>Up to 70% Off</h1>
+    <p>Discover the latest trends in fashion, electronics, and lifestyle. Free delivery on orders above ₹499.</p>
+    <span class="hero-tag">🔥 SHOP NOW</span>
+  </div>
+</section>
+
+<section class="categories">
+  <h2>Shop by Category</h2>
+  <div class="cat-grid">
+    <div class="cat-item"><i class="fas fa-tshirt"></i><h3>Clothing</h3></div>
+    <div class="cat-item"><i class="fas fa-mobile-alt"></i><h3>Electronics</h3></div>
+    <div class="cat-item"><i class="fas fa-home"></i><h3>Home & Living</h3></div>
+    <div class="cat-item"><i class="fas fa-running"></i><h3>Sports</h3></div>
+  </div>
+</section>
+
+<section class="products">
+  <h2>Trending Products</h2>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img p1"><i class="fas fa-tshirt"></i></div>
+      <div class="product-info">
+        <h3>Premium Cotton T-Shirt</h3>
+        <div><span class="price">₹599</span><span class="old-price">₹1,299</span></div>
+        <div class="rating">★★★★★ (128)</div>
+      </div>
+      <button class="add-btn">Add to Cart</button>
+    </div>
+    <div class="product-card">
+      <div class="product-img p2"><i class="fas fa-headphones"></i></div>
+      <div class="product-info">
+        <h3>Wireless Headphones</h3>
+        <div><span class="price">₹1,499</span><span class="old-price">₹3,999</span></div>
+        <div class="rating">★★★★☆ (89)</div>
+      </div>
+      <button class="add-btn">Add to Cart</button>
+    </div>
+    <div class="product-card">
+      <div class="product-img p3"><i class="fas fa-shoe-prints"></i></div>
+      <div class="product-info">
+        <h3>Running Sneakers</h3>
+        <div><span class="price">₹2,199</span><span class="old-price">₹4,500</span></div>
+        <div class="rating">★★★★★ (204)</div>
+      </div>
+      <button class="add-btn">Add to Cart</button>
+    </div>
+    <div class="product-card">
+      <div class="product-img p4"><i class="fas fa-couch"></i></div>
+      <div class="product-info">
+        <h3>Modern Desk Lamp</h3>
+        <div><span class="price">₹899</span><span class="old-price">₹1,800</span></div>
+        <div class="rating">★★★★☆ (56)</div>
+      </div>
+      <button class="add-btn">Add to Cart</button>
+    </div>
+  </div>
+</section>
+
+<section class="sale-banner">
+  <h2>🎉 MEGA SALE IS LIVE!</h2>
+  <p>Use code TRENDY50 for extra 50% off on all items</p>
+  <a href="index.html#order-section" class="sale-btn">Explore Deals</a>
+</section>
+
+<div class="footer">
+  <p>&copy; 2026 TrendCart. All rights reserved. | <a href="index.html">Go Back to WebCraft</a></p>
+</div>
+
+</body>
+</html>

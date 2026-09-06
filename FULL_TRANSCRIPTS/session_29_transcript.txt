@@ -1,0 +1,19 @@
+# Session 29 Transcript (Continued): Recovery and Final Clean-up
+**Date**: 2026-05-14/15
+**Participants**: User & Antigravity (AI)
+
+## Context
+After troubleshooting interactive gestures, the user decided to perform a **Full Factory Reset** to ensure system integrity. Post-reset, the focus shifted to selective debloating with a strict emphasis on stability.
+
+## Highlights:
+- **Factory Reset Success**: User confirmed that interactive gestures (Flexible Windows) are now working perfectly.
+- **Strict Stability Rule**: Established a protocol where the AI will NOT touch system engines proactively. Only user-requested apps will be modified.
+- **Selective App Removal**:
+    - Removed **Realme Glance** permanently.
+    - Disabled **Realme Music, Browser, FinShell Pay**.
+    - Disabled **Google Meet & Home**.
+    - Applied ADB flags to disable **Google Discover** feed.
+- **Hardware Continuity**: Confirmed hardware specs (Dimensity 800U, F.14 build) for future root safety.
+
+## Conclusion:
+Device is in a stable, stock-plus state. All core features are functional.

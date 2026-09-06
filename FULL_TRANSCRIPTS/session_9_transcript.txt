@@ -1,0 +1,17 @@
+# Session 9 Transcript
+**Date:** May 1, 2026
+
+**[10:44 AM] User (Audio):** Asked how to check PC up time and how long it has been running.
+**[10:45 AM] AI:** Provided methods using Task Manager, CMD (`systeminfo`), and PowerShell. Ran a live PowerShell command confirming an up time of 6 days, 18 hours.
+**[10:48 AM] User:** Requested the information in English.
+**[10:49 AM] AI:** Summarized methods and findings in English. Explained the "Fast Startup" behavior where "Shut Down" doesn't reset the timer.
+**[10:50 AM] User (Audio):** Expressed frustration that the timer doesn't reset despite many shutdowns. Asked if the PC isn't shutting down properly and how to fix it.
+**[10:51 AM] AI:** Explained the "Shift + Shut Down" trick and the "Restart" method. Provided steps to disable "Fast Startup" in Power Options.
+**[10:52 AM] User:** Commanded "continue".
+**[10:53 AM] User (Audio):** Asked for a way to make the "Shut Down" button perform a full shutdown by default using "code" (settings).
+**[10:54 AM] AI:** Provided the `powercfg /hibernate off` command and Registry edit (`HiberbootEnabled`) to permanently fix the button behavior.
+**[10:55 AM] User (Audio):** Asked for an elaboration on the Control Panel method for Hardware and Sound > Power Options.
+**[10:56 AM] AI:** Provided a detailed 7-step guide to disabling Fast Startup via the UI.
+**[10:57 AM] User (Image):** Uploaded a screenshot of the Power Options window showing the "Turn on fast startup" setting grayed out.
+**[10:58 AM] AI:** Directed user to click "Change settings that are currently unavailable" to unlock the checkbox.
+**[10:59 AM] User (Audio):** Commanded to read `PROJECT_HISTORY.md`, work accordingly, and then "upload the conversation."

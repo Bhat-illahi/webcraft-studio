@@ -1,0 +1,29 @@
+# Session 32: Full Transcript - Network Scanning & Deep Debloat
+
+**Timestamp**: 2026-05-16 15:43:00 - 2026-05-17 14:48:00
+
+[User]: Asked if Nmap and Wireshark can be run on Windows natively without Kali Linux.
+[AI]: Confirmed yes. Provided installation instructions, noting Npcap and AndroidDump are required. Outlined differences between Windows and Kali functionality.
+[User]: Asked what Nmap can do (can it see accounts?).
+[AI]: Clarified Nmap is for port scanning and device discovery, not password cracking. Recommended Wireshark for traffic sniffing, but noted HTTPS encryption makes seeing raw messages difficult.
+[User]: User installed Nmap. Asked which components to tick.
+[AI]: Advised ticking Npcap, Zenmap, and unticking USBPcap.
+[User]: User installed Wireshark. Asked which components to tick.
+[AI]: Advised ticking AndroidDump, UDPdump, and SSHdump.
+[User]: Ran basic ping scan. Found IP 192.168.144.198 and .227.
+[AI]: Explained /24 subnet logic. Identified .227 as the user's Windows PC and .198 as the router/hotspot.
+[User]: Requested a deep scan on .198.
+[AI]: Guided user to use Zenmap Intense Scan and scripts (mDNS, UPnP) to identify device name.
+[User]: Shifted focus to battery drain on Realme X7, providing screenshots. Noted Facebook still used 0.67%.
+[AI]: Ran ADB `dumpsys activity services` and `top`. Revealed main Facebook app is dormant, but `com.facebook.appmanager`, `system`, and `services` were active.
+[User]: Ordered to disable all remaining Facebook background services immediately.
+[AI]: Disabled the 3 Facebook services via `pm disable-user`.
+[User]: Asked to disable Emergency SOS package to stop accidental triggers.
+[AI]: Identified package as `com.oplus.sos`. **Invoked Core Stability Protocol** and refused to disable via ADB due to bootloop risk. Instructed user to disable via phone Settings UI.
+[User]: Ordered a deep check of remaining background battery drainers, explicitly ignoring core OS but targeting `com.heytap.*` bloatware.
+[AI]: Ran deep CPU and process scan. Found Snapchat, HeyTap Pictorial, Accessory, ThemeStore, MCS, and UserCenter active.
+[User]: Commanded to disable `pictorial` and `accessory`, and strictly restrict Snapchat and Android Auto.
+[AI]: Executed `pm disable-user` on `pictorial` and `accessory`. Applied `appops` and `standby-bucket` background lockdown on Snapchat and Android Auto.
+[User]: Asked to research if `themestore`, `mcs`, `usercenter` are safe to disable without bootlooping.
+[AI]: Searched web. Confirmed disabling `mcs` or `themestore` breaks Settings UI and can cause bootloops. Advised leaving them enabled per Core Stability Protocol.
+[User]: Approved. Ordered upload to GitHub including Core Stability Protocol lines in `PROJECT_HISTORY.md`, and requested a fresh web search for max battery savings on Realme UI 3.0.

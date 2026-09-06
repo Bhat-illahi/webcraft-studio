@@ -1,0 +1,26 @@
+# Session 7 Transcript
+**Date:** April 22, 2026
+
+**[06:53 PM] User (Audio):** "achha taahoom ki tum project_history.md ko padho aur ushi mutabiq kaam karo"
+**[06:56 PM] AI:** Acknowledged reading `PROJECT_HISTORY.md` and confirmed understanding of Hinglish preference, Code Integrity, Batch Metadata Update, and project ecosystem.
+**[06:56 PM] User (Audio):** "kya tumhe pata hai ki humne ye drive ka folder banaya tha matlab google drive ka folder mein maine kaun kaun sa folder banaya tha wo tumhe sab kuch pata hi hai right"
+**[07:03 PM] AI:** Searched previous logs and recalled the folders created in Session 6: Downloads, Music, Videos, Archive (Hidden), and Screenshots. Also remembered the Desktop boot error.
+**[07:03 PM] User (Audio):** Commanded the AI to update `PROJECT_HISTORY.md` so that the AI reads all conversations (4, 5, 6), full transcripts, workflows, and `MouseMaster_reference.ahk` completely in one go, without skipping anything.
+**[07:13 PM] AI:** Updated `PROJECT_HISTORY.md` with a "CRITICAL REQUIREMENT" in the Master Key Prompt and pushed changes to GitHub.
+**[07:13 PM] User (Image & Audio):** Uploaded images of a "Jarvis Protocol" document regarding "Moltbot" and asked if it was safe to install, and if there is any AI like Jarvis that is safe to run locally.
+**[07:22 PM] AI:** Strongly advised against installing Moltbot on the primary PC due to terminal deletion and prompt injection risks. Suggested safer alternatives like custom Python Voice Assistant or ChatGPT/Copilot native apps.
+**[07:23 PM] User (Image & Audio):** Uploaded an image of the "badclaude" GitHub repo and asked if it's beneficial.
+**[07:23 PM] AI:** Explained it's a joke/meme tool with zero productivity benefit and flagged the "Crypto miner" mention as a security risk. Advised against installing it.
+**[07:29 PM] User (Audio):** Asked about a reel claiming a RedMagic 9 Pro APK turns a low-end phone into a PS5. User also commanded the AI to use Brave Browser instead of Chrome for all tasks and add this rule to `PROJECT_HISTORY.md`, then update conversations and git push.
+**[07:30 PM] AI:** Executed the batch metadata update, evaluated the reel, added the Brave browser rule, and pushed to Git.
+**[Session Update: April 23 & 24, 2026]**
+**User (Audio/Image):** Experienced "Folder is empty" error when connecting Realme X7 5G via USB. AI explained Android's MTP security and guided the user to enable File Transfer mode.
+**User (Audio):** Complained of massive battery drain and speed drop (from 8MB/s to 40KB/s) on Jio 5G Hotspot while downloading a 3GB ZIP file.
+**AI:** Diagnosed the issue as hardware thermal throttling and Jio's FUP hotspot limit. Suggested putting the phone in front of a fan and using USB tethering. User tested by placing the phone in the fridge (which worked but was risky) and changing hotspot to 5GHz, successfully restoring speed.
+**User (Image/Audio):** Encountered "Location is not available" error for `G:\` drive and a nested OneDrive folder sync lock. Also asked why custom `C:\Desktop` lacked the official icon.
+**AI:** Explained the cloud sync conflict (nesting OneDrive in Google Drive). Guided user to Unlink OneDrive. Deployed a PowerShell script to inject `desktop.ini` and restore the official Desktop icon.
+**[Session Update: April 25, 2026]**
+**User (Audio/Image):** Struggled with VLC's interface glitches and resume-playback failure. VS Code startup also cluttered.
+**AI:** Guided user to clean VS Code settings. Forcefully uninstalled VLC and Visual Studio Installer via terminal. Installed PotPlayer.
+**User (Audio):** Noticed PotPlayer also started from 0:00 and asked about UI settings like "Stay on Top."
+**AI:** Provided PotPlayer configuration steps (F5 settings) to ensure "Always Resume" and customized UI behavior.

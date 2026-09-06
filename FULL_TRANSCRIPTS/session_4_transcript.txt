@@ -1,0 +1,26 @@
+# WebCraft Studio - Complete Session 4 Transcript (April 19, 2026)
+
+[SYSTEM START]
+USER: "python -m graphify install ; python -m graphify init"
+AI: [Error: No module named graphifyy]
+USER: "python -m graphify antigravity install"
+AI: [Success: Rules written. MCP Config requested.]
+USER: "done downloded" (uv installed)
+USER (Audio): "Explain how this works... how do I teach Cursor with one command?"
+AI: [Explained .cursorrules and Project History files.]
+USER (Audio): "I want every word to be updated... I don't want just summaries, I want the AI to know my style and mistakes."
+AI: [Agreed. Initialized CONVERSATIONS/ folder.]
+USER (Audio): "Wait, I deleted the OneDrive folder. MCP error is annoying me."
+AI: [Updated mcp_config.json to the new 'Fresh' path.]
+USER (Audio): "Still error... unknown command '.'"
+AI: [Guided user to run 'python -m graphify antigravity install' and then 'python -m graphify .']
+USER (Audio): "Actually, let's just delete the MCP error... it's annoying."
+AI: [Wiped mcp_config.json to clear the error.]
+USER (Audio): "GitHub is synced. Now, I want a Word-for-Word log so any AI knows me exactly."
+AI: [Creating FULL_TRANSCRIPTS/ folder for complete session logs.]
+
+---
+## 🧠 Logic & Strategy (Word-for-Word)
+- PIN: 582619 (Confirmed)
+- Next Step: Anantnag Lead Expansion.
+- Rule: Every session must be logged word-for-word in this folder.

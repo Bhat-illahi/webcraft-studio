@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leads Access | WebCraft Studio</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6C63FF;
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --text: #f8fafc;
+      --border: rgba(255, 255, 255, 0.1);
+      --success: #22c55e;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --muted: #64748b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    #auth-gate {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 40px 30px;
+      border-radius: 30px;
+      border: 1px solid rgba(108, 99, 255, 0.3);
+      text-align: center;
+      width: 380px;
+      height: fit-content;
+      margin: 15vh auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin: 25px 0 15px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: #fff;
+      text-align: center;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(108, 99, 255, 0.3);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .unlock-btn {
+      background: linear-gradient(135deg, #6C63FF 0%, #3b82f6 100%);
+      color: white;
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      transition: 0.3s;
+      box-shadow: 0 10px 20px -5px rgba(108, 99, 255, 0.4);
+    }
+
+    .unlock-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 25px -5px rgba(108, 99, 255, 0.5);
+      filter: brightness(1.1);
+    }
+
+    #leads-panel {
+      display: none;
+      width: 100%;
+      max-width: 1300px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      background: var(--surface);
+      padding: 20px;
+      border-radius: 15px;
+      border: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .leads-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .lead-card {
+      background: var(--surface);
+      padding: 15px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      transition: 0.3s;
+      position: relative;
+    }
+
+    /* Status Styles */
+    /* Status Styles */
+    .lead-card.interested {
+      border-color: var(--success);
+      background: none;
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
+    }
+
+    .lead-card.not-interested {
+      border-color: var(--danger);
+      background: none;
+      opacity: 0.7;
+    }
+
+    .lead-card.ignored {
+      border-color: var(--danger);
+      background: rgba(239, 68, 68, 0.15);
+      opacity: 1;
+    }
+
+    .lead-card.pitched {
+      border-color: var(--primary);
+      opacity: 0.4;
+      filter: grayscale(0.5);
+      transition: opacity 0.3s, filter 0.3s;
+    }
+
+    .lead-card.pitched:hover {
+      opacity: 0.8;
+      filter: grayscale(0);
+    }
+
+    .status-pill {
+      font-size: 0.65rem;
+      padding: 4px 10px;
+      border-radius: 50px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-left: 10px;
+    }
+
+    .status-new {
+      background: rgba(108, 99, 255, 0.1);
+      color: var(--primary);
+    }
+
+    .status-pitched {
+      background: rgba(108, 99, 255, 0.2);
+      color: #fff;
+    }
+
+    .status-interested {
+      background: var(--success);
+      color: #fff;
+    }
+
+    .status-not_interested {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .status-ignored {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .lead-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .wa-btn {
+      flex: 1;
+      min-width: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #25D366;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .action-icon {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      transition: 0.2s;
+      font-size: 0.9rem;
+    }
+
+    .int-btn {
+      color: var(--success);
+      background: rgba(34, 197, 94, 0.1);
+    }
+
+    .pitched-btn {
+      color: var(--primary);
+      background: rgba(108, 99, 255, 0.1);
+    }
+
+    .not-int-btn {
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .ign-btn {
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .del-btn {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+      margin-left: auto;
+    }
+
+    .action-icon:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.2);
+    }
+
+    .action-icon.active {
+      border-width: 2px;
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .add-btn {
+      background: var(--primary);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .import-btn {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border: 1px solid var(--border);
+      padding: 10px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .logout-btn {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 10px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    #cloud-status {
+      font-size: 0.7rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 5px;
+    }
+
+    .syncing-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--warning);
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 0.3;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0.3;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="auth-gate">
+    <i class="fas fa-fingerprint"
+      style="font-size: 50px; color: var(--primary); margin-bottom: 25px; text-shadow: 0 0 20px rgba(108, 99, 255, 0.5);"></i>
+    <h2 style="margin-bottom:12px; font-weight: 800; letter-spacing: -0.5px;">Cloud Security</h2>
+    <p style="font-size:0.85rem; color:var(--muted); font-weight: 500;">Secure gateway to WebCraft CRM</p>
+    <input type="password" id="pass" placeholder="••••" onkeydown="if(event.key==='Enter') checkPass()">
+    <button class="unlock-btn" id="unlockBtn" onclick="checkPass()">Unlock Session</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="leads-panel">
+    <div class="header">
+      <div>
+        <h1><i class="fas fa-server"></i> Cloud Lead CRM</h1>
+        <div id="cloud-status"><i class="fas fa-check-circle" style="color:var(--success)"></i> System Ready</div>
+      </div>
+      <div class="btn-group">
+        <button class="import-btn" onclick="importLatestBatch()"><i class="fas fa-sync"></i> Pull Research</button>
+        <button class="add-btn" style="background: #25D366;" onclick="startBulkQueue()"><i
+            class="fas fa-paper-plane"></i> Bulk Pitch (Queue)</button>
+        <a href="https://docs.google.com/spreadsheets/d/1hu-i9w6XXsQEPrIpG-7dTGsGsXpE-RB_tUScoz43SZE/edit"
+          target="_blank" class="import-btn"
+          style="color:#2ecc71; border-color:rgba(46, 204, 113, 0.3); text-decoration:none; display:inline-flex; align-items:center; gap:8px;"><i
+            class="fas fa-file-excel"></i> View Sheets</a>
+        <button class="add-btn" onclick="addNewLead()"><i class="fas fa-plus"></i> Manual Add</button>
+        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </div>
+    <div class="leads-grid" id="leadsGrid"></div>
+  </div>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    // CONFIG
+    const SB_URL = 'https://imuqwquuytcfuqbpaqoa.supabase.co';
+    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdXF3cXV1eXRjZnVxYnBhcW9hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NTQwNzcsImV4cCI6MjA5MTAzMDA3N30.J_E1pbC8nJKMsIMJE-IAnI_3lV47q6WX0HuSSWIhpd4';
+    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycby3I2_zeVD6_nFkiuxWMO9xsCN2gNJUit-TjfVZMFl2SRTVQ_Air5WyE4FpyQMcrcsGEg/exec';
+    const MASTER_PIN = '582619';
+    let sb = null;
+    let leadsData = [];
+
+    // RESEARCH BATCH
+    const RESEARCH_BATCH = [
+      { id: Date.now() + 1, name: "Jk hardware & ply sopore", city: "Sopore", phone: "09906624554", niche: "Hardware & Plywood", status: "new" },
+      { id: Date.now() + 2, name: "irshad hardware store", city: "Sopore", phone: "09797819684", niche: "Hardware Store", status: "new" },
+      { id: Date.now() + 3, name: "Nowpora Hardware", city: "Sopore", phone: "09149516126", niche: "Construction Supplies", status: "new" },
+      { id: Date.now() + 4, name: "Naseer & Son's", city: "Sopore", phone: "07780843902", niche: "Fruit Export Agent", status: "new" },
+      { id: Date.now() + 5, name: "Nadihal Fruit Company", city: "Sopore", phone: "07889570291", niche: "Fruit Export", status: "new" },
+      { id: Date.now() + 6, name: "Madina Fruit Traders", city: "Sopore", phone: "07006320178", niche: "Fruit Traders", status: "new" },
+      { id: Date.now() + 7, name: "Resonance Coaching", city: "Sopore", phone: "07006859495", niche: "Coaching Institute", status: "new" },
+      { id: Date.now() + 8, name: "Bodyworks Gym & Snooker", city: "Sopore", phone: "07780960236", niche: "Gym & Health Club", status: "new" },
+      { id: Date.now() + 9, name: "City Gym Centre Sopore", city: "Sopore", phone: "07006938022", niche: "Gym & Fitness", status: "new" },
+      { id: Date.now() + 10, name: "SOFI STORE SOPORE", city: "Sopore", phone: "09149548660", niche: "Clothing & Boutique", status: "new" },
+      { id: Date.now() + 41, name: "SherePunjab Steel Industries", city: "Ludhiana", phone: "09814023456", niche: "Steel & Manufacturing", status: "new" },
+      { id: Date.now() + 42, name: "Ludhiana Textile Mills", city: "Ludhiana", phone: "09872012345", niche: "Textile Factory", status: "new" },
+      { id: Date.now() + 43, name: "Surat Diamond Hub (Exports)", city: "Surat", phone: "09825012345", niche: "Diamond Exporter", status: "new" },
+      { id: Date.now() + 44, name: "Bangalore Advanced Dental", city: "Bangalore", phone: "09845012345", niche: "Healthcare & Dental", status: "new" },
+      { id: Date.now() + 45, name: "Skyline Interior Solutions", city: "Delhi", phone: "09811012345", niche: "Interior Design", status: "new" },
+      { id: Date.now() + 31, name: "KHAN ELECTRONICS SOPORE", city: "Sopore", phone: "07006280762", niche: "Electronics & Electrical", status: "new" },
+      { id: Date.now() + 32, name: "Kana electronics", city: "Sopore", phone: "07006616512", niche: "Electronics Store", status: "new" },
+      { id: Date.now() + 33, name: "SAF Printings", city: "Sopore", phone: "09906535666", niche: "Digital Printing", status: "new" },
+      { id: Date.now() + 34, name: "A one collection sopore", city: "Sopore", phone: "07006949699", niche: "Bridal Boutique", status: "new" },
+      { id: Date.now() + 35, name: "JZ outfits", city: "Sopore", phone: "09149699978", niche: "Clothing & Boutique", status: "new" },
+      { id: Date.now() + 36, name: "Zoha Textile", city: "Sopore", phone: "07006261840", niche: "Women's Fashion", status: "new" },
+      { id: Date.now() + 21, name: "Rahil Ply Mart", city: "Sopore", phone: "09797777957", niche: "Furniture Store", status: "new" },
+      { id: Date.now() + 22, name: "DR MUSHTAQ’S SCAN CENTRE", city: "Sopore", phone: "09419038563", niche: "Medical Clinic", status: "new" },
+      { id: Date.now() + 23, name: "Zargar Medical Hall Sopore", city: "Sopore", phone: "09906939006", niche: "Medical Clinic", status: "new" },
+      { id: Date.now() + 24, name: "S.N. Automobiles", city: "Sopore", phone: "09906497031", niche: "Automobile (Two-Wheelers)", status: "new" },
+      { id: Date.now() + 25, name: "Mehraj Automobiles", city: "Sopore", phone: "09419566277", niche: "Automobile (Auto Parts)", status: "new" },
+      { id: Date.now() + 26, name: "PEN N PAPER", city: "Sopore", phone: "07006347852", niche: "Stationery Store", status: "new" },
+      { id: Date.now() + 27, name: "Hunain Media Services", city: "Sopore", phone: "09906546830", niche: "Stationery Wholesaler", status: "new" },
+      { id: Date.now() + 11, name: "A S hardware store", city: "Sopore", phone: "07006261623", niche: "Hardware Store", status: "new" },
+      { id: Date.now() + 12, name: "NEW AFSARA ENTERPRISES", city: "Sopore", phone: "09906614887", niche: "Hardware & Supplies", status: "new" },
+      { id: Date.now() + 13, name: "ibaadat the jewellers", city: "Srinagar", phone: "09070057777", niche: "Premium Jewelry", status: "new", instagram: "@ibaadat_the_jewellers" },
+      { id: Date.now() + 14, name: "Shah Jewellers Srinagar", city: "Srinagar", phone: "09419001234", niche: "Jewellery Shop", status: "new" },
+      { id: Date.now() + 15, name: "Ittihaad Fruit Mundi (Haji & Sons)", city: "Sopore", phone: "09419012345", niche: "Fruit Export", status: "new", instagram: "@soporefruitmandi" },
+      { id: Date.now() + 16, name: "Kashmir Auto Tyres", city: "Sopore", phone: "09906123456", niche: "Tyres & Service", status: "new" }
+    ];
+
+    // ==== AUTH ====
+    function checkPass() {
+      const pin = document.getElementById('pass').value;
+      if (pin === MASTER_PIN) {
+        localStorage.setItem('wc_leads_session', 'true');
+        showDashboard();
+      } else {
+        alert("Incorrect PIN!");
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('wc_leads_session');
+      window.location.reload();
+    }
+
+    function showDashboard() {
+      document.getElementById('auth-gate').style.display = 'none';
+      document.getElementById('leads-panel').style.display = 'block';
+      initSupabase();
+    }
+
+    // Immediate check
+    if (localStorage.getItem('wc_leads_session') === 'true') {
+      showDashboard();
+    }
+
+    // ==== CLOUD LOGIC ====
+    function initSupabase() {
+      try {
+        if (!window.supabase) {
+          console.error("Supabase SDK not loaded!");
+          return;
+        }
+        sb = window.supabase.createClient(SB_URL, SB_KEY);
+        loadLeadsFromCloud();
+      } catch (e) { console.error("Cloud Error:", e); }
+    }
+
+    async function loadLeadsFromCloud() {
+      setSyncStatus('Connecting...', 'warning');
+      try {
+        // Use maybeSingle() to avoid error if no row exists yet
+        const { data, error } = await sb.from('site_settings').select('value').eq('key', 'crm_leads_data').maybeSingle();
+
+        let loadedData = [];
+        if (data && data.value) {
+          loadedData = JSON.parse(data.value);
+        } else {
+          // Check local migration
+          const local = localStorage.getItem('webcraft_leads_v3') || localStorage.getItem('webcraft_leads_cloud_backup');
+          if (local) {
+            loadedData = JSON.parse(local);
+          } else {
+            loadedData = RESEARCH_BATCH;
+          }
+        }
+
+        leadsData = loadedData;
+        renderLeads();
+        setSyncStatus('Cloud Synchronized', 'success');
+
+        // Save back once to establish cloud entry if it was missing
+        if (!data) syncToCloud();
+
+      } catch (e) {
+        console.error("Cloud Load Crashed:", e);
+        setSyncStatus('Local Mode', 'danger');
+      }
+    }
+
+    async function syncToCloud() {
+      if (!sb) return;
+      setSyncStatus('Saving...', 'warning');
+      localStorage.setItem('webcraft_leads_cloud_backup', JSON.stringify(leadsData));
+      try {
+        await sb.from('site_settings').upsert({
+          key: 'crm_leads_data',
+          value: JSON.stringify(leadsData)
+        });
+        setSyncStatus('Cloud Synchronized', 'success');
+
+        // SYNC TO GOOGLE SHEETS
+        if (GOOGLE_SHEET_URL) {
+          fetch(GOOGLE_SHEET_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify(leadsData)
+          }).catch(e => console.warn("Sheet Sync Hidden Error:", e));
+        }
+
+      } catch (e) {
+        setSyncStatus('Local Save Only', 'danger');
+      }
+    }
+
+    // ==== CRM ACTIONS ====
+    let currentQueue = [];
+    let isWaitingForNext = false;
+
+    function startBulkQueue() {
+      currentQueue = leadsData.filter(l => l.status === 'new');
+      if (currentQueue.length === 0) {
+        alert("No new leads to pitch!");
+        return;
+      }
+      isWaitingForNext = false;
+      processNextInQueue();
+    }
+
+    function processNextInQueue() {
+      if (currentQueue.length === 0) {
+        alert("Queue Finished! All new leads have been processed.");
+        closeQueue();
+        return;
+      }
+
+      const lead = currentQueue[0];
+      const overlay = document.getElementById('queue-overlay') || createQueueOverlay();
+      overlay.style.display = 'flex';
+
+      const remaining = currentQueue.length;
+
+      overlay.innerHTML = `
+        <div class="queue-card" style="background: var(--surface); padding: 30px; border-radius: 24px; border: 1px solid var(--primary); text-align: center; max-width: 450px; width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+          <div style="font-size: 0.7rem; color: var(--primary); font-weight: 800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1.5px;">Bulk Pitch Queue (${remaining} Remaining)</div>
+          <h2 style="margin-bottom: 5px; font-size: 1.5rem;">${lead.name}</h2>
+          <p style="color: var(--muted); margin-bottom: 25px;">Niche: ${lead.niche} | City: ${lead.city}</p>
+          
+          <div id="queue-actions" style="display: flex; flex-direction: column; gap: 12px;">
+            ${!isWaitingForNext ? `
+              <button class="unlock-btn" style="background: #25D366; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);" onclick="executeSend()">
+                <i class="fab fa-whatsapp"></i> Open WhatsApp & Send
+              </button>
+            ` : `
+              <button class="unlock-btn" style="background: var(--primary);" onclick="executeNext()">
+                <i class="fas fa-arrow-right"></i> Mark Sent & Show Next
+              </button>
+            `}
+            
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+              <button class="import-btn" style="flex: 1;" onclick="skipNext()">Skip</button>
+              <button class="logout-btn" style="flex: 1;" onclick="closeQueue()">Stop Queue</button>
+            </div>
+          </div>
+          
+          ${isWaitingForNext ? `<p style="margin-top: 20px; font-size: 0.8rem; color: var(--success); font-weight: 600; animation: pulse 1.5s infinite;">Waiting for your return... Click 'Next' when done.</p>` : ''}
+        </div>
+      `;
+    }
+
+    function createQueueOverlay() {
+      const el = document.createElement('div');
+      el.id = 'queue-overlay';
+      el.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15, 23, 42, 0.9); z-index:10000; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(12px);';
+      document.body.appendChild(el);
+      return el;
+    }
+
+    function executeSend() {
+      const lead = currentQueue[0];
+      contactLead(lead.phone, lead.name, lead.niche);
+      isWaitingForNext = true;
+      processNextInQueue();
+    }
+
+    function executeNext() {
+      currentQueue.shift();
+      isWaitingForNext = false;
+      processNextInQueue();
+    }
+
+    function skipNext() {
+      currentQueue.shift();
+      isWaitingForNext = false;
+      processNextInQueue();
+    }
+
+    function closeQueue() {
+      currentQueue = [];
+      isWaitingForNext = false;
+      const overlay = document.getElementById('queue-overlay');
+      if (overlay) overlay.style.display = 'none';
+    }
+
+    // Auto-focus logic: When you switch back to this tab, we highlight the "Next" button
+    window.addEventListener('focus', () => {
+      if (isWaitingForNext && currentQueue.length > 0) {
+        // We could automatically click next, but it's safer to just refresh the UI 
+        // to show the "Next" button clearly.
+        processNextInQueue();
+      }
+    });
+
+    async function bulkPitch() {
+      // (Legacy function kept for reference or removed if preferred)
+      startBulkQueue();
+    }
+
+    function contactLead(phone, name, niche) {
+      // CLEAN PHONE: Remove non-digits and leading 0, then prefix with 91
+      let cleanPhone = phone.replace(/\D/g, '');
+      if (cleanPhone.startsWith('0')) cleanPhone = cleanPhone.substring(1);
+      if (!cleanPhone.startsWith('91') && cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
+
+      const message = `Greetings! I am reaching out from WebCraft Studio. While researching the local market, we noticed that '${name}' does not yet have a professional, dedicated website.
+
+In today's digital era, a premium web presence is essential for building brand authority and reaching more customers. We specialize in creating high-performance, mobile-responsive websites specifically designed for businesses in the ${niche} sector.
+
+You can view our portfolio and recent projects here: webcraftstudio-in.vercel.app
+
+Would you be available for a brief discussion on how we can help elevate your online brand?
+
+Best regards,
+The WebCraft Studio Team`;
+
+      updateStatus(null, 'pitched', true, phone); // Update status and then open WA
+      window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    function renderLeads() {
+      const grid = document.getElementById('leadsGrid');
+      if (!grid) return;
+      grid.innerHTML = leadsData.map(l => `
+        <div class="lead-card ${l.status.replace('_', '-')}">
+          <div style="display:flex; align-items:center; margin-bottom:10px;">
+            <span style="font-size:0.65rem; color:var(--primary); font-weight:900; letter-spacing:1px;">${l.city.toUpperCase()}</span>
+            <span class="status-pill status-${l.status}">${l.status.replace('_', ' ')}</span>
+          </div>
+          <h3 style="font-size:1.1rem;">${l.name}</h3>
+          <p style="font-size:0.8rem; opacity:0.5; margin: 4px 0 8px;">Target: ${l.niche}</p>
+          ${l.instagram ? `<p style="font-size:0.75rem; color:#e1306c; margin-top:-5px; margin-bottom:10px;"><i class="fab fa-instagram"></i> @${l.instagram.replace('@', '')}</p>` : ''}
+          <p style="font-size:0.65rem; opacity:0.4; margin-bottom:15px;"><i class="fas fa-history" style="font-size:0.6rem;"></i> ${l.last_update ? 'Update: ' + l.last_update : 'New Lead'}</p>
+          <div class="lead-actions">
+            <button onclick="contactLead('${l.phone}', '${l.name}', '${l.niche}')" class="wa-btn" style="border:none; cursor:pointer;">
+              <i class="fab fa-whatsapp"></i> Send Pitch
+            </button>
+            <a href="${l.instagram ? `https://instagram.com/${l.instagram.replace('@', '')}` : '#'}" 
+               target="_blank" 
+               class="action-icon insta-btn" 
+               style="background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); color: white; border: none; ${!l.instagram ? 'opacity: 0.2; pointer-events: none;' : ''}"
+               onclick="${l.instagram ? `updateStatus(${l.id}, 'pitched')` : 'event.preventDefault()'}">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <div class="action-icon pitched-btn ${l.status === 'pitched' ? 'active' : ''}" onclick="updateStatus(${l.id}, 'pitched')"><i class="fas fa-paper-plane"></i></div>
+            <div class="action-icon int-btn ${l.status === 'interested' ? 'active' : ''}" onclick="updateStatus(${l.id}, 'interested')"><i class="fas fa-thumbs-up"></i></div>
+            <div class="action-icon not-int-btn ${l.status === 'not_interested' ? 'active' : ''}" onclick="updateStatus(${l.id}, 'not_interested')"><i class="fas fa-thumbs-down"></i></div>
+            <div class="action-icon ign-btn ${l.status === 'ignored' ? 'active' : ''}" onclick="updateStatus(${l.id}, 'ignored')"><i class="fas fa-eye-slash"></i></div>
+            <div class="action-icon del-btn" onclick="deleteLead(${l.id})"><i class="fas fa-trash-alt"></i></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateStatus(id, s, viaPhone = false, phone = '') {
+      const now = new Date().toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' });
+      leadsData = leadsData.map(l => {
+        if (l.id === id || (viaPhone && l.phone === phone)) {
+          const newStatus = (l.status === s) ? 'new' : s; // Toggle back to new if same status
+          return { ...l, status: newStatus, last_update: now };
+        }
+        return l;
+      });
+      renderLeads();
+      syncToCloud();
+    }
+
+    function deleteLead(id) {
+      if (!confirm("Are you sure you want to permanently remove this lead? It will not be re-imported.")) return;
+
+      const lead = leadsData.find(l => l.id === id);
+      if (lead) {
+        // Save to removedLeads list to prevent re-import
+        const removed = JSON.parse(localStorage.getItem('removedLeads') || '[]');
+        if (!removed.includes(lead.phone)) {
+          removed.push(lead.phone);
+          localStorage.setItem('removedLeads', JSON.stringify(removed));
+        }
+      }
+
+      leadsData = leadsData.filter(l => l.id !== id);
+      renderLeads();
+      syncToCloud();
+    }
+
+    function addNewLead() {
+      const n = prompt("Business Name:");
+      if (!n) return;
+      const p = prompt("Phone:");
+      if (!p) return;
+      const niche = prompt("Niche (e.g. Salon):", "Business");
+      const city = prompt("City:", "Kashmir");
+      const insta = prompt("Instagram ID (optional):", "");
+
+      const newLead = {
+        id: Date.now(),
+        name: n,
+        phone: p,
+        city: city,
+        niche: niche,
+        instagram: insta,
+        status: "new"
+      };
+
+      leadsData.unshift(newLead);
+      renderLeads();
+      syncToCloud();
+    }
+
+    function importLatestBatch() {
+      const removedLeads = JSON.parse(localStorage.getItem('removedLeads') || '[]');
+      const existingPhones = new Set(leadsData.map(l => l.phone));
+
+      const filtered = RESEARCH_BATCH.filter(l =>
+        !existingPhones.has(l.phone) && !removedLeads.includes(l.phone)
+      );
+
+      if (filtered.length === 0) {
+        alert("No new leads found (all existing leads are up to date).");
+        return;
+      }
+
+      leadsData = [...filtered, ...leadsData];
+      syncToCloud();
+      renderLeads();
+      alert(`Added ${filtered.length} new leads!`);
+    }
+
+    function setSyncStatus(m, t) {
+      const el = document.getElementById('cloud-status');
+      if (!el) return;
+      let c = t === 'success' ? 'var(--success)' : (t === 'warning' ? 'var(--warning)' : 'var(--danger)');
+      el.innerHTML = m;
+      el.style.color = c;
+    }
+
+  </script>
+  <div id="ai-master-key" style="display:none;">
+    AI MASTER KEY: "I am the owner of WebCraft Studio. Before we begin, read PROJECT_HISTORY.md and .cursorrules to
+    fully understand our business strategy, the CRM logic (including the secret PIN), and the progress from all our past
+    sessions. Once you are up to speed, summarize our current status and wait for my next mission."
+  </div>
+</body>
+
+</html>
+
+<!-- 
+AI MASTER KEY:
+"I am the owner of WebCraft Studio. Before we begin, read PROJECT_HISTORY.md and .cursorrules to fully understand our business strategy, the CRM logic (including the secret PIN), and the progress from all our past sessions. Once you are up to speed, summarize our current status and wait for my next mission."
+-->

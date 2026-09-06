@@ -1,0 +1,19 @@
+# Session 8 Transcript
+**Date:** April 28, 2026
+
+**[10:18 PM] AI:** Initialized session with full awareness of project history and rules. Confirmed reading `PROJECT_HISTORY.md`, `.cursorrules`, and previous transcripts.
+**[10:19 PM] User (Audio):** Asked about PotPlayer window size issue, wanting it to open maximized instead of in a small window.
+**[10:20 PM] AI:** Provided instructions to set PotPlayer to start "Maximized" via F5 Preferences > General > Startup.
+**[12:26 PM] User (Images):** Uploaded screenshots of PotPlayer "Startup" settings showing "Maximize (to Desktop)" and other settings. Asked for full-screen shortcut and how to change subtitles/audio.
+**[12:27 PM] AI:** Confirmed settings are correct. Provided shortcuts: `Enter` for Full Screen, `A` for Audio change, and `L` for Subtitle change.
+**[01:02 PM] User (Audio):** Asked for shortcuts to show/hide playlist and how to make the player automatically play the next video in the folder instead of repeating the current one.
+**[01:03 PM] AI:** Provided `F6` for playlist toggle. Suggested `Shift + R` for repeat cycle (which turned out to be "Free Verb" in user's version).
+**[01:08 PM] User (Audio):** Reported that `Shift + R` toggles "Free Verb" (On/Off). If On, it repeats; if Off, it stops. Wanted it to play Episode 2 after Episode 1.
+**[01:09 PM] AI:** Corrected shortcut to `Ctrl + R` or `R`. Guided user to "When playback finished" menu in "Miscellaneous" to set "Play next item".
+**[01:12 PM] User (Image & Audio):** Pressing `Ctrl + R` gave a DXVA error. Confirmed that the error was due to hardware acceleration conflict with video processing.
+**[01:13 PM] AI:** Clarified that `Ctrl + R` was the wrong shortcut for the user's intent. Directed user to Right-click > Playback > Playlist Cycle > Disabled.
+**[01:16 PM] User (Image):** Uploaded screenshot of "When files opened" dropdown menu. Asked which option to select.
+**[01:17 PM] AI:** Recommended "Add together all files to playlist" to ensure seamless progression through folder items.
+**[01:20 PM] User (Audio):** Asked whether to keep "Free Verb" On or Off.
+**[01:21 PM] AI:** Advised keeping it OFF for original audio quality.
+**[01:21 PM] User:** Commanded "upload all conversation".

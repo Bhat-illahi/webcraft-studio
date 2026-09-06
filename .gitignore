@@ -1,0 +1,5 @@
+node_modules/
+mtkclient_repo/
+*.apk
+battery_stats.txt
+*.log
