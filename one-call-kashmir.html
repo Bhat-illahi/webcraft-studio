@@ -680,8 +680,8 @@
                                 <input type="tel" id="leadPhone" class="form-control form-control-custom" placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" maxlength="10" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-semibold small">Your Email Address *</label>
-                                <input type="email" id="leadEmail" class="form-control form-control-custom" placeholder="Enter your email" required>
+                                <label class="form-label fw-semibold small">Your Email Address (Optional)</label>
+                                <input type="email" id="leadEmail" class="form-control form-control-custom" placeholder="Enter your email (optional)">
                             </div>
                             <button type="submit" class="btn-submit-hero">
                                 <i class="fa-brands fa-whatsapp me-2"></i> Submit & Get Offer on WhatsApp
@@ -1121,8 +1121,8 @@
                             <input type="tel" id="modalPhone" name="phone" class="form-control" placeholder="Mobile" pattern="[0-9]{10}" maxlength="10" required>
                         </div>
                         <div class="mb-3">
-                            <label for="modalEmail">Your Email<code>*</code>:</label>
-                            <input type="email" id="modalEmail" name="email" class="form-control" placeholder="Email" required>
+                            <label for="modalEmail">Your Email (Optional):</label>
+                            <input type="email" id="modalEmail" name="email" class="form-control" placeholder="Email (Optional)">
                         </div>
                         
                         <div id="modalAlert" class="alert d-none mb-3 small" role="alert"></div>
@@ -1157,7 +1157,8 @@
             e.preventDefault();
             const name = document.getElementById('modalName').value.trim();
             const phone = document.getElementById('modalPhone').value.trim();
-            const email = document.getElementById('modalEmail').value.trim();
+            const emailInput = document.getElementById('modalEmail').value.trim();
+            const email = emailInput || 'Not Provided';
             const pkg = document.getElementById('selectedPackage').value;
             const submitBtn = document.getElementById('btnModalSubmit');
             const alertBox = document.getElementById('modalAlert');
